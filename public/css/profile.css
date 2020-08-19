@@ -1,0 +1,238 @@
+body {
+    background-color: #f3f3f3;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #000;
+}
+
+p {
+    font-size: 0.875rem;
+    margin-bottom: .5rem;
+    line-height: 1.3rem;
+}
+
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 450px;
+    min-width: 200px;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid #e7eaed;
+    border-radius: 0;
+}
+
+.card .card-body {
+    width: 50rem;
+}
+
+.card .card-description {
+    margin-bottom: .875rem;
+    font-weight: 400;
+    color: #76838f;
+}
+
+.cover-image {
+    height: auto;
+    width: 100%;
+}
+
+.cover-image img {
+    height: auto;
+    width: 100%;
+}
+
+.profile-card .profile-content {
+    padding: 50px 20px 30px 20px;
+}
+
+.profile-card .profile-name {
+    font-size: 1.2rem;
+    color: #3249b9;
+    font-weight: 600;
+    text-align: center;
+}
+
+.profile-card .profile-designation {
+    font-size: 13px;
+    color: #777;
+    text-align: center;
+}
+
+.profile-card .profile-description {
+    padding: 10px;
+    font-size: 13px;
+    color: #777;
+    margin: 5px 0px;
+    background-color: #F1F2F3;
+    border-radius: 5px;
+}
+
+.profile-card ul.profile-info-list {
+    padding: 0;
+    margin: 10px 0;
+    list-style: none;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #777;
+}
+
+.profile-card ul.profile-info-list a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.profile-card a.profile-info-list-item {
+    margin: 10px 0;
+    padding: 15px;
+    background-color: #F1F2F3;
+    display: block;
+    -webkit-transition: all .5s ease-in-out;
+    -o-transition: all .5s ease-in-out;
+    transition: all .5s ease-in-out;
+}
+
+.profile-card a.profile-info-list-item:hover {
+    background-color: #9E9E9E;
+    color: white;
+    -webkit-transition: all .5s ease-in-out;
+    -o-transition: all .5s ease-in-out;
+    transition: all .5s ease-in-out;
+}
+
+.profile-card a.profile-info-list-item i {
+    padding: 10px;
+}
+
+ul.about {
+    list-style: none;
+    color: black;
+    padding: 0;
+}
+
+li.about-items {
+    margin: 10px;
+    font-size: 0.9rem;
+    /* font-family: sans-serif; */
+    /* font-weight: 400; */
+}
+
+li.about-items i {
+    color: #607d8b;
+}
+
+span.about-item-name {
+    width: 100px;
+    display: inline-flex;
+    margin-left: 10px;
+}
+
+span.about-item-detail {
+    padding-left: 30px;
+    display: inline-flex;
+    width: calc(100% - 160px);
+}
+
+span.about-item-detail>button {
+    margin-right: 10px;
+}
+
+.btn.btn-icon {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+}
+
+.btn.btn-rounded {
+    border-radius: 50px;
+}
+
+a.about-item-edit {
+    float: right;
+}
+
+textarea {
+    resize: none;
+}
+
+.avatar_background {
+    width: 100%;
+    height: auto;
+}
+
+.avatar_image {
+    margin-top: 30%;
+}
+
+.all_button {
+    padding-top: 10%;
+    text-align: center;
+}
+
+.about-items .about-item-detail input {
+    width: 100%;
+}
+
+.all_button input,
+.all_button button {
+    margin-left: 3%;
+}
+
+.form-group {
+    width: 50%;
+}
+
+@media screen and (max-width: 600px) {
+    .avatar_image {
+        margin-top: 10%;
+        margin-left: 6%;
+    }
+}
+
+
+/*-----------------------------------------------------------------Timeline------------------------------------------------------------------------*/
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+
+/* .container{
+	width:90%
+	margin:10px auto;
+} */
+
+.portfolio-menu {
+    text-align: center;
+}
+
+.portfolio-menu ul li {
+    display: inline-block;
+    margin: 0;
+    list-style: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    -webkit-transition: all 05s ease;
+    -moz-transition: all 05s ease;
+    -ms-transition: all 05s ease;
+    -o-transition: all 05s ease;
+    transition: all .5s ease;
+}
+
+.portfolio-item {
+    width: 100%;
+}
+
+.portfolio-item .item {
+    /*width:303px;*/
+    float: left;
+    margin-bottom: 10px;
+}
+
+
+/*-----------------------------------------------------------------Timeline------------------------------------------------------------------------*/
