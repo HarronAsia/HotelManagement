@@ -14,6 +14,9 @@
                             <a href="{{route('admin.categories.add')}}">
                                 <button type="button" class="btn btn-sm btn-primary">Add Category</button>
                             </a>
+                            <a href="{{route('admin.export.categories')}}">
+                                <button type="button" class="btn btn-sm btn-primary">Export Categories</button>
+                            </a>
                         </div>
                     </div>
                     <hr>

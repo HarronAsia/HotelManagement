@@ -14,6 +14,9 @@
                             <a href="{{route('admin.regions.add')}}">
                                 <button type="button" class="btn btn-sm btn-primary">Add Region</button>
                             </a>
+                            <a href="{{route('admin.export.regions')}}">
+                                <button type="button" class="btn btn-sm btn-primary">Export Region</button>
+                            </a>
                         </div>
                     </div>
                     <hr>

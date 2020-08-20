@@ -1,7 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use LaravelFullCalendar\Facades\Calendar;
+use Excel;
+
+use App\Exports\RegionsExport;
+use App\Exports\BedsExport;
 
 use App\Models\User;
 use App\Models\Profile;
@@ -17,8 +22,7 @@ use App\Http\Requests\StoreCategory;
 use App\Http\Requests\StoreHotel;
 use App\Http\Requests\StoreRoom;
 use App\Http\Requests\StoreBed;
-
-
+use App\Models\Booking_Date;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -74,7 +78,7 @@ class AdminController extends Controller
         $hotels = $this->hotelRepo->showAll();
         $rooms = $this->roomRepo->showall();
         $beds = $this->bedRepo->showall();
-        return view('Admin.monitoring', compact('users', 'regions', 'categories', 'hotels', 'rooms','beds'));
+        return view('Admin.monitoring', compact('users', 'regions', 'categories', 'hotels', 'rooms', 'beds'));
     }
 
 
@@ -82,28 +86,28 @@ class AdminController extends Controller
     {
         $events = [];
         $data = Room::all();
-        
+
         if ($data->count()) {
             foreach ($data as $key => $value) {
                 $events[] = Calendar::event(
                     $value->room_name,
                     true,
-                    new \DateTime($value->date_start),
-                    new \DateTime($value->date_end . ' +1 day'),
+                    new \DateTime($value->date->checkin),
+                    new \DateTime($value->date->checkout . ' +1 day'),
                     null,
                     // Add color and link on event
                     [
                         'color' => '#f05050',
-                        'route' => '#', 
+                        'route' => '#',
                     ]
                 );
             }
         }
         $calendar = Calendar::addEvents($events)->setOptions([
-            'selectable'=> true,
-            'editable'=> true,
-            'handleWindowResize'=> true,
-            'displayEventTime'=> true,
+            'selectable' => true,
+            'editable' => true,
+            'handleWindowResize' => true,
+            'displayEventTime' => true,
             // 'buttonText'=> [
             //     'prevYear'=> '&laquo;', 
             //     'nextYear'=> '&raquo;',  
@@ -121,7 +125,7 @@ class AdminController extends Controller
             // // 曜日略称
             // 'dayNamesShort'=> ['日', '月', '火', '水', '木', '金', '土'],
         ]);
-        return view('Admin.Calendar',compact('calendar'));
+        return view('Admin.Calendar', compact('calendar'));
     }
 
 
@@ -133,11 +137,6 @@ class AdminController extends Controller
     public function feedback()
     {
         return view('Admin.feedback');
-    }
-
-    public function export()
-    {
-        return view('Admin.export');
     }
 
     //********************************* SideBar *****************************************************************************************************************************/
@@ -476,6 +475,11 @@ class AdminController extends Controller
         return redirect()->back();
     }
 
+    public function export()
+    {
+        return Excel::download(new RegionsExport, 'regions_list.csv');
+    }
+
     //-------------------------------------------------------------------------------CATEGORY-----------------------------------------------------------------------//
 
     //-------------------------------------------------------------------------------HOTEL-----------------------------------------------------------------------//
@@ -547,7 +551,7 @@ class AdminController extends Controller
         $hotel->user_id = $data['user_id'];
         $hotel->category_id = $data['category_id'];
         $hotel->region_id = $data['region_id'];
-        
+
         $old_hotel_image = $hotel->hotel_image;
         if ($request->hasFile('hotel_image')) {
 
@@ -632,7 +636,7 @@ class AdminController extends Controller
         $room->date_end = $data['date_end'];
         $room->time_start = $data['time_start'];
         $room->time_end = $data['time_end'];
-        
+
         $hotel = $this->hotelRepo->showHotel($room->hotel_id);
         if ($request->hasFile('room_image')) {
 
@@ -679,7 +683,7 @@ class AdminController extends Controller
         $room->date_end = $data['date_end'];
         $room->time_start = $data['time_start'];
         $room->time_end = $data['time_end'];
-        
+
         $hotel = $this->hotelRepo->showHotel($room->hotel_id);
 
         $old_room_image = $room->room_image;
@@ -750,17 +754,17 @@ class AdminController extends Controller
 
         $bed = new Bed();
 
-        $bed->bed_name = $data['bed_name'];  
+        $bed->bed_name = $data['bed_name'];
         $bed->bed_type = $data['bed_type'];
-        $bed->room_id = $data['room_id'];  
-        
+        $bed->room_id = $data['room_id'];
+
         $room = $this->roomRepo->showRoom($bed->room_id);
         $hotel = $this->hotelRepo->showHotel($room->hotel_id);
         if ($request->hasFile('bed_image')) {
 
             $extension = $data['bed_image']->getClientOriginalExtension();
             $filename = $bed->bed_name . '.' . $extension;
-            $path = storage_path('app/public/hotel/' . $hotel->hotel_name . '/' . $room->room_name . '/'. $bed->bed_name .'/');
+            $path = storage_path('app/public/hotel/' . $hotel->hotel_name . '/' . $room->room_name . '/' . $bed->bed_name . '/');
 
             $data['bed_image']->move($path, $filename);
         }
@@ -785,10 +789,10 @@ class AdminController extends Controller
 
         $bed = $this->bedRepo->showBed($bed);
 
-        $bed->bed_name = $data['bed_name'];  
+        $bed->bed_name = $data['bed_name'];
         $bed->bed_type = $data['bed_type'];
-        $bed->room_id = $data['room_id'];  
-        
+        $bed->room_id = $data['room_id'];
+
         $room = $this->roomRepo->showRoom($bed->room_id);
         $hotel = $this->hotelRepo->showHotel($room->hotel_id);
 
@@ -797,7 +801,7 @@ class AdminController extends Controller
 
             $extension = $data['bed_image']->getClientOriginalExtension();
             $filename = $bed->bed_name . '.' . $extension;
-            $path = storage_path('app/public/hotel/' . $hotel->hotel_name . '/' . $room->room_name . '/'.$bed->bed_name.'/');
+            $path = storage_path('app/public/hotel/' . $hotel->hotel_name . '/' . $room->room_name . '/' . $bed->bed_name . '/');
 
             if (!file_exists($path . $filename)) {
 
@@ -832,7 +836,10 @@ class AdminController extends Controller
         $this->bedRepo->restorebed($bed);
         return redirect()->back();
     }
-
+    public function exportbed()
+    {
+        return Excel::download(new BedsExport, 'beds_list.csv');
+    }
     //-------------------------------------------------------------------------------Bed-----------------------------------------------------------------------//
     //********************************* Monitoring *****************************************************************************************************************************/
 }

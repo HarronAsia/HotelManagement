@@ -11,6 +11,9 @@ use App\Models\User;
 use App\Repositories\User\UserRepositoryInterface;
 use App\Repositories\Profile\ProfileRepositoryInterface;
 
+use Excel;
+
+use App\Exports\UsersExport;
 class UserController extends Controller
 {
     protected $userRepo;
@@ -150,6 +153,11 @@ class UserController extends Controller
     {
         $search_query = $_GET['query'];
         $users = User::where('name', 'LIKE', '%' . $search_query . '%')->get();
-        return view('Admin.Users.lists',compact($users));
+        return view('Admin.Users.lists', compact($users));
+    }
+
+    public function export()
+    {
+        return Excel::download(new UsersExport, 'users_list.csv');
     }
 }

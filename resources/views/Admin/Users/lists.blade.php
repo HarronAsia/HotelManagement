@@ -14,6 +14,9 @@
                             <a href="{{route('admin.users.add')}}">
                                 <button type="button" class="btn btn-sm btn-primary">Add User</button>
                             </a>
+                            <a href="{{route('admin.export.users')}}">
+                                <button type="button" class="btn btn-sm btn-primary">Export Users</button>
+                            </a>
                         </div>
                     </div>
                     <br>

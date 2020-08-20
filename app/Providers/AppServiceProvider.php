@@ -59,6 +59,11 @@ class AppServiceProvider extends ServiceProvider
             \App\Repositories\Bed\BedRepositoryInterface::class,
             \App\Repositories\Bed\BedRepository::class,
         );
+
+        $this->app->singleton(
+            \App\Repositories\Booking_Date\Booking_DateRepositoryInterface::class,
+            \App\Repositories\Booking_Date\Booking_DateRepository::class,
+        );
     }
 
     /**

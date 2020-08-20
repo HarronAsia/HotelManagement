@@ -159,10 +159,16 @@
             <div class="card my-4">
                 <h5 class="card-header">Room Information</h5>
                 <div class="card-body">
-                    <div class="col-lg-12">
-                        <p> <strong>Room on floor:</strong> {{$room->room_floor}}</p>
-                        <p> <strong>Room Number:</strong> {{$room->room_number}}</p>
-                        <p> <strong>Room Price:</strong> {{$room->room_price}}</p>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <p> <strong>Room on floor:</strong> {{$room->room_floor}}</p>
+                            <p> <strong>Room Number:</strong> {{$room->room_number}}</p>
+                            <p> <strong>Room Price:</strong> {{$room->room_price}}</p>
+                        </div>
+                        <div class="col-lg-7">
+                            <p> <strong>Room Condition:</strong> {{$room->room_condition}}</p>
+                            <p> <strong>Room Status:</strong> {{$room->room_status}}</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -181,9 +187,10 @@
             <div class="card my-4">
                 <h5 class="card-header">Other Information</h5>
                 <div class="card-body">
-                        <a class="btn btn-success btn-block" href="{{route('room.reserve',$room->id)}}">Reserve</a>       
+                    <a class="btn btn-success btn-block" href="{{route('room.reserve',$room->id)}}">Reserve</a>
                 </div>
             </div>
+
         </div>
 
     </div>

@@ -14,6 +14,9 @@
                             <a href="{{route('admin.beds.add')}}">
                                 <button type="button" class="btn btn-sm btn-primary">Add Bed</button>
                             </a>
+                            <a href="{{route('admin.export.beds')}}">
+                                <button type="button" class="btn btn-sm btn-primary">Export Bed</button>
+                            </a>
                         </div>
                     </div>
                     <hr>

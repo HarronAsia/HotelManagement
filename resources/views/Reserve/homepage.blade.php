@@ -1,182 +1,220 @@
 @extends('layouts.app')
 @section('content')
 <link href="{{ asset('css/reserve.css') }}" rel="stylesheet" type="text/css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
 <div class="container-fluid register-form top-buffer-1">
     <div class="form">
         <div class="note">
             <p>Booking a place for {{$room->room_name}}</p>
         </div>
-        <form action="#" method="POST">
-            <div class="form-content bk">
+        <form action="{{route('room.booking',$room->id)}}" method="POST" enctype="multipart/form-data">
+            @csrf
 
+            <div class="form-content bk">
+                <input type="hidden" name="bookable_id" value="{{$room->id}}">
+                <input type="hidden" name="user_id" value="{{Auth::user()->id}}">
+                <!-- Personal Information -->
                 <fieldset class="scheduler-border">
                     <legend class="scheduler-border">Personal Information</legend>
                     <div class="row">
                         <div class="col-lg-12">
                             <label for="name">Name</label>
-                            <input type="name" class="form-control" id="name" placeholder="What is your name ?" name="name" value="{{Auth::user()->name}}">
+                            <p class="form-control">{{Auth::user()->name}}</p>
                         </div>
                     </div>
                     <div class="section-to-print" id="section-to-print">
                         <div class="row top-buffer">
                             <div class="col-lg-4">
                                 <label for="email">Email ID</label>
-                                <input type="email" class="form-control" id="email" placeholder="How can we contact you ?" name="email" value="{{Auth::user()->email}}">
+                                <p class="form-control">{{Auth::user()->email}}</p>
                             </div>
                             <div class="col-lg-4">
                                 <label for="dob">Date of Birth</label>
-                                <input name="date" class="form-control" id="dob" onfocus="(this.type='date')" placeholder="{{Auth::user()->profile->dob??''}}" value="{{Auth::user()->profile->dob??''}}" />
+                                <p class="form-control">{{Auth::user()->profile->dob}}</p>
                             </div>
                             <div class="col-lg-4">
                                 <label for="number">Phone Number</label>
-                                <input name="number" class="form-control" id="number" type="tel" placeholder="Please provide your Phone Number" value="{{Auth::user()->profile->number??''}}"/>
+                                <p class="form-control">{{Auth::user()->profile->number}}</p>
                             </div>
 
                         </div>
                         <div class="row top-buffer">
-                            <!-- Address -->
-                            <div class="form-group col-lg-3">
+                            <div class="form-group col-lg-6">
                                 <label for="inputAddress">Address</label>
-                                <input type="text" class="form-control" id="inputAddress" name="add1" placeholder="Please Provide your address" >
+                                <p class="form-control">{{Auth::user()->profile->place}}</p>
                             </div>
-                            <div class="form-group col-lg-3">
-                                <label for="inputCity">City</label>
-                                <input type="text" class="form-control" name="city" id="inputCity">
-                            </div>
-                            <div class="form-group col-lg-3">
-                                <label for="inputState">State</label>
-                                <select id="inputState" class="form-control">
-                                    <option selected>Choose...</option>
-                                    <option>...</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-lg-3">
-                                <label for="inputZip">Zip</label>
-                                <input type="text" class="form-control" name="zip" id="inputZip">
-                            </div>
-                        </div>
-                        <!-- Address -->
-                        <div class="row top-buffer">
-                            <div class="col-sm-4">
-                                <label for="phone">Gender / Sex</label></br>
-                                <label class="radio-inline"><input type="radio" name="sex" value="male" checked>Male</label>
-                                <label class="radio-inline"><input type="radio" name="sex" value="female">Female</label>
-                                <label class="radio-inline"><input type="radio" name="sex" value="transgender">Transgender</label>
-                            </div>
-                        </div>
-                    </div>
-            </div>
-            </fieldset>
-            <!-- Educational Qualification -->
 
-            <fieldset class="scheduler-border">
-                <legend class="scheduler-border">Educational Qualification</legend>
-                <div class="row">
-                    <div class="col-sm-4">
-                        <label for="cname">Collage Name</label>
-                        <input type="name" class="form-control" id="title" placeholder="KITS" name="cname">
+                            <div class="form-group col-lg-2 has-feedback{{ $errors->has('gender') ? ' has-error' : '' }}">
+                                <label for="inputState">Gender</label>
+                                <p class="form-control">{{Auth::user()->profile->gender}}</p>
+                            </div>
+                            <div class="form-group col-lg-2 has-feedback{{ $errors->has('blood') ? ' has-error' : '' }}">
+                                <label for="inputState">Blood Type</label>
+                                <p class="form-control">{{Auth::user()->profile->blood}}</p>
+                            </div>
+                            <div class="form-group col-lg-2 has-feedback{{ $errors->has('relationship') ? ' has-error' : '' }}">
+                                <label for="inputState">Relationship</label>
+                                <p class="form-control">{{Auth::user()->profile->relationship}}</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-sm-4">
-                        <label for="uname">University Name</label>
-                        <input type="name" class="form-control" id="fmane" placeholder="JNTUH" name="uname">
+                </fieldset>
+                <!-- Personal Information -->
+
+
+                <!-- Room Information -->
+
+                <fieldset class="scheduler-border">
+                    <legend class="scheduler-border">Room Information</legend>
+                    <div class="row top-buffer">
+                        <div class="col-lg-12">
+                            <label for="cname">Room Image</label>
+                            @if($room->room_image == NULL)
+                            <img src="{{asset('storage/default.png')}}" alt="img1" class="card-img-top" alt="Card image cap">
+                            @else
+
+                            <img src="{{asset('storage/hotel/'.$room->hotel->hotel_name.'/'.$room->room_name.'/'.$room->room_image.'/')}}" alt="Card image cap" class="card-img-top">
+                            @endif
+                        </div>
                     </div>
-                    <div class="col-sm-4">
-                        <label for="place">Place</label>
-                        <input type="name" class="form-control" id="fmane" placeholder="Manohar" name="place">
+                    <hr>
+                    <div class="row top-buffer">
+                        <div class="col-lg-3">
+                            <label for="percentage">Room Name</label>
+                            <p class="form-control">{{$room->room_name}}</p>
+                        </div>
+                        <div class="col-lg-3">
+                            <label for="percentage">Room Number</label>
+                            <p class="form-control">{{$room->room_number}}</p>
+                        </div>
+                        <div class="col-lg-3">
+                            <label for="percentage">Room Type</label>
+                            <p class="form-control">{{$room->room_type}}</p>
+                        </div>
+                        <div class="col-lg-3">
+                            <label for="percentage">In Hotel</label>
+                            <p class="form-control">{{$room->hotel->hotel_name}}</p>
+                        </div>
+                        <div class="col-lg-12">
+                            <label for="percentage">Description</label>
+                            <p class="form-control">{{$room->room_description}}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="row top-buffer">
-                    <div class="col-sm-2">
-                        <label for="percentage">Percentage %</label>
-                        <input type="number" class="form-control" id="email" placeholder="xyz@xyz.com" name="percentage">
+                </fieldset>
+                <!-- Room Information -->
+
+                <!-- Booking Information -->
+                <fieldset class="scheduler-border">
+                    <legend class="scheduler-border">Booking Date</legend>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            {!!$calendar->calendar()!!}
+
+                            {!! $calendar->script() !!}
+                        </div>
                     </div>
-                    <div class="col-sm-2">
-                        <label for="backlogs">Backlogs</label>
-                        <input name="number" class="form-control" id="dob" type="backlogs" />
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 ">
+                            <div class="form_group has-feedback{{ $errors->has('checkin') ? ' has-error' : '' }}">
+                                <input onfocus="(this.type='date')" class="form-control" name="checkin" placeholder="Checkin">
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 ">
+                            <div class="form_group has-feedback{{ $errors->has('checkout') ? ' has-error' : '' }}">
+                                <input onfocus="(this.type='date')" class="form-control" name="checkout" placeholder="Checkout">
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 ">
+                            <div class="form_group has-feedback{{ $errors->has('time_begin') ? ' has-error' : '' }}">
+                                <input onfocus="(this.type='time')" class="form-control" name="time_begin" placeholder="Time Start">
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 ">
+                            <div class="form_group has-feedback{{ $errors->has('time_end') ? ' has-error' : '' }}">
+                                <input onfocus="(this.type='time')" class="form-control " name="time_end" placeholder="Time End">
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-sm-2">
-                        <label for="phone">Specialization</label>
-                        <select class="form-control" id="sel1">
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                        </select>
+                </fieldset>
+                <!-- Booking Information -->
+
+                <!-- Price  -->
+                <fieldset class="scheduler-border">
+                    <legend class="scheduler-border">Price</legend>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <label for="location">Have you taken any Test Prep?</label>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Options</th>
+                                        <th scope="col">Nightly Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">1</th>
+                                        <td>
+                                            <p>Free Cancellation</p>
+                                            <p>Reserve now, pay when you stay</p>
+                                            <p>Free Parking</p>
+                                            <p>Free Internet</p>
+                                            <p>No Expedia booking or credit card fees</p>
+                                            <p>Free Cancellation</p>
+                                        </td>
+                                        <td>
+                                            <div class="form-check form-check-inline" style="font-size: 25px;">
+                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="695235.00">
+                                                <label class="form-check-label" for="inlineCheckbox1">$30</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">2</th>
+                                        <td>
+                                            <p>Free Cancellation</p>
+                                            <p>Breakfast Included</p>
+                                            <p>Reserve now, pay when you stay</p>
+                                            <p>Free Parking</p>
+                                            <p>Free Internet</p>
+                                            <p>No Expedia booking or credit card fees</p>
+                                            <p>Free Cancellation</p>
+                                        </td>
+                                        <td>
+                                            <div class="form-check form-check-inline" style="font-size: 25px;">
+                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="880631.00">
+                                                <label class="form-check-label" for="inlineCheckbox1">$38</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <div class="col-sm-2">
-                        <label for="phone">Majors / Subjects</label>
-                        <select class="form-control" id="sel1">
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                        </select>
-                    </div>
-                    <div class="col-sm-2">
-                        <label for="yop">Year of Passing</label>
-                        <input name="number" class="form-control" id="dob" type="yop" />
-                    </div>
-                    <div class="col-sm-2">
-                        <label for="phone">Any Work Exp?</label></br>
-                        <div class="radio-inline"><label><input type="radio" name="work" value="yes">Yes</label></div>
-                        <div class="radio-inline"><label><input type="radio" name="work" value="no" checked>No</label></div>
-                    </div>
-                </div>
-            </fieldset>
-            <!--Educational Qualification -->
-            <!-- Study Abroad Plans -->
-            <fieldset class="scheduler-border">
-                <legend class="scheduler-border">Study Abroad Plans</legend>
-                <div class="row">
-                    <div class="col-sm-8">
-                        <label for="cname">Country Intrested For</label>
-                        <label class="checkbox-inline"><input type="checkbox" name="country[]" value="Australia">Australia</label>
-                        <label class="checkbox-inline"><input type="checkbox" name="country[]" value="Canada">Canada</label>
-                        <label class="checkbox-inline"><input type="checkbox" name="country[]" value="UK">UK</label>
-                        <label class="checkbox-inline"><input type="checkbox" name="country[]" value="USA">USA</label>
-                        <label class="checkbox-inline"><input type="checkbox" name="country[]" value="NZ">NZ</label>
-                        <label class="checkbox-inline"><input type="checkbox" name="country[]" value="Italy">Italy</label>
-                        <label class="checkbox-inline"><input type="checkbox" name="country[]" value="Germany">Germany</label>
-                        <input type="checkbox" name="country[]" id="propertytype-8" value="others">
-                        <input id="propertytype_other" name="country[]" type="text" value="" placeholder="other Seperate with coma (,)" class="form-control">
-                    </div>
-                    <div class="col-sm-4">
-                        <label for="location">Location</label>
-                        <input type="name" class="form-control" id="fmane" placeholder="Sydney" name="location">
-                    </div>
-                </div>
-            </fieldset>
-            <!-- Study Abroad Plans -->
-            <!-- Test Prep -->
-            <fieldset class="scheduler-border">
-                <legend class="scheduler-border">Test Prep</legend>
-                <div class="row">
-                    <div class="col-sm-2">
-                        <label for="location">Have you taken any Test Prep?</label>
-                        <div class="radio-inline"><label><input type="radio" name="testprep" value="yes">Yes</label></div>
-                        <div class="radio-inline"><label><input type="radio" name="testprep" value="no" checked>No</label></div>
-                    </div>
-                    <div class="col-sm-6">
-                        <label for="cname">Name of Test Prep</label>
-                        <label class="checkbox-inline"><input type="checkbox" name="tname[]" value="IELTS">IELTS</label>
-                        <label class="checkbox-inline"><input type="checkbox" name="tname[]" value="PTE">PTE</label>
-                        <label class="checkbox-inline"><input type="checkbox" name="tname[]" value="UK">GRE</label>
-                        <label class="checkbox-inline"><input type="checkbox" name="tname[]" value="USA">GMAT</label>
-                        <label class="checkbox-inline"><input type="checkbox" name="tname[]" value="NZ">TOEFL</label>
-                        <input type="checkbox" name="tname[]" id="propertytype-8" value="others"> Others
-                        <input id="propertytype_other" name="tname[]" type="text" value="" placeholder="other Seperate with coma (,)" class="form-control">
-                    </div>
-                    <div class="col-sm-4">
-                        <label for="location">Overall Marks</label>
-                        <input type="number" class="form-control" id="fmane" placeholder="Sydney" name="marks">
-                    </div>
-                </div>
-            </fieldset>
+                </fieldset>
+            </div>
             <!-- Study Abroad Plans -->
             <input type="submit" class="btn btn-success btn-md" value="{{__('Submit')}}">
             <input type="reset" class="btn btn-warning btn-md" value="{{__('Reset')}}">
             <button type="button" class="btn btn-danger btn-md" onclick="window.history.back()">{{__('Cancel')}}</button>
+            @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+
+            @endif
         </form>
     </div>
 </div>
+
 @endsection

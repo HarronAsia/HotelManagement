@@ -16,6 +16,7 @@
         "laravel/framework": "^7.25",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.1",
+        "maatwebsite/excel": "^3.1",
         "propaganistas/laravel-phone": "^4.2",
         "qlick/laravel-full-calendar": "^1.1"
     },

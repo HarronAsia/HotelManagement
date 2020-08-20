@@ -12,7 +12,7 @@ $factory->define(Profile::class, function (Faker $faker) {
         'username' => $faker->userName,
         'number' => $faker->phoneNumber,
         'dob' => Carbon::now(),
-        'gender' => $faker->randomElement(['Male','Female','Not Sure']),
+        'gender' => $faker->randomElement(['Male','Female','Transgender']),
         'place' => $faker->address,
         'job' => $faker->jobTitle,
         'bio' => $faker->paragraph,

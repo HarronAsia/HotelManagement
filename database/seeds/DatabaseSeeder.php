@@ -13,6 +13,7 @@ use App\Models\Category;
 use App\Models\Hotel;
 use App\Models\Room;
 use App\Models\Bed;
+use App\Models\Booking_Date;
 
 class DatabaseSeeder extends Seeder
 {
@@ -23,6 +24,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        ini_set('memory_limit',-1);
         DB::table('users')->insert(
             [
                 'name' => 'harron',
@@ -35,14 +37,15 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => Carbon::now(),
             ]
         );
-
-        factory(User::class, 1000)->create();
-        factory(Profile::class, 1001)->create();
+        
+        factory(User::class, 100)->create();
+        factory(Profile::class, 101)->create();
         factory(Region::class, 6)->create();
         factory(Category::class, 23)->create();
-        factory(Hotel::class, 1000)->create();
-        factory(Room::class, 10000)->create();
-        factory(Bed::class, 10000)->create();
+        factory(Hotel::class, 100)->create();
+        factory(Room::class, 100)->create();
+        factory(Bed::class, 100)->create();
+        factory(Booking_Date::class, 1000)->create();
         // for ($user = 0; $user < 2; $user++) {
         //     factory(User::class, 500)->create();
         // }

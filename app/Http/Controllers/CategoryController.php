@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\Category;
 use App\Models\Hotel;
 use Illuminate\Http\Request;
@@ -9,6 +10,10 @@ use Illuminate\Support\Facades\DB;
 
 use App\Repositories\Hotel\HotelRepositoryInterface;
 use App\Repositories\Category\CategoryRepositoryInterface;
+
+use Excel;
+
+use App\Exports\CategoriesExport;
 
 class CategoryController extends Controller
 {
@@ -105,5 +110,11 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         //
+    }
+
+
+public function export()
+    {
+        return Excel::download(new CategoriesExport, 'categories_list.csv');
     }
 }

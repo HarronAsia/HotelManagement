@@ -9,7 +9,7 @@
                 <div class="col-lg-12">
                     <div class="row">
 
-                        <div class="col-lg-4 col-md-3 col-sm-12 p-0">
+                        <div class="col-lg-6 col-md-3 col-sm-12 p-0">
                             <div class="form_group ">
                                 <select class="form-control search-slt" id="type_query" name="type_query">
                                     <option value="" name="type_query" selected hidden>Room Type</option>
@@ -23,7 +23,7 @@
                             </div>
                         </div>
 
-                        <div class="col-lg-4 col-md-3 col-sm-12 p-0">
+                        <div class="col-lg-6 col-md-3 col-sm-12 p-0">
                             <div class="form_group ">
                                 <select class="form-control search-slt" id="bed_query" name="bed_query">
                                     <option value="" name="bed_query" selected hidden>Bed Type</option>
@@ -34,19 +34,6 @@
                                     <option value="Super Kind Size Bed" name="bed_query">Super Kind Size Bed</option>
                                     <option value="California king bed" name="bed_query">California king bed</option>
                                     <option value="Extra bed" name="bed_query">Extra bed</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-3 col-sm-12 p-0">
-                            <div class="form_group ">
-                                <select class="form-control search-slt" name="room_query" id="room_query">
-                                    <option value="" name="room_query" selected hidden>Room Condition</option>
-                                    <option value="Available" name="room_query">Available</option>
-                                    <option value="Vacant and ready" name="room_query">Vacant and ready</option>
-                                    <option value="Due out" name="room_query">Due out</option>
-                                    <option value="Do Not Paid" name="room_query">Do Not Paid</option>
-                                    <option value="Checkout" name="room_query">Checkout</option>
                                 </select>
                             </div>
                         </div>

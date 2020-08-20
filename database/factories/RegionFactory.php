@@ -4,16 +4,19 @@
 
 use App\Models\Region;
 use Faker\Generator as Faker;
+use Illuminate\Support\Facades\File;
 
 $factory->define(Region::class, function (Faker $faker) {
+    static $number = 1;
+    static $number2 = 1;
+
+    $filepath = storage_path('app/public/region/New Region'.$number2++.'/');
+
+    if(!File::exists($filepath)){
+        File::makeDirectory($filepath);
+    }
     return [
-        'title' => $faker->unique()->randomElement([
-            'New Region 1',
-            'New Region 2',
-            'New Region 3',
-            'New Region 4',
-            'New Region 5',
-            'New Region 6',
-        ])
+        'title' => 'New Region'.$number++,
+        // 'banner'=> $faker->image($filepath,640,480, null, false),
     ];
 });

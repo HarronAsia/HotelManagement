@@ -15,6 +15,17 @@ class User extends Authenticatable
     {
         return $this->hasOne('App\Models\Profile');
     }
+
+    public function date()
+    {
+        return $this->hasOne('App\Models\Booking_Date');
+    }
+
+    public function dates()
+    {
+        return $this->hasMany('App\Models\Booking_Date');
+    }
+
     /**
      * The attributes that are mass assignable.
      *

@@ -22,9 +22,6 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{route('admin.feedback')}}" title="Feedback"><i class="far fa-comment-alt "></i>&ensp; Feedback <i class="far fa-comment-alt shortmenu animate"></i></a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{route('admin.export')}}" title="Export"><i class="fas fa-file-export "></i>&ensp; Export <i class="fas fa-file-export shortmenu animate"></i></a>
-            </li>
         </ul>
 
         <ul class="navbar-nav  mr-auto">

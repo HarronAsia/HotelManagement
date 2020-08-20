@@ -81,4 +81,6 @@ class BedController extends Controller
     {
         //
     }
+
+    
 }

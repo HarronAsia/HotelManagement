@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Repositories\Hotel\HotelRepositoryInterface;
 use App\Repositories\Room\RoomRepositoryInterface;
 
+use Excel;
+
+use App\Exports\HotelsExport;
 class HotelController extends Controller
 {
     protected $hotelRepo;
@@ -110,5 +113,10 @@ class HotelController extends Controller
         $search_query = $_GET['query'];
         $hotels = Hotel::where('hotel_name', 'LIKE', '%' . $search_query . '%')->get();
         return view('Hotels.search',compact('hotels'));
+    }
+
+    public function export()
+    {
+        return Excel::download(new HotelsExport, 'hotels_list.csv');
     }
 }

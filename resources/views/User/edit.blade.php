@@ -184,7 +184,7 @@
                                             <select class="form-control" name="gender" id="gender">
                                                 <option value="Male">{{__('Male')}}</option>
                                                 <option value="Female">{{__('Female')}}</option>
-                                                <option value="Third Party">{{__('Third Party')}}</option>
+                                                <option value="Third Party">{{__('Transgender')}}</option>
                                             </select>
                                         </div>
                                     </span>

@@ -14,6 +14,9 @@
                             <a href="{{route('admin.rooms.add')}}">
                                 <button type="button" class="btn btn-sm btn-primary">Add Room</button>
                             </a>
+                            <a href="{{route('admin.export.rooms')}}">
+                                <button type="button" class="btn btn-sm btn-primary">Export Rooms</button>
+                            </a>
                         </div>
                     </div>
                     <hr>

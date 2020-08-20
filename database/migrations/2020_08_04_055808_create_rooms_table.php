@@ -32,12 +32,6 @@ class CreateRoomsTable extends Migration
             $table->unsignedBigInteger('hotel_id')->nullable();
             $table->foreign('hotel_id')->references('id')->on('hotels')->onDelete('cascade');
 
-            $table->date('date_start')->nullable();
-            $table->time('time_start')->nullable();
-            
-            $table->date('date_end')->nullable();
-            $table->time('time_end')->nullable();
-
             $table->timestamps();
             $table->softDeletes();
         });
