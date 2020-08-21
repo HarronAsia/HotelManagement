@@ -178,6 +178,7 @@ return [
         Intervention\Image\ImageServiceProvider::class,
         LaravelFullCalendar\FullCalendarServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+
     ],
 
     /*

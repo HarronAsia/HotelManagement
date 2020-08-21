@@ -91,7 +91,7 @@
                 <tbody>
                     @foreach($rooms as $room)
                     <tr>
-                        <td><a href="{{route('room.show',$room->id)}}">{{$room->room_name}}</a></td>
+                        <td><a href="{{route('room.show',$room->room_id)}}">{{$room->room_name}}</a></td>
                         <td>
                             @if($room->room_image == NULL)
                             <img src="{{asset('storage/default.png')}}" alt="img1" class="card-img-top" alt="Card image cap" style="width:200px;height:200px;">
@@ -113,7 +113,7 @@
                     @endforeach
                 </tbody>
             </table>
-            {{ $rooms->appends(array(Request::all()))->links() }}
+            
         </div>
     
 </div>

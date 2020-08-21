@@ -31,6 +31,7 @@ class CreateProfilesTable extends Migration
             $table->string('job')->nullable();
             $table->string('blood')->nullable();
             $table->string('relationship')->nullable();
+            $table->integer('balance')->nullable();
             
             $table->longText('bio')->nullable();
 

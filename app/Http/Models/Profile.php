@@ -9,7 +9,7 @@ class Profile extends Model
 {
     use Notifiable;
     protected $fillable = [
-        'username', 'number', 'dob', 'place', 'job', 'blood', 'relationship', 'bio', 'google_plus_link', 'yahoo_link', 'skype_link', 'facebook_link', 'twitter_link', 'instagram_link', 'user_id',
+        'username', 'number', 'dob', 'place', 'job', 'blood', 'relationship', 'bio', 'google_plus_link', 'yahoo_link', 'skype_link', 'facebook_link', 'twitter_link', 'instagram_link', 'user_id','balance'
     ];
 
     public function user()

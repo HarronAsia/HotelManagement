@@ -35,6 +35,7 @@ class StoreProfile extends FormRequest
             'blood' => '',
             'relationship' => '',
             'bio' => '',
+            'balance' => '',
             'google_plus_link' => '',
             'yahoo_link' => '',
             'skype_link' => '',

@@ -5,10 +5,8 @@ namespace App\Repositories\Comment;
 interface CommentRepositoryInterface
 {
     public function showall();
-    public function showallonPost($id);
-
-    public function showComment($id);
-
-    public function deletecomment($id);
-    public function restorecomment($id);
+    public function showallonRoom($room);
+    public function showComment($comment);
+    public function deletecomment($comment);
+    public function restorecomment($comment);
 }

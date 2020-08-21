@@ -4,7 +4,7 @@ namespace App\Repositories\Follower;
 interface FollowerRepositoryInterface
 {
     
-    public function showfollowers($community);
+    public function showfollowers($room);
 
-    public function showfollowerCommunity($id,$community);
+    public function showfollowerRoom($id,$room);
 }

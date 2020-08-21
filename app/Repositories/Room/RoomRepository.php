@@ -26,7 +26,7 @@ class RoomRepository extends BaseRepository implements RoomRepositoryInterface
 
     public function showall()
     {
-        return $this->model = Room::withTrashed()->get();
+        return $this->model = Room::withTrashed()->orderBy('booking_time','desc')->where('room_condition','Available')->get();
     }
 
     public function paginate()

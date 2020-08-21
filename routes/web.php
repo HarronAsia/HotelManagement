@@ -136,4 +136,18 @@ Route::group([
     Route::get('/{id}/images', 'RoomController@images')->name('room.images');
     Route::get('/{room}/reserve', 'RoomController@reserve')->name('room.reserve');
     Route::post('/{room}/booking', 'RoomController@booking')->name('room.booking');
+    Route::get('/{room}/{user}/like','RoomController@like')->name('room.like');
+    Route::get('/{room}/{user}/unlike','RoomController@unlike')->name('room.unlike');
+    Route::get('/{room}/{user}/follow','RoomController@follow')->name('room.follow');
+    Route::get('/{room}/{user}/unfollow','RoomController@unfollow')->name('room.unfollow');
+    Route::post('/{room}/{user}/comment','RoomController@comment')->name('room.comment');
+});
+
+
+
+
+Route::group([
+    'prefix' => 'Assignment2',
+], function () {
+    Route::any('/search', 'Assignment2@search')->name('assignment2.search');
 });

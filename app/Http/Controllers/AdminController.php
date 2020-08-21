@@ -2,37 +2,38 @@
 
 namespace App\Http\Controllers;
 
-use LaravelFullCalendar\Facades\Calendar;
 use Excel;
-
-use App\Exports\RegionsExport;
-use App\Exports\BedsExport;
-
-use App\Models\User;
-use App\Models\Profile;
-use App\Models\Region;
-use App\Models\Category;
-use App\Models\Hotel;
-use App\Models\Room;
 use App\Models\Bed;
 
-use App\Http\Requests\StoreAdmin;
-use App\Http\Requests\StoreRegion;
-use App\Http\Requests\StoreCategory;
-use App\Http\Requests\StoreHotel;
-use App\Http\Requests\StoreRoom;
-use App\Http\Requests\StoreBed;
+use App\Models\Room;
+use App\Models\User;
+
+use App\Models\Hotel;
+use App\Models\Region;
+use App\Models\Profile;
+use App\Models\Category;
+use App\Exports\BedsExport;
 use App\Models\Booking_Date;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
-use App\Repositories\User\UserRepositoryInterface;
-use App\Repositories\Profile\ProfileRepositoryInterface;
-use App\Repositories\Region\RegionRepositoryInterface;
-use App\Repositories\Category\CategoryRepositoryInterface;
-use App\Repositories\Hotel\HotelRepositoryInterface;
-use App\Repositories\Room\RoomRepositoryInterface;
+use App\Exports\RegionsExport;
+use App\Http\Requests\StoreBed;
+use App\Http\Requests\StoreRoom;
+use App\Http\Requests\StoreAdmin;
+use App\Http\Requests\StoreHotel;
+use App\Http\Requests\StoreRegion;
+use App\Http\Requests\StoreCategory;
+use Illuminate\Support\Facades\Auth;
+use LaravelFullCalendar\Facades\Calendar;
+
 use App\Repositories\Bed\BedRepositoryInterface;
+use App\Repositories\Room\RoomRepositoryInterface;
+use App\Repositories\User\UserRepositoryInterface;
+use App\Repositories\Hotel\HotelRepositoryInterface;
+use LaravelDaily\LaravelCharts\Classes\LaravelChart;
+use App\Repositories\Region\RegionRepositoryInterface;
+use App\Repositories\Profile\ProfileRepositoryInterface;
+use App\Repositories\Category\CategoryRepositoryInterface;
 
 class AdminController extends Controller
 {
@@ -67,7 +68,16 @@ class AdminController extends Controller
     //********************************* SideBar *****************************************************************************************************************************/
     public function dashboard()
     {
-        return view('Admin.dashboard');
+        $users = $this->userRepo->showAll();
+
+        $regions = $this->regionRepo->showall();
+        $categories = $this->categoryRepo->showAll();
+        $hotels = $this->hotelRepo->showAll();
+        $rooms = $this->roomRepo->showall();
+        $beds = $this->bedRepo->showall();
+
+    
+        return view('Admin.dashboard', compact('users', 'regions', 'categories', 'hotels', 'rooms', 'beds'));
     }
 
     public function monitoring()

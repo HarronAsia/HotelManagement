@@ -25,7 +25,8 @@ class StoreImage extends FormRequest
     {
         return [
             'filename' => 'required',
-            'filename.*' =>'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'filename.*.file' =>'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'room_id' => 'required',
         ];
     }
 }

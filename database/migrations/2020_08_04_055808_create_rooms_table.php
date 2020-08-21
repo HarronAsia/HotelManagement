@@ -25,6 +25,7 @@ class CreateRoomsTable extends Migration
             $table->string('room_status');
             $table->longText('room_description');
 
+            $table->integer('booking_time')->nullable();
             
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

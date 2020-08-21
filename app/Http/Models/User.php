@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use App\Models\Room;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -14,6 +14,11 @@ class User extends Authenticatable
     public function profile()
     {
         return $this->hasOne('App\Models\Profile');
+    }
+
+    public function following()
+    {
+        return $this->belongsToMany(Room::class, 'followers', 'follower_id', 'following_id')->withTimestamps();
     }
 
     public function date()

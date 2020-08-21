@@ -5,7 +5,7 @@ namespace App\Repositories\Follower;
 use App\Models\Follower;
 use App\Repositories\BaseRepository;
 
-use App\Models\Community;
+use App\Models\Room;
 
 
 class FollowerRepository extends BaseRepository implements FollowerRepositoryInterface
@@ -16,16 +16,16 @@ class FollowerRepository extends BaseRepository implements FollowerRepositoryInt
         return \App\Models\Follower::class;
     }
 
-    public function showfollowers($community)
+    public function showfollowers($room)
     {
-         $community = Community::findOrFail($community); 
+         $room = Room::findOrFail($room); 
         
-         return $this->model =  $community->followers();
+         return $this->model =  $room->followers();
                
     }
-    public function showfollowerCommunity($id,$community)
+    public function showfollowerRoom($id,$room)
     {          
-        return $this->model =  Follower::ofFollowerId($id)->ofFollowingId($community)->first();
+        return $this->model =  Follower::ofFollowerId($id)->ofFollowingId($room)->first();
     }
 
 }

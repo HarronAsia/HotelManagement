@@ -64,6 +64,16 @@ class AppServiceProvider extends ServiceProvider
             \App\Repositories\Booking_Date\Booking_DateRepositoryInterface::class,
             \App\Repositories\Booking_Date\Booking_DateRepository::class,
         );
+
+        $this->app->singleton(
+            \App\Repositories\Follower\FollowerRepositoryInterface::class,
+            \App\Repositories\Follower\FollowerRepository::class,
+        );
+
+        $this->app->singleton(
+            \App\Repositories\Comment\CommentRepositoryInterface::class,
+            \App\Repositories\Comment\CommentRepository::class,
+        );
     }
 
     /**
@@ -73,7 +83,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Builder::macro('whereLike', function ($attributes, string $searchTerm) {
+        Builder::macro('whereLike', function ($attributes, string $searchTerm) { 
             $this->where(function (Builder $query) use ($attributes, $searchTerm) {
                 foreach (array_wrap($attributes) as $attribute) {
                     $query->when(

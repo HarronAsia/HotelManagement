@@ -18,28 +18,28 @@ class CommentRepository extends BaseRepository implements CommentRepositoryInter
         return $this->model = Comment::withTrashed()->paginate(5);
     }
 
-    public function showallonPost($id)
+    public function showallonRoom($room)
     {
-        return $this->model = Comment::withTrashed()->ofPost($id)->get();
+        return $this->model = Comment::withTrashed()->ofRoom($room)->get();
     }
 
-    public function showComment($id)
+    public function showComment($comment)
     {
-        return $this->model = Comment::findOrFail($id);
+        return $this->model = Comment::findOrFail($comment);
     }
 
-    public function deletecomment($id)
+    public function deletecomment($comment)
     {
         
-        $this->model = Comment::findOrFail($id);
+        $this->model = Comment::findOrFail($comment);
         
         return $this->model->delete();
     }
 
-    public function restorecomment($id)
+    public function restorecomment($comment)
     {
        
-        return $this->model = Comment::onlyTrashed()->ofId($id)->restore();
+        return $this->model = Comment::onlyTrashed()->ofId($comment)->restore();
                   
     }
    

@@ -408,3 +408,11 @@ ol li {
 
 
 /*************************************  Detail ******************************************/
+
+.camera {
+    height: 100%;
+    border: none;
+    font-size: 15px;
+    background-color: #338EB5;
+    color: white;
+}

@@ -5,14 +5,22 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use App\Repositories\User\UserRepositoryInterface;
+use App\Repositories\Room\RoomRepositoryInterface;
+use App\Repositories\Follower\FollowerRepositoryInterface;
 
 class FollowerController extends Controller
 {
 
- 
-    public function __construct()
+    protected $userRepo;
+    protected $roomRepo;
+    protected $followerRepo;
+
+    public function __construct(UserRepositoryInterface $userRepo, RoomRepositoryInterface $roomRepo, FollowerRepositoryInterface $followerRepo)
     {
-       
+        $this->userRepo = $userRepo;
+        $this->roomRepo = $roomRepo;
+        $this->followerRepo = $followerRepo;
     }
     /**
      * Display a listing of the resource.
@@ -90,14 +98,26 @@ class FollowerController extends Controller
         //
     }
 
-    public function follow()
+    public function follow($room, $user)
     {
 
+        $room = $this->roomRepo->showRoom($room);
+
+        $user = $this->userRepo->showUser($user);
+
+        $user->following()->attach($room);
+
+        return redirect()->back();
     }
 
-    public function unfollow()
+    public function unfollow($room, $userid)
     {
 
-      
+        $room = $this->roomRepo->showRoom($room);
+        $user = $this->userRepo->showUser($userid);
+
+        $user->following()->detach($room);
+
+        return redirect()->back();
     }
 }

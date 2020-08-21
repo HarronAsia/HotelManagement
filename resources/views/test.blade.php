@@ -1,32 +1,62 @@
-<!doctype html>
-<html lang="en">
+<div class="col-md-4">
+            <h1>{{ $chart1->options['chart_title'] }}</h1>
+            {!! $chart1->renderHtml() !!}
 
-<head>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" />
-    <style>
-        /* ... */
-    </style>
-</head>
-
-<body>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Calendar</div>
-
-                    <div class="panel-body">
-                        {!! $calendar->calendar() !!}
-                        {!! $calendar->script() !!}
-                    </div>
-                </div>
-            </div>
         </div>
-    </div>
+        <div class="col-md-4">
+            <h1>{{ $chart2->options['chart_title'] }}</h1>
+            {!! $chart2->renderHtml() !!}
 
-</body>
 
-</html>
+        </div>
+        <div class="col-md-4">
+            <h1>{{ $chart3->options['chart_title'] }}</h1>
+            {!! $chart3->renderHtml() !!}
+
+        </div>
+
+        {!! $chart1->renderChartJsLibrary() !!}
+{!! $chart1->renderJs() !!}
+{!! $chart3->renderJs() !!}
+{!! $chart2->renderJs() !!}
+        $chart_options = [
+            'chart_title' => 'Booking Room By Week',
+            'chart_type' => 'line',
+            'report_type' => 'group_by_date',
+            'model' => 'App\Models\Booking_Date',
+
+            'group_by_field' => 'checkin',
+            'group_by_period' => 'week',
+            'filter_field' => 'checkin',
+            'group_by_field_format' => 'Y-m-d',
+            
+        ];
+        $chart1 = new LaravelChart($chart_options);
+
+        $chart_options = [
+            'chart_title' => 'Booking Room by Month',
+            'chart_type' => 'line',
+            'report_type' => 'group_by_date',
+            'model' => 'App\Models\Booking_Date',
+
+            'group_by_field' => 'checkin',
+            'group_by_period' => 'month',
+            'filter_field' => 'checkin',
+            'group_by_field_format' => 'Y-m-d',
+            
+        ];
+        $chart2 = new LaravelChart($chart_options);
+
+        $chart_options = [
+            'chart_title' => 'Booking Room by Year',
+            'chart_type' => 'line',
+            'report_type' => 'group_by_date',
+            'model' => 'App\Models\Booking_Date',
+
+            'group_by_field' => 'checkin',
+            'group_by_period' => 'year',
+            'filter_field' => 'checkin',
+            'group_by_field_format' => 'Y-m-d',
+            
+        ];
+        $chart3 = new LaravelChart($chart_options);

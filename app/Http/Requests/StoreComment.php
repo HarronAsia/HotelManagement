@@ -22,7 +22,8 @@ class StoreComment extends FormRequest
      * @return array
      */
     public function rules()
-    {  
+    {
+        
         return [
             'comment_detail' => 'required',
             'comment_image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',

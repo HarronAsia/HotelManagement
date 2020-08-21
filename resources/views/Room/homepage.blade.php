@@ -2,8 +2,12 @@
 @section('content')
 <link href="{{ asset('css/room.css') }}" rel="stylesheet" type="text/css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js'></script>
 
+<!--Latest JQuery Light Gallery -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/1.7.3/css/lightgallery.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/1.7.3/js/lightgallery.min.js"></script>
+<!--Latest JQuery Light Gallery -->
 <!-- Page Content -->
 <div class="container-fluid">
 
@@ -18,7 +22,30 @@
             <!-- Author -->
             <p class="lead">
                 by
+
                 <a href="{{route('profile.view',$room->user->name)}}">{{$room->user->name}}</a>
+                @guest
+                <a href="{{route('login')}}" class="btn btn-info">{{__('Follow')}}</a>
+                @else
+                @if ($follower->follower_id?? '' == Auth::user()->id)
+                <a href="{{route('room.unfollow',['room'=>$room->id,'user'=>Auth::user()->name])}}" class="btn btn-info pull-right"><i class="fa fa-bell-slash-o"></i>&ensp;{{__('Unfollow')}}</a>
+                @else
+                <a href="{{route('room.follow',['room'=>$room->id,'user'=>Auth::user()->name])}}" class="btn btn-info pull-right"><i class="fa fa-bell"></i>&ensp;{{__('Follow')}}</a>
+                @endif
+                @endif
+
+                @guest
+                <a href="{{route('login')}}" class="card-link"><i class="far fa-thumbs-up"></i> {{__('Like')}}&ensp;{{$room->likes->count()}}</a>
+                @else
+                @if($room->like->user_id??'' == Auth::user()->id)
+                <a href="{{route('room.unlike',['room' => $room->id, 'user'=>Auth::user()->name])}}" class="btn btn-info pull-right"><i class="fas fa-thumbs-up"></i></i> {{__('Like')}}&ensp;{{$room->likes->count()}}</a>
+                @else
+                <a href="{{route('room.like',['room' => $room->id,'user'=>Auth::user()->name])}}" class="btn btn-info pull-right"><i class="far fa-thumbs-up"></i> {{__('Like')}}&ensp;{{$room->likes->count()}}</a>
+                @endif
+                @endif
+
+
+
             </p>
 
             <hr>
@@ -46,7 +73,7 @@
                         <h3 class="h3">Other Images of the room</h3>
                     </div>
                     <div class="col-md-4">
-
+                        <a href="{{route('room.images',$room->id)}}" class="btn btn-primary">Add more Images</a>
                     </div>
                 </div>
 
@@ -54,6 +81,9 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div id="news-slider2" class="owl-carousel">
+                            @if($room->images == NULL)
+
+                            @else
                             <div class="post-slide2">
                                 <div class="post-img">
                                     <img src="http://bestjquery.com/tutorial/news-slider/demo33/images/img-1.jpg" alt="">
@@ -77,6 +107,7 @@
                                     <a href="#"><img src="http://bestjquery.com/tutorial/news-slider/demo33/images/img-4.jpg" alt=""></a>
                                 </div>
                             </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -87,54 +118,69 @@
 
             {!! $calendar->script() !!}
             <hr>
+            @guest
+
+            @else
             <!-- Comments Form -->
             <div class="card my-4">
                 <h5 class="card-header">Leave a Comment:</h5>
                 <div class="card-body">
-                    <form>
+                    <form action="{{route('room.comment',['room'=>$room->id,'user'=>Auth::user()->name])}}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <input type="hidden" name="user_id" value="{{Auth::user()->id}}">
                         <div class="form-group">
-                            <textarea class="form-control" rows="6"></textarea>
+                            <textarea class="form-control" name="comment detail" rows="6"></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <div class="form-group">
+                            <input type="file" id="comment_image" name="comment_image" />
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+
+                        <div id="image_preview"></div>
+                        @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+
+                        @endif
                     </form>
                 </div>
             </div>
+            @endif
 
+            @foreach($comments as $comment)
             <!-- Single Comment -->
             <div class="media mb-4">
-                <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+                @if($user->profile->avatar_image??'' == NULL)
+                <img src="{{asset('storage/user.png')}}" class="d-flex mr-3 rounded-circle" style="width: 50px; height:50px;">
+                @else
+                <img src="{{asset('storage/user/'.$user->name.'/image'.'/'.$user->profile->avatar_image).'/'}}" class="d-flex mr-3 rounded-circle" style="width:50px; height:50px;">
+                @endif
                 <div class="media-body">
-                    <h5 class="mt-0">Commenter Name</h5>
-                    Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                </div>
-            </div>
+                    <h5 class="mt-0">{{$comment->user->name}}</h5>
+                    <div id="#lightgallery">
+                        <p>{{$comment->comment_detail}}</p>
+                        @if($comment->comment_image == NULL)
+                        <div>
 
-            <!-- Comment with nested comments -->
-            <div class="media mb-4">
-                <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-                <div class="media-body">
-                    <h5 class="mt-0">Commenter Name</h5>
-                    Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-
-                    <div class="media mt-4">
-                        <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-                        <div class="media-body">
-                            <h5 class="mt-0">Commenter Name</h5>
-                            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
                         </div>
+                        @else
+                        <div >
+                            <img src="{{asset('storage/hotel/'.$room->hotel->hotel_name.'/'.$room->room_name.'/comment'.'/'.$comment->user->name.'/'.$comment->comment_image)}}" style="width:350px; height:350px;">
+                        </div>
+
+                        @endif
                     </div>
 
-                    <div class="media mt-4">
-                        <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-                        <div class="media-body">
-                            <h5 class="mt-0">Commenter Name</h5>
-                            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                        </div>
-                    </div>
 
                 </div>
-            </div>
 
+            </div>
+            @endforeach
         </div>
 
         <!-- Sidebar Widgets Column -->
@@ -187,7 +233,11 @@
             <div class="card my-4">
                 <h5 class="card-header">Other Information</h5>
                 <div class="card-body">
+                    @if(Auth::guest())
+                    <a class="btn btn-success btn-block" href="{{route('login')}}">Reserve</a>
+                    @else
                     <a class="btn btn-success btn-block" href="{{route('room.reserve',$room->id)}}">Reserve</a>
+                    @endif
                 </div>
             </div>
 
@@ -195,8 +245,10 @@
 
     </div>
     <!-- /.row -->
-
+    <hr>
 </div>
+
 <!-- /.container -->
 <script src="{{ asset('js/room.js') }}"></script>
+
 @endsection

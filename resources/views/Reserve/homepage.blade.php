@@ -170,7 +170,7 @@
                                         </td>
                                         <td>
                                             <div class="form-check form-check-inline" style="font-size: 25px;">
-                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="695235.00">
+                                                <input class="form-check-input" name="balance" type="checkbox" id="inlineCheckbox1" value="695235.00">
                                                 <label class="form-check-label" for="inlineCheckbox1">$30</label>
                                             </div>
                                         </td>
@@ -188,7 +188,7 @@
                                         </td>
                                         <td>
                                             <div class="form-check form-check-inline" style="font-size: 25px;">
-                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="880631.00">
+                                                <input class="form-check-input" name="balance" type="checkbox" id="inlineCheckbox1" value="880631.00">
                                                 <label class="form-check-label" for="inlineCheckbox1">$38</label>
                                             </div>
                                         </td>

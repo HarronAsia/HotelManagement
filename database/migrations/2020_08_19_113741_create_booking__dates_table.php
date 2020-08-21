@@ -16,10 +16,10 @@ class CreateBookingDatesTable extends Migration
         Schema::create('booking__dates', function (Blueprint $table) {
             $table->id();
 
-            $table->date('checkin');
-            $table->date('checkout');
-            $table->time('time_begin');
-            $table->time('time_end');
+            $table->date('checkin')->nullable();
+            $table->date('checkout')->nullable();
+            $table->time('time_begin')->nullable();
+            $table->time('time_end')->nullable();
 
             $table->morphs('bookable');
             $table->unsignedBigInteger('user_id')->nullable();

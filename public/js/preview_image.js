@@ -10,6 +10,11 @@ $(document).ready(function() {
         PreviewImage(this);
     });
 
+    $(".camera #comment_image").change(function(e) {
+        e.preventDefault();
+        PreviewImage(this);
+    });
+
     function PreviewImage(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -22,4 +27,6 @@ $(document).ready(function() {
         }
     }
     /**********************************Image Preview *******************************/
+
+
 });

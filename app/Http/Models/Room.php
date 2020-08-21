@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
@@ -42,13 +43,40 @@ class Room extends Model
 
     public function date()
     {
-        return $this->morphOne('App\Models\Booking_Date','bookable');
+        return $this->morphOne('App\Models\Booking_Date', 'bookable');
     }
 
     public function dates()
     {
-        return $this->morphMany('App\Models\Booking_Date','bookable');
+        return $this->morphMany('App\Models\Booking_Date', 'bookable');
     }
+
+    // users that follow this user
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'followers', 'following_id', 'follower_id');
+    }
+
+    public function likes()
+    {
+        return $this->morphMany('App\Models\Like', 'likeable');
+    }
+
+    public function like()
+    {
+        return $this->morphOne('App\Models\Like', 'likeable');
+    }
+
+    public function comment()
+    {
+        return $this->morphOne('App\Models\Comment', 'commentable');
+    }
+
+    public function comments()
+    {
+        return $this->morphMany('App\Models\Comment', 'commentable');
+    }
+
 
     //*********************************mutator************************************************************************************************************
 
@@ -103,19 +131,19 @@ class Room extends Model
 
     public function scopeOfAll($query, $room1, $room2, $room3, $room4, $room5, $room6)
     {
-        
+
         $query = Room::query()
+
+            ->join('beds', 'rooms.id', '=', 'beds.room_id')
+            ->join('booking__dates', 'rooms.id', '=', 'booking__dates.bookable_id')
+            ->whereLike('checkin', $room1)
+            ->whereLike('checkout', $room2)
+            ->whereLike('time_begin', $room3)
+            ->whereLike('time_end', $room4)
+            ->whereLike('room_type', $room5)
+            ->whereLike('bed_type', $room6)
+            ->whereLike('room_condition', 'Available')->get();
         
-        ->join('beds', 'rooms.id', '=', 'beds.room_id')
-        ->join('booking__dates','rooms.id', '=', 'booking__dates.bookable_id')  
-        ->whereLike('checkin',$room1)
-        ->whereLike('checkout',$room2)
-        ->whereLike('time_begin',$room3)
-        ->whereLike('time_end',$room4)
-        ->whereLike('room_type',$room5)
-        ->whereLike('bed_type',$room6)
-        ->whereLike('room_condition','Available');
-        //dd($query);
         return $query;
     }
     //*********************************Search************************************************************************************************************//

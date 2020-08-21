@@ -27,17 +27,9 @@
             <li class="about-items"><i class="mdi mdi-mail-ru icon-sm "></i><span class="about-item-name">username:</span><span class="about-item-detail">{{$user->profile->username??''}}</span> </li>
             <li class="about-items"><i class="mdi mdi-format-align-left icon-sm "></i><span class="about-item-name">Bio:</span><span class="about-item-detail">{{$user->profile->bio??''}}.</span> </li>
 
-            <li class="about-items"><i class="mdi mdi-trophy-variant-outline icon-sm "></i><span class="about-item-name">Badges:</span><span class="about-item-detail">
-                    <button type="button" class="btn btn-success btn-rounded btn-icon">
-                        <i class="mdi mdi-star text-white"></i>
-                    </button>
-                    <button type="button" class="btn btn-info btn-rounded btn-icon">
-                        <i class="mdi mdi-check text-white"></i>
-                    </button>
-                    <button type="button" class="btn btn-danger btn-rounded btn-icon">
-                        <i class="mdi mdi-check text-white"></i>
-                    </button>
-                </span> </li>
+            <li class="about-items"><i class="mdi mdi-trophy-variant-outline icon-sm "></i><span class="about-item-name">Has Paid:</span><span class="about-item-detail">
+                    <span class="about-item-detail">{{$user->profile->balance??''}}</span>
+            </li>
 
         </ul>
         <p class="card-description">Contact Information</p>
