@@ -9,20 +9,18 @@ use App\Models\Room;
 use App\Models\User;
 
 use App\Models\Hotel;
-use App\Models\Region;
 use App\Models\Profile;
-use App\Models\Category;
 use App\Exports\BedsExport;
 use App\Models\Booking_Date;
 use Illuminate\Http\Request;
 
-use App\Exports\RegionsExport;
 use App\Http\Requests\StoreBed;
 use App\Http\Requests\StoreRoom;
 use App\Http\Requests\StoreAdmin;
 use App\Http\Requests\StoreHotel;
-use App\Http\Requests\StoreRegion;
-use App\Http\Requests\StoreCategory;
+use App\Imports\HuyenImport;
+use App\Imports\TinhImport;
+use App\Imports\XaImport;
 use Illuminate\Support\Facades\Auth;
 use LaravelFullCalendar\Facades\Calendar;
 
@@ -31,16 +29,13 @@ use App\Repositories\Room\RoomRepositoryInterface;
 use App\Repositories\User\UserRepositoryInterface;
 use App\Repositories\Hotel\HotelRepositoryInterface;
 use LaravelDaily\LaravelCharts\Classes\LaravelChart;
-use App\Repositories\Region\RegionRepositoryInterface;
 use App\Repositories\Profile\ProfileRepositoryInterface;
-use App\Repositories\Category\CategoryRepositoryInterface;
+
 
 class AdminController extends Controller
 {
     protected $userRepo;
     protected $profileRepo;
-    protected $regionRepo;
-    protected $categoryRepo;
     protected $hotelRepo;
     protected $roomRepo;
     protected $bedRepo;
@@ -48,8 +43,6 @@ class AdminController extends Controller
     public function __construct(
         UserRepositoryInterface $userRepo,
         ProfileRepositoryInterface $profileRepo,
-        RegionRepositoryInterface $regionRepo,
-        CategoryRepositoryInterface $categoryRepo,
         HotelRepositoryInterface $hotelRepo,
         RoomRepositoryInterface $roomRepo,
         BedRepositoryInterface $bedRepo
@@ -58,8 +51,6 @@ class AdminController extends Controller
 
         $this->userRepo = $userRepo;
         $this->profileRepo = $profileRepo;
-        $this->regionRepo = $regionRepo;
-        $this->categoryRepo = $categoryRepo;
         $this->hotelRepo = $hotelRepo;
         $this->roomRepo = $roomRepo;
         $this->bedRepo = $bedRepo;
@@ -70,25 +61,21 @@ class AdminController extends Controller
     {
         $users = $this->userRepo->showAll();
 
-        $regions = $this->regionRepo->showall();
-        $categories = $this->categoryRepo->showAll();
         $hotels = $this->hotelRepo->showAll();
         $rooms = $this->roomRepo->showall();
         $beds = $this->bedRepo->showall();
 
-    
-        return view('Admin.dashboard', compact('users', 'regions', 'categories', 'hotels', 'rooms', 'beds'));
+
+        return view('Admin.dashboard', compact('users',  'hotels', 'rooms', 'beds'));
     }
 
     public function monitoring()
     {
         $users = $this->userRepo->showAll();
-        $regions = $this->regionRepo->showall();
-        $categories = $this->categoryRepo->showAll();
         $hotels = $this->hotelRepo->showAll();
         $rooms = $this->roomRepo->showall();
         $beds = $this->bedRepo->showall();
-        return view('Admin.monitoring', compact('users', 'regions', 'categories', 'hotels', 'rooms', 'beds'));
+        return view('Admin.monitoring', compact('users',  'hotels', 'rooms', 'beds'));
     }
 
 
@@ -302,196 +289,6 @@ class AdminController extends Controller
     }
     //-------------------------------------------------------------------------------USER-----------------------------------------------------------------------//
 
-    //-------------------------------------------------------------------------------Region-----------------------------------------------------------------------//
-    public function regions()
-    {
-        if (isset($_GET['query'])) {
-            $search_query = $_GET['query'];
-            $regions = $this->regionRepo->search($search_query);
-            return view('Admin.Regions.lists', compact('regions'));
-        } else {
-            $regions = $this->regionRepo->paginate();
-            return view('Admin.Regions.lists', compact('regions'));
-        }
-    }
-
-    public function addregion()
-    {
-        return view('Admin.Regions.add');
-    }
-
-    public function storeregion(StoreRegion $request)
-    {
-        $data = $request->validated();
-
-        $region = new Region();
-
-        $region->title = $data['title'];
-
-        if ($request->hasFile('banner')) {
-
-            $extension = $data['banner']->getClientOriginalExtension();
-            $filename = $data['title'] . '.' . $extension;
-            $path = storage_path('app/public/region/' . $data['title'] . '/');
-
-            $data['banner']->move($path, $filename);
-        }
-        $data['banner'] = $filename;
-        $region->banner = $data['banner'];
-
-        $region->save();
-
-        return redirect()->route('admin.regions');
-    }
-
-    public function editregion($region)
-    {
-        $region = $this->regionRepo->showRegion($region);
-        return view('Admin.Regions.edit', compact('region'));
-    }
-
-    public function updateregion(StoreRegion $request, $region)
-    {
-        $data = $request->validated();
-
-        $region = $this->regionRepo->showRegion($region);
-        $region->title = $data['title'];
-        $oldbanner = $region->banner;
-        if ($request->hasFile('banner')) {
-
-            $extension = $data['banner']->getClientOriginalExtension();
-            $filename = $region->title . '.' . $extension;
-            $path = storage_path('app/public/region/' . $region->title . '/');
-
-            if (!file_exists($path . $filename)) {
-
-                $data['banner']->move($path, $filename);
-            } elseif (!file_exists($path . $oldbanner)) {
-
-                $data['banner']->move($path, $filename);
-                unlink($path . $oldbanner);
-            }
-        }
-        $data['banner'] = $filename;
-        $region->banner = $data['banner'];
-
-        $region->save();
-
-        return redirect()->route('admin.regions');
-    }
-
-    public function destroyregion($region)
-    {
-        $this->regionRepo->destroyRegion($region);
-        return redirect()->back();
-    }
-
-    public function restoreregion($region)
-    {
-        $this->regionRepo->restoreRegion($region);
-        return redirect()->back();
-    }
-
-    //-------------------------------------------------------------------------------Region-----------------------------------------------------------------------//
-
-
-    //-------------------------------------------------------------------------------CATEGORY-----------------------------------------------------------------------//
-    public function categories()
-    {
-        if (isset($_GET['query'])) {
-            $search_query = $_GET['query'];
-            $categories = $this->categoryRepo->search($search_query);
-            return view('Admin.Categories.lists', compact('categories'));
-        } else {
-            $categories = $this->categoryRepo->paginate();
-            return view('Admin.Categories.lists', compact('categories'));
-        }
-    }
-
-    public function addcategory()
-    {
-        return view('Admin.Categories.add');
-    }
-
-    public function storecategory(StoreCategory $request)
-    {
-        $data = $request->validated();
-
-        $category = new Category();
-
-        $category->title = $data['title'];
-
-        if ($request->hasFile('banner')) {
-
-            $extension = $data['banner']->getClientOriginalExtension();
-            $filename = $data['title'] . '.' . $extension;
-            $path = storage_path('app/public/category/' . $data['title'] . '/');
-
-            $data['banner']->move($path, $filename);
-        }
-        $data['banner'] = $filename;
-        $category->banner = $data['banner'];
-
-        $category->save();
-
-        return redirect()->route('admin.categories');
-    }
-
-    public function editcategory($category)
-    {
-        $category = $this->categoryRepo->showCategory($category);
-        return view('Admin.Categories.edit', compact('category'));
-    }
-
-    public function updatecategory(StoreCategory $request, $category)
-    {
-        $data = $request->validated();
-
-        $category = $this->categoryRepo->showCategory($category);
-        $category->title = $data['title'];
-        $oldbanner = $category->banner;
-        if ($request->hasFile('banner')) {
-
-            $extension = $data['banner']->getClientOriginalExtension();
-            $filename = $category->title . '.' . $extension;
-            $path = storage_path('app/public/category/' . $category->title . '/');
-
-            if (!file_exists($path . $filename)) {
-
-                $data['banner']->move($path, $filename);
-            } elseif (!file_exists($path . $oldbanner)) {
-
-                $data['banner']->move($path, $filename);
-                unlink($path . $oldbanner);
-            }
-        }
-        $data['banner'] = $filename;
-        $category->banner = $data['banner'];
-
-        $category->save();
-
-        return redirect()->route('admin.categories');
-    }
-
-    public function destroycategory($category)
-    {
-        $this->categoryRepo->destroyCategory($category);
-        return redirect()->back();
-    }
-
-    public function restorecategory($category)
-    {
-        $this->categoryRepo->restoreCategory($category);
-        return redirect()->back();
-    }
-
-    public function export()
-    {
-        return Excel::download(new RegionsExport, 'regions_list.csv');
-    }
-
-    //-------------------------------------------------------------------------------CATEGORY-----------------------------------------------------------------------//
-
     //-------------------------------------------------------------------------------HOTEL-----------------------------------------------------------------------//
     public function hotels()
     {
@@ -522,8 +319,6 @@ class AdminController extends Controller
         $hotel->hotel_description = $data['hotel_description'];
         $hotel->hotel_address = $data['hotel_address'];
         $hotel->user_id = $data['user_id'];
-        $hotel->category_id = $data['category_id'];
-        $hotel->region_id = $data['region_id'];
 
         if ($request->hasFile('hotel_image')) {
 
@@ -559,8 +354,6 @@ class AdminController extends Controller
         $hotel->hotel_description = $data['hotel_description'];
         $hotel->hotel_address = $data['hotel_address'];
         $hotel->user_id = $data['user_id'];
-        $hotel->category_id = $data['category_id'];
-        $hotel->region_id = $data['region_id'];
 
         $old_hotel_image = $hotel->hotel_image;
         if ($request->hasFile('hotel_image')) {
@@ -852,4 +645,32 @@ class AdminController extends Controller
     }
     //-------------------------------------------------------------------------------Bed-----------------------------------------------------------------------//
     //********************************* Monitoring *****************************************************************************************************************************/
+
+    //********************************* Searching *****************************************************************************************************************************/
+    public function searching()
+    {
+        return view('Admin.Location.search');
+    }
+
+    public function Tinhimport(Request $request) 
+    {
+        $file = $request->file('excel');
+        Excel::import(new TinhImport, $file);
+        return redirect()->back();
+    }
+
+    public function Huyenimport(Request $request) 
+    {
+        $file = $request->file('excel');
+        Excel::import(new HuyenImport, $file);
+        return redirect()->back();
+    }
+
+    public function Xaimport(Request $request) 
+    {
+        $file = $request->file('excel');
+        Excel::import(new XaImport, $file);
+        return redirect()->back();
+    }
+    //********************************* Searching *****************************************************************************************************************************/
 }

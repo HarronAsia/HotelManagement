@@ -22,12 +22,6 @@ class HotelRepository extends BaseRepository implements HotelRepositoryInterface
         return $this->model = Hotel::OfName($hotel)->paginate(100);
     }
 
-    public function searchOnCategory($hotel,$category)
-    {
-      
-        return $this->model = Hotel::OfCategoryId($category)->OfName($hotel)->paginate(100);
-    }
-
     public function showall()
     {
         return $this->model = Hotel::withTrashed()->get();
@@ -36,11 +30,6 @@ class HotelRepository extends BaseRepository implements HotelRepositoryInterface
     public function paginate()
     {
         return $this->model = Hotel::withTrashed()->paginate(6);
-    }
-
-    public function showalloncategory($id)
-    {
-        return $this->model = Hotel::where('category_id',$id)->orderBy('created_at','desc')->paginate(6);
     }
 
     public function showHotel($hotel)

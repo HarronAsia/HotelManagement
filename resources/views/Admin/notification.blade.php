@@ -1,5 +1,6 @@
 @extends('layouts.admin.app')
 
+@section('title','Notification')
 @section('content')
 <div class="container-fluid">
     <div class="row">

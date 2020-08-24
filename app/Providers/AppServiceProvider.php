@@ -22,18 +22,6 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->app->singleton(
-            \App\Repositories\Region\RegionRepositoryInterface::class,
-            \App\Repositories\Region\RegionRepository::class,
-
-        );
-
-        $this->app->singleton(
-            \App\Repositories\Category\CategoryRepositoryInterface::class,
-            \App\Repositories\Category\CategoryRepository::class,
-
-        );
-
-        $this->app->singleton(
             \App\Repositories\Profile\ProfileRepositoryInterface::class,
             \App\Repositories\Profile\ProfileRepository::class,
 

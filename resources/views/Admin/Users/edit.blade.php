@@ -1,5 +1,6 @@
 @extends('layouts.admin.app')
 
+@section('title','Edit User')
 @section('content')
 <link href="{{ asset('css/admin/users/main.css') }}" rel="stylesheet" type="text/css">
 <div class="container register-form top-buffer-1">

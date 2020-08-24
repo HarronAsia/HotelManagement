@@ -1,5 +1,6 @@
 @extends('layouts.admin.app')
 
+@section('title','List of Beds')
 @section('content')
 <div class="container-fluid" style="max-width:100%">
     <div class="row">
@@ -47,7 +48,13 @@
                                     <tr>
                                         <td><small>{{$bed->bed_name}}</small></td>
                                         <td><small>{{$bed->bed_type}}</small></td>
-                                        <td><small>{{$bed->bed_image}}</small></td>
+                                        <td>
+                                            @if($bed->bed_image == NULL)
+                                            <img id="image_preview_container" src="{{asset('storage/default.png')}}" class="form-control" alt="preview Room Image">
+                                            @else
+                                            <img src="{{asset('storage/hotel/'.$bed->room->hotel->hotel_name.'/'.$bed->room->room_name.'/'.$bed->bed_name.'/'.$bed->bed_image)}}" alt="Card image cap" class="form-control">
+                                            @endif
+                                        </td>
                                         <td><small>{{$bed->room->room_name}}</small></td>
                                         <td><small>{{$bed->created_at}}</small></td>
                                         <td><small>{{$bed->updated_at}}</small></td>
@@ -70,7 +77,7 @@
                 </div>
             </div>
             {{$beds->links()}}
-        </div>      
+        </div>
     </div>
 </div>
 @endsection

@@ -55,19 +55,7 @@
                     </div>
                     <div class="section-to-print" id="section-to-print">
                         <div class="row top-buffer">
-                            <div class="col-md-6">
-                                <div class="form-group has-feedback{{ $errors->has('hotel_type') ? ' has-error' : '' }}">
-                                    <label for="hotel_type">Type</label>
-
-                                    <select class="form-control " name="user_id" id="user_id" required>
-                                        @foreach($categories as $category)
-                                        <option value="{{$category->id}}" selected>{{$category->title}}</option>
-                                        @endforeach
-                                    </select>
-
-                                </div>
-                            </div>
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div class="form-group has-feedback{{ $errors->has('user_id') ? ' has-error' : '' }}">
                                     <label for="user_id">Owner</label>
                                     <select class="form-control " name="user_id" id="user_id" required>

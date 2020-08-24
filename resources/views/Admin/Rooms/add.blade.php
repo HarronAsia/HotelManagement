@@ -1,5 +1,6 @@
 @extends('layouts.admin.app')
 
+@section('title','Add Room')
 @section('content')
 <link href="{{ asset('css/admin/users/main.css') }}" rel="stylesheet" type="text/css">
 <div class="container register-form top-buffer-1">
@@ -55,17 +56,7 @@
                     </div>
                     <div class="section-to-print" id="section-to-print">
                         <div class="row top-buffer">
-                            <div class="col-md-6">
-                                <div class="form-group has-feedback{{ $errors->has('category_id') ? ' has-error' : '' }}">
-                                    <label for="hotel_id">In Hotel</label>
-                                    <select class="form-control " name="hotel_id" id="hotel_id" required>
-                                        @foreach($hotels as $hotel)
-                                        <option value="{{$hotel->id}}" selected>{{$hotel->hotel_name}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div class="form-group has-feedback{{ $errors->has('user_id') ? ' has-error' : '' }}">
                                     <label for="user_id">Customer Name</label>
                                     <select class="form-control " name="user_id" id="user_id" required>
@@ -133,7 +124,7 @@
                                 <select class="form-control " name="room_type" id="room_type" required>
                                     <option value="Single" selected>Single</option>
                                     <option value="Couple">Couple</option>
-                                    <option value="Four People">Four People</option>
+                                    <option value="Three or Four People">Three or Four People</option>
                                     <option value="Family">Family</option>
                                     <option value="Business">Business</option>
                                     <option value="For Disabled">For Disabled</option>

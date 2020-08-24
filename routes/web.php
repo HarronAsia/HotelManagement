@@ -43,22 +43,6 @@ Route::group([
         Route::get('/user/{user}/destroy', 'AdminController@destroyuser')->name('admin.users.destroy');
         Route::get('/user/{user}/restore', 'AdminController@restoreuser')->name('admin.users.restore');
 
-        Route::get('/regions', 'AdminController@regions')->name('admin.regions');
-        Route::get('/regions/add', 'AdminController@addregion')->name('admin.regions.add');
-        Route::post('/regions/store', 'AdminController@storeregion')->name('admin.regions.store');
-        Route::get('/regions/{region}/edit', 'AdminController@editregion')->name('admin.regions.edit');
-        Route::post('/regions/{region}/update', 'AdminController@updateregion')->name('admin.regions.update');
-        Route::get('/regions/{region}/destroy', 'AdminController@destroyregion')->name('admin.regions.destroy');
-        Route::get('/regions/{region}/restore', 'AdminController@restoreregion')->name('admin.regions.restore');
-
-        Route::get('/categories', 'AdminController@categories')->name('admin.categories');
-        Route::get('/categories/add', 'AdminController@addcategory')->name('admin.categories.add');
-        Route::post('/categories/store', 'AdminController@storecategory')->name('admin.categories.store');
-        Route::get('/categories/{category}/edit', 'AdminController@editcategory')->name('admin.categories.edit');
-        Route::post('/categories/{category}/update', 'AdminController@updatecategory')->name('admin.categories.update');
-        Route::get('/categories/{category}/destroy', 'AdminController@destroycategory')->name('admin.categories.destroy');
-        Route::get('/categories/{category}/restore', 'AdminController@restorecategory')->name('admin.categories.restore');
-
         Route::get('/hotels', 'AdminController@hotels')->name('admin.hotels');
         Route::get('/hotels/add', 'AdminController@addhotel')->name('admin.hotels.add');
         Route::post('/hotels/store', 'AdminController@storehotel')->name('admin.hotels.store');
@@ -88,11 +72,18 @@ Route::group([
         'prefix' => 'export',
     ], function () {
         Route::get('/users', 'UserController@export')->name('admin.export.users');
-        Route::get('/regions', 'AdminController@export')->name('admin.export.regions');
-        Route::get('/categories', 'CategoryController@export')->name('admin.export.categories');
         Route::get('/hotels', 'HotelController@export')->name('admin.export.hotels');
         Route::get('/rooms', 'RoomController@export')->name('admin.export.rooms');
         Route::get('/beds', 'AdminController@exportbed')->name('admin.export.beds');
+    });
+
+    Route::group([
+        'prefix' => 'searching',
+    ], function (){
+        Route::get('/','AdminController@searching')->name('admin.searching');
+        Route::post('/tinh','AdminController@Tinhimport')->name('admin.tinh.import');
+        Route::post('/huyen','AdminController@Huyenimport')->name('admin.huyen.import');
+        Route::post('/xa','AdminController@Xaimport')->name('admin.xa.import');
     });
 });
 
@@ -108,15 +99,10 @@ Route::group([
 });
 
 Route::group([
-    'prefix' => 'Region',
-], function () {
-    Route::get('/{region}/homepage', 'RegionController@index')->name('region.index');
-});
-
-Route::group([
     'prefix' => 'Category',
 ], function () {
-    Route::get('/{category}/homepage', 'CategoryController@index')->name('category.index');
+    Route::get('/{category}/homepage', 'BedController@index')->name('category.index');
+    Route::get('/{category}/search', 'BedController@search')->name('category.search');
 });
 
 Route::group([
@@ -142,8 +128,6 @@ Route::group([
     Route::get('/{room}/{user}/unfollow','RoomController@unfollow')->name('room.unfollow');
     Route::post('/{room}/{user}/comment','RoomController@comment')->name('room.comment');
 });
-
-
 
 
 Route::group([

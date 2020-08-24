@@ -11,7 +11,7 @@ class Hotel extends Model
     use Notifiable, SoftDeletes;
 
     protected $fillable = [
-        'hotel_name', 'hotel_description', 'hotel_type', 'hotel_address', 'hotel_latitude','hotel_longitude', 'hotel_image', 'user_id', 'category_id','region_id'
+        'hotel_name', 'hotel_description', 'hotel_type', 'hotel_address', 'hotel_latitude','hotel_longitude', 'hotel_image', 'user_id'
     ];
 
     public function user()

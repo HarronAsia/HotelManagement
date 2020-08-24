@@ -39,6 +39,14 @@ class RoomRepository extends BaseRepository implements RoomRepositoryInterface
         return $this->model = Room::where('hotel_id',$id)->orderBy('created_at','desc')->paginate(6);
     }
 
+    public function showallroomonBed($bed)
+    {
+       
+        return $this->model = Room::query()->join('beds', 'rooms.id', '=', 'beds.room_id')
+        ->select(['rooms.id', 'rooms.room_name', 'rooms.room_type', 'rooms.room_condition', 'beds.bed_type', 'rooms.room_description'])
+        ->where('bed_type',$bed)->orderBy('rooms.created_at','desc')->paginate(6);
+    }
+
     public function showRoom($room)
     {
         return $this->model = Room::OfId($room)->first();

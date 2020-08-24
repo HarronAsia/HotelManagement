@@ -1,5 +1,6 @@
 @extends('layouts.admin.app')
 
+@section('title','Lists of Rooms')
 @section('content')
 <div class="container-fluid" style="max-width:100%">
     <div class="row">
@@ -34,7 +35,6 @@
                                     <tr>
                                         <th>Name</th>
                                         <th>Customer</th>
-                                        <th>In Hotel</th>
                                         <th>Condition</th>
                                         <th>Status</th>
                                         <th>Created At</th>
@@ -48,7 +48,6 @@
                                     <tr>
                                         <td><a href="{{route('room.show',$room->id)}}"><small>{{$room->room_name}}</small></td>
                                         <td><small>{{$room->user->name}}</small></td>
-                                        <td><small>{{$room->hotel->hotel_name}}</small></td>
                                         <td><small>{{$room->room_condition}}</small></td>
                                         <td><small>{{$room->room_status}}</small></td>
                                         <td><small>{{$room->created_at}}</small></td>

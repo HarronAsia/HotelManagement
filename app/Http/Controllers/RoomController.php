@@ -214,6 +214,7 @@ class RoomController extends Controller
 
             return view('Room.search', compact('rooms'));
         }
+        
     }
 
     public function reserve($room)

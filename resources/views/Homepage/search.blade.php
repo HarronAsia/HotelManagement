@@ -1,3 +1,4 @@
+<link href="{{ asset('css/HomePage/search.css') }}" rel="stylesheet" type="text/css">
 <section class="search-sec">
     <form method="GET" action="{{route('room.search')}}">
 

@@ -18,7 +18,6 @@
             <th>Time End</th>
 
             <th>Customer</th>
-            <th>In Hotel</th>
            
             <th>Created On</th>
             <th>Last Update</th>
@@ -45,7 +44,6 @@
             <td>{{$room->date->time_end}}</td>
            
             <td>{{$room->user->name??''}}</td>
-            <td>{{$room->hotel->hotel_name??''}}</td>
            
             <td>{{$room->created_at}}</td>
             <td>{{$room->updated_at}}</td>

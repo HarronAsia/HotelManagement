@@ -1,3 +1,4 @@
+<link href="{{ asset('css/HomePage/Background_video.css') }}" rel="stylesheet" type="text/css">
 <!--********************************************************************************* Video *******************************************************-->
 <section class="video-sec">
     <div class="overlay-wcs"></div>
@@ -7,8 +8,8 @@
     <div class="container h-100">
         <div class="d-flex h-100 text-center align-items-center">
             <div class="w-100 text-white">
-                <h1>Hotel Booking in Viet Nam</h1>
-                <p class="lead mb-0">is easier than ever</p>
+                <h1>Hotel Name</h1>
+                <p class="lead mb-0">Hotel Motto</p>
             </div>
         </div>
     </div>

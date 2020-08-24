@@ -14,8 +14,6 @@ $factory->define(Hotel::class, function (Faker $faker) {
         'hotel_description' => $faker->sentence(),
         'hotel_address' => $faker->address,
         'user_id' => rand(1,100),
-        'category_id' => rand(1,24),
-        'region_id' => rand(1,6),
         'created_at' => Carbon::now(),
         'updated_at' => Carbon::now()
     

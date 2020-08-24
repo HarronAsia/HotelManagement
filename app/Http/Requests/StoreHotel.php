@@ -29,7 +29,6 @@ class StoreHotel extends FormRequest
             'hotel_address' => 'required',
             'hotel_image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'user_id' => 'required',
-            'category_id' => 'required',
         ];
     }
 }

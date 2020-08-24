@@ -1,44 +1,162 @@
 @extends('layouts.app')
 
+@section('title',$bed)
+
 @section('content')
-<link href="{{ asset('css/Category_Homepage.css')}}" rel="stylesheet" type="text/css">
-<div class="container-fluid ">
-    <div class="row">
-        <form class="form-inline my-2 my-lg-0" method="GET" action="{{route('category.index',$category->title)}}">
-            <div class="form-group">
-                <input class="form-control mr-sm-2" type="search" name="query" id="search_text" placeholder="{{__('Search')}}" aria-label="{{__('Search')}}">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">{{__('Search')}}</button>
+<script src="https://www.cssscript.com/demo/animated-customizable-range-slider-pure-javascript-rslider-js/js/rSlider.min.js"></script>
+<link href="{{ asset('css/Category.css') }}" rel="stylesheet" type="text/css">
+<script src="{{ asset('js/Category.js') }}"></script>
+<section class="listings">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <div class="card bg-warning">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h3>Search</h3>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+
+                                        <form method="GET" action="{{route('category.search',$bed)}}">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" placeholder="Enter the name" id="name_query" name="name_query">
+                                            </div>
+                                            <div class="form-group">
+                                                <select class="form-control" id="floor_query" name="floor_query">
+                                                    <option name="floor_query" value="" hidden>Floor</option>
+                                                    <option name="floor_query" value="1">1</option>
+                                                    <option name="floor_query" value="2">2</option>
+                                                    <option name="floor_query" value="3">3</option>
+                                                    <option name="floor_query" value="4">4</option>
+                                                    <option name="floor_query" value="5">5</option>
+                                                    <option name="floor_query" value="6">6</option>
+                                                    <option name="floor_query" value="7">7</option>
+                                                    <option name="floor_query" value="8">8</option>
+                                                    <option name="floor_query" value="9">9</option>
+                                                    <option name="floor_query" value="10">10</option>
+                                                    <option name="floor_query" value="11">11</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group ">
+                                                <div class="form-group search-slt" id="type_query" name="type_query">
+                                                    <label for="room_type">Room Type:</label>
+                                                    <select class="form-control " name="type_query" id="type_query" required>
+                                                        <option value="Single" name="type_query" selected>Single</option>
+                                                        <option value="Couple" name="type_query">Couple</option>
+                                                        <option value="Three or Four People" name="type_query">Three or Four People</option>
+                                                        <option value="Family" name="type_query">Family</option>
+                                                        <option value="Business" name="type_query">Business</option>
+                                                        <option value="For Disabled" name="type_query">For Disabled</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="price">
+                                                    <h4>Price</h4>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <input type="number" min=100000 max="1000000" id="min_price" class="form-control" name="min_price" />
+                                                        </div>
+                                                        <div class="col">
+                                                            <input type="number" min=100000 max="1000000" id="max_price" class="form-control" name="max_price" />
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                            </div>
+
+                                            <hr>
+                                            <button type="submit" class="btn btn-primary">Find Now</button>
+                                            <button type="reset" class="btn btn-primary">Reset All</button>
+                                            <div class="pb-3"></div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </form>
-    </div>
-    <div class="row mt-30">
+            <div class="col-md-9">
+                <div class="row">
+                    <div class="col-md-12">
+                        <ul class="nav nav-justified nav-pills">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#">Default</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link bg-light" href="#">Most Rated Room</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link bg-light" href="#">Newest Room</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link bg-light" href="#">Cheapest Room</a>
+                            </li>
 
-        @foreach($hotels as $hotel)
-        <div class="col-sm-12 col-md-6">
+                        </ul>
+                    </div>
+                </div>
+                @foreach($rooms as $room)
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        @if($room->room_image == NULL)
+                                        <img id="image_preview_container" src="{{asset('storage/default.png')}}" alt="preview Room Image" style="width: 200px;height:200px;">
+                                        @else
+                                        <img src="{{asset('storage/hotel/'.$room->hotel->hotel_name.'/'.$room->room_name.'/'.$room->room_image.'/')}}" alt="Card image cap" style="width: 200px;height:200px;">
+                                        @endif
+                                    </div>
+                                    <div class="col-md-6  card-body">
+                                        <div class="list-title">
+                                            <ul class="list-inline list-unstyled">
+                                                <li class="list-inline-item"><a href="{{route('room.show',$room->id)}}">
+                                                        <h4>{{$room->room_name}}</h4>
+                                                    </a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="list-descrip">
+                                            <small>{{$room->room_description}}</small>
+                                        </div>
 
-            <div class="box20 blue">
-                @if($hotel->hotel_image == NULL)
-                <img src="{{asset('storage/default.png')}}" alt="Hotel Image" style="width:400px;height:400px;">
-                @else
-                <img id="image_preview_container" src="{{asset('storage/hotel/'.$hotel->hotel_name.'/'.$hotel->hotel_image.'/')}}" class="form-control" alt="preview Hotel Image" style="width:400px;height:400px;">
-                @endif
-                <div class="box-content">
-                    <i class="fas fa-hotel circle-icon"></i>
-                    <h3 class="title">{{$hotel->hotel_name}}</h3>
-                    <h4 style="color:aqua;">Tags: {{$hotel->category->title}}</h4>
-                    <p>{{$hotel->created_at}}</p>
-                    <p> <small>{{$hotel->hotel_address}}</small></p>
-                    <p> <small>{{\Illuminate\Support\Str::limit($hotel->hotel_description,45)}}</small></p>
-                    <p>
-                        <a class="btn btn-secondary" href="{{route('hotel.index',$hotel->id)}}">View</a>
-                    </p>
 
+
+                                    </div>
+                                    <div class="col-md-3 border-left card-body">
+                                        <ul class="list-unstyled">
+                                            <li>
+                                                <h3>Very Good</h3>
+                                            </li>
+                                            <li class="text-secondary"><small>8067 Reviews </small></li>
+                                        </ul>
+                                        <a href="{{route('room.show',$room->id)}}">
+                                            <button type="button" class="btn btn-outline-primary">Book Now</button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <small> {{$rooms->count()}} properties found in Reno. </small>
+                    </div>
+                    {{$rooms->links()}}
                 </div>
             </div>
         </div>
-        @endforeach
     </div>
-    {{$hotels->links()}}
-</div>
+</section>
 
 @endsection

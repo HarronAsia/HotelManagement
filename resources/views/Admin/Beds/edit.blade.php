@@ -1,5 +1,6 @@
 @extends('layouts.admin.app')
 
+@section('title','Edit Bed')
 @section('content')
 <link href="{{ asset('css/admin/users/main.css') }}" rel="stylesheet" type="text/css">
 <div class="container register-form top-buffer-1">
@@ -75,13 +76,12 @@
                                     <label for="bed_type">Customer Name</label>
                                     <select class="form-control " name="bed_type" id="bed_type" required>
                                         <option value="{{$bed->bed_type}}" selected>{{$bed->bed_type}}</option>
-                                        <option value="Single Bed"></option>
-                                        <option value="Double Bed"></option>
-                                        <option value="Queen Size Bed"></option>
-                                        <option value="King size Bed"></option>
-                                        <option value="Super Kind Size Bed"></option>
-                                        <option value="California king bed"></option>
-                                        <option value="Extra bed"></option>
+                                        <option value="Single Bed">Single Bed</option>
+                                        <option value="Double Bed">Double Bed</option>
+                                        <option value="Queen Size Bed">Queen Size Bed</option>
+                                        <option value="King size Bed">King size Bed</option>
+                                        <option value="Super Kind Size Bed">Super Kind Size Bed</option>
+                                        <option value="California king bed">California king bed</option>
                                     </select>
                                 </div>
                             </div>

@@ -1,5 +1,6 @@
 @extends('layouts.admin.app')
 
+@section('title','List of Users')
 @section('content')
 <div class="container-fluid" style="max-width:100%">
     <div class="row">

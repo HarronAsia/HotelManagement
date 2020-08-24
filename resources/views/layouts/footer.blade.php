@@ -1,3 +1,4 @@
+<link href="{{ asset('css/HomePage/footer.css') }}" rel="stylesheet" type="text/css">
 <footer class="footer">
     <div class="container bottom_border">
         <div class="row">

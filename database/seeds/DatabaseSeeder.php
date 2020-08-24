@@ -40,32 +40,11 @@ class DatabaseSeeder extends Seeder
         
         factory(User::class, 100)->create();
         factory(Profile::class, 101)->create();
-        factory(Region::class, 6)->create();
-        factory(Category::class, 23)->create();
-        factory(Hotel::class, 100)->create();
-        factory(Room::class, 100)->create();
-        factory(Bed::class, 100)->create();
+        factory(Hotel::class, 3)->create();
+        factory(Room::class, 10000)->create();
+        factory(Bed::class, 10000)->create();
         factory(Booking_Date::class, 10000)->create();
-        // for ($user = 0; $user < 2; $user++) {
-        //     factory(User::class, 500)->create();
-        // }
-        // for ($user = 0; $user < 2; $user++) {
-        //     factory(Profile::class, 500)->create();
-        // }
-
-        // factory(Region::class, 6)->create();
-        // factory(Category::class, 7)->create();
-
-        // for ($user = 0; $user < 2; $user++) {
-        //     factory(Hotel::class, 500)->create();
-        // }
-        // for ($user = 0; $user < 2; $user++) {
-        //     factory(Room::class, 500)->create();
-        // }
-        // for ($user = 0; $user < 2; $user++) {
-        //     factory(Bed::class, 500)->create();
-        // }
-
+        
 
 
 

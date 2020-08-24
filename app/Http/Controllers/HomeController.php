@@ -6,9 +6,8 @@ use App\Models\Room;
 
 use LaravelFullCalendar\Facades\Calendar;
 use Illuminate\Http\Request;
-use App\Repositories\Category\CategoryRepositoryInterface;
-use App\Repositories\Region\RegionRepositoryInterface;
 use App\Repositories\Room\RoomRepositoryInterface;
+use App\Repositories\Bed\BedRepositoryInterface;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -20,15 +19,13 @@ class HomeController extends Controller
      *
      * @return void
      */
-    protected $categoryRepo;
-    protected $regionRepo;
     protected $roomRepo;
+    protected $bedRepo;
 
-    public function __construct(CategoryRepositoryInterface $categoryRepo, RegionRepositoryInterface $regionRepo, RoomRepositoryInterface $roomRepo)
+    public function __construct(RoomRepositoryInterface $roomRepo,BedRepositoryInterface $bedRepo)
     {
-        $this->categoryRepo = $categoryRepo;
-        $this->regionRepo = $regionRepo;
         $this->roomRepo = $roomRepo;
+        $this->bedRepo = $bedRepo;
     }
 
     public function admin(Request $req)
@@ -47,10 +44,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $categories = $this->categoryRepo->showall();
-        $regions = $this->regionRepo->showall();
+
         $rooms = $this->roomRepo->showall();
-        return view('home', compact('categories', 'regions','rooms'));
+        $beds = $this->bedRepo->showall();
+        return view('home', compact('rooms','beds'));
     }
 
 

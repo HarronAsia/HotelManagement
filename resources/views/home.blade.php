@@ -8,11 +8,10 @@
 
 @include('Homepage.search')
 
-@include('Homepage.Hotel_Slide')
+@include('Homepage.Room_Slide')
 
-@include('Homepage.Hotel_Categories')
+@include('Homepage.Category_Slide')
 
-@include('Homepage.Hotel_Region')
+@include('Homepage.services')
 
-<hr>
 @endsection

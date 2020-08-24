@@ -1,3 +1,4 @@
+<link href="{{ asset('css/HomePage/navbar.css') }}" rel="stylesheet" type="text/css">
 <nav class="navbar navbar-icon-top navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="{{route('home')}}">
         <img src="{{asset('storage/cybridgeasia.png')}}" alt="England Flag" style="width: 50px;">

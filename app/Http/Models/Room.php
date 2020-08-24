@@ -129,21 +129,43 @@ class Room extends Model
         return $query->whereHotelId($room);
     }
 
+
     public function scopeOfAll($query, $room1, $room2, $room3, $room4, $room5, $room6)
     {
 
         $query = Room::query()
-
             ->join('beds', 'rooms.id', '=', 'beds.room_id')
+            ->whereLike('room_type', $room5)
+            ->whereLike('bed_type', $room6)
+            ->whereLike('room_condition', 'Available')
+            ->distinct()
             ->join('booking__dates', 'rooms.id', '=', 'booking__dates.bookable_id')
             ->whereLike('checkin', $room1)
             ->whereLike('checkout', $room2)
             ->whereLike('time_begin', $room3)
             ->whereLike('time_end', $room4)
-            ->whereLike('room_type', $room5)
-            ->whereLike('bed_type', $room6)
-            ->whereLike('room_condition', 'Available')->get();
-        
+            ->select(['rooms.id', 'rooms.room_name', 'rooms.room_type', 'rooms.room_condition', 'beds.bed_type', 'rooms.room_description'])
+            ->paginate(6);
+
+        return $query;
+    }
+
+    public function scopeOfAll2($query, $bed, $room1, $room2, $room3, $room4, $room5)
+    {
+       
+        $query = Room::query()
+            ->join('beds', 'rooms.id', '=', 'beds.room_id')
+            ->whereLike('room_name', $room1)
+            ->whereLike('room_floor', $room2)
+            ->whereLike('room_type', $room3)
+            ->whereLike('room_price', $room4)
+            ->whereLike('room_price', $room5)
+            ->whereLike('room_condition', 'Available')
+            ->whereLike('bed_type', $bed)
+            ->distinct()
+            ->select(['rooms.id', 'rooms.room_name', 'rooms.room_type', 'rooms.room_condition', 'beds.bed_type', 'rooms.room_description'])
+            ->paginate(6);
+
         return $query;
     }
     //*********************************Search************************************************************************************************************//

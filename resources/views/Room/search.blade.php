@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title','Result')
+
 @section('content')
 <div class="container-fluid">
     <h1>Search Results</h1>
@@ -84,14 +86,13 @@
                         <th scope="col">Type</th>
                         <th scope="col">Bed Type</th>
                         <th scope="col">Condition</th>
-                        <th scope="col">Hotel</th>
                         <th scope="col">Description</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($rooms as $room)
                     <tr>
-                        <td><a href="{{route('room.show',$room->room_id)}}">{{$room->room_name}}</a></td>
+                        <td><a href="{{route('room.show',$room->id)}}">{{$room->room_name}}</a></td>
                         <td>
                             @if($room->room_image == NULL)
                             <img src="{{asset('storage/default.png')}}" alt="img1" class="card-img-top" alt="Card image cap" style="width:200px;height:200px;">
@@ -103,11 +104,6 @@
                         <td>{{$room->room_type}}</td>
                         <td>{{$room->bed->bed_type??''}}</td>
                         <td>{{$room->room_condition}}</td>
-                        <td>
-                            <a href="{{route('hotel.index',$room->hotel->id)}}}">
-                                {{$room->hotel->hotel_name}}
-                            </a>
-                        </td>
                         <td>{{\Illuminate\Support\Str::limit($room->room_description,260)}}</td>
                     </tr>
                     @endforeach

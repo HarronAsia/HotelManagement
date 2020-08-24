@@ -2,20 +2,51 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Room;
 use Illuminate\Http\Request;
+use App\Repositories\Room\RoomRepositoryInterface;
 
 class BedController extends Controller
 {
+    protected $roomRepo;
+
+    public function __construct(RoomRepositoryInterface $roomRepo)
+    {
+        $this->roomRepo = $roomRepo;
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($bed)
     {
-        //
+        $rooms = $this->roomRepo->showallroomonBed($bed);
+        return view('Category.homepage', compact('rooms', 'bed'));
     }
 
+    public function search($bed)
+    {
+
+        if (
+            isset($_GET['name_query']) or isset($_GET['floor_query']) or isset($_GET['type_query'])
+            or isset($_GET['min_price']) or isset($_GET['max_price'])
+        ) {
+            $query = $_GET['name_query'];
+            $query2 = $_GET['floor_query'];
+            $query3 = $_GET['type_query'];
+            $query4 = $_GET['min_price'];
+            $query5 = $_GET['max_price'];
+
+            $rooms = Room::OfAll2($bed, $query, $query2, $query3, $query4, $query5);
+            // ->paginate(6);
+            // $rooms->appends(array(['start_date_query'=>$query,'end_date_query'=>$query2,
+            //                         'start_time_query'=>$query3,'end_time_query'=>$query4,
+            //                         'type_query'=>$query5,'bed_query'=>$query6,'room_query'=>$query7]));
+
+            return view('Category.homepage', compact('rooms', 'bed'));
+        } 
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -81,6 +112,4 @@ class BedController extends Controller
     {
         //
     }
-
-    
 }

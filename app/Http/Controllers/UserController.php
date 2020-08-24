@@ -14,6 +14,7 @@ use App\Repositories\Profile\ProfileRepositoryInterface;
 use Excel;
 
 use App\Exports\UsersExport;
+
 class UserController extends Controller
 {
     protected $userRepo;
@@ -88,9 +89,13 @@ class UserController extends Controller
 
     public function edit_profile($user, $profile)
     {
-        $profile = $this->profileRepo->showProfile($profile);
-        $user = $this->userRepo->showUser($user);
-        return view('User.edit', compact('user', 'profile'));
+        if (Auth::user()->name != $user) {
+            return redirect()->route('profile.show', Auth::user()->name);
+        } else {
+            $profile = $this->profileRepo->showProfile($profile);
+            $user = $this->userRepo->showUser($user);
+            return view('User.edit', compact('user', 'profile'));
+        }
     }
 
     public function update_profile(StoreProfile $request, $user, $profile)
