@@ -43,7 +43,7 @@ class DatabaseSeeder extends Seeder
         factory(Hotel::class, 3)->create();
         factory(Room::class, 10000)->create();
         factory(Bed::class, 10000)->create();
-        factory(Booking_Date::class, 10000)->create();
+        factory(Booking_Date::class, 20000)->create();
         
 
 

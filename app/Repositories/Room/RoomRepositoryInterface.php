@@ -15,4 +15,8 @@ interface RoomRepositoryInterface
     public function showRoom($room);
     public function destroyRoom($room);
     public function restoreRoom($room);
+
+    public function calendarperYear();
+    public function perMonth();
+    public function perYear();
 }

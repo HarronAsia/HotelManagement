@@ -1,17 +1,13 @@
 <?php
 
-namespace App\Repositories\User;
+namespace App\Repositories\Location\Tĩnh;
 
-interface UserRepositoryInterface
+interface TĩnhRepositoryInterface
 {
-    public function search($user);
-    
-    public function showall();
+
+    public function showAll();
     public function paginate();
     
-    public function showUser($user);
-    public function destroyUser($user);
-    public function restoreUser($user);
 
     
     // public function showallascbyName();
@@ -26,7 +22,4 @@ interface UserRepositoryInterface
     // public function showalldesbyUpdated();
     // public function showallascbyDeleted();
     // public function showalldesbyDeleted();
-
-    public function HighestPaidPerMonth();
-    public function HighestPaidPerYear();
 }

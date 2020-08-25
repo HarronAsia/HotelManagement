@@ -15,8 +15,8 @@ class CreateHuyệnsTable extends Migration
     {
         Schema::create('huyệns', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
-            $table->longText('description')->nullable();
+            $table->string('huyen_name')->nullable();
+            $table->longText('huyen_description')->nullable();
             $table->timestamps();
 
             $table->unsignedBigInteger('tĩnh_id')->nullable();

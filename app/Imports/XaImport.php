@@ -17,10 +17,10 @@ class XaImport implements ToCollection
                 
                 //dd($value);
                 DB::table('xãs')->insert([
-                    'name' => $value[1],
+                    'xa_name' => $value[1],
                     'tĩnh_id' => $value[2],
                     'huyện_id' => $value[3],
-                    'description' => $value[4],     
+                    'xa_description' => $value[4],     
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
                     'deleted_at' => NULL

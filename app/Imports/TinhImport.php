@@ -18,8 +18,8 @@ class TinhImport implements ToCollection
             
             if ($key > 0) {
                 //dd($value);
-                DB::table('tĩnhs')->insert(['name' => $value[1], 
-                'description' => $value[2], 
+                DB::table('tĩnhs')->insert(['tinh_name' => $value[1], 
+                'tinh_description' => $value[2], 
                 'created_at' => Carbon::now(), 
                 'updated_at' => Carbon::now(),
                 'deleted_at' => NULL]);

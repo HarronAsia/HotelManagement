@@ -15,8 +15,8 @@ class CreateXãsTable extends Migration
     {
         Schema::create('xãs', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
-            $table->longText('description')->nullable();
+            $table->string('xa_name')->nullable();
+            $table->longText('xa_description')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

@@ -27,9 +27,9 @@
                     <legend class="scheduler-border">Location Information</legend>
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="form-group has-feedback{{ $errors->has('bed_name') ? ' has-error' : '' }}">
-                                <label for="bed_name">Name</label>
-                                <input type="text" class="form-control " id="bed_name" placeholder="Enter Name of the Bed" name="bed_name" required>
+                            <div class="form-group has-feedback{{ $errors->has('tinh_name') ? ' has-error' : '' }}">
+                                <label for="tinh_name">Name</label>
+                                <input type="text" class="form-control " id="tinh_name" placeholder="Enter Name of the Bed" name="tinh_name" required>
                             </div>
                         </div>
                     </div>

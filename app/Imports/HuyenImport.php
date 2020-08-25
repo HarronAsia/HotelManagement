@@ -16,9 +16,9 @@ class HuyenImport implements ToCollection
             if ($key > 0) {
                 
                 DB::table('huyệns')->insert([
-                    'name' => $value[1],
+                    'huyen_name' => $value[1],
                     'tĩnh_id' => $value[2],
-                    'description' => $value[3],
+                    'huyen_description' => $value[3],
 
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),

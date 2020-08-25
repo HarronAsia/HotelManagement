@@ -4,6 +4,7 @@ namespace App\Repositories\User;
 
 use App\Repositories\BaseRepository;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
@@ -39,7 +40,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         $user = User::OfId($user)->first();
         return $this->model = $user->delete();
     }
-    
+
     public function restoreUser($user)
     {
         $user = User::onlyTrashed()->OfId($user)->first();
@@ -111,4 +112,50 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     // }
 
     // //************************************************************************ Sort ***********************************************************************************************/
+    public function HighestPaidPerMonth()
+    {
+
+        //return $this->model = DB::select('select year(created_at) as year, month(created_at) as month, sum(room_price) as total_amount from rooms group by year(created_at), month(created_at)');
+        return $this->model = User::join('profiles', 'users.id', '=', 'profiles.user_id')
+            ->join('booking__dates', 'users.id', '=', 'booking__dates.user_id')
+            ->select(
+                DB::raw('HOUR(booking__dates.time_begin) as duration'),
+                DB::raw('users.id as id'),
+                DB::raw('users.name as name'),
+                DB::raw('users.email as email'),
+                DB::raw('profiles.gender as gender'),
+                DB::raw('profiles.balance as balance'),
+            )
+            
+            ->groupBy('duration','id', 'name', 'email', 'gender', 'balance')
+            ->orderBy('duration', 'desc')
+            ->orderBy('balance', 'desc')
+
+            ->limit(7)
+            ->get()
+            ->sortBy('MONTH(booking__dates.checkin)');
+    }
+
+    public function HighestPaidPerYear()
+    {
+        //return $this->model = DB::select('select year(created_at) as year, month(created_at) as month, sum(room_price) as total_amount from rooms group by year(created_at), month(created_at)');
+        return $this->model = User::join('booking__dates', 'users.id', '=', 'booking__dates.user_id')
+            ->join('profiles', 'users.id', '=', 'profiles.user_id')
+            ->select(
+                DB::raw('HOUR(booking__dates.time_begin) as duration'),
+                DB::raw('users.id as id'),
+                DB::raw('users.name as name'),
+                DB::raw('users.email as email'),
+                DB::raw('profiles.gender as gender'),
+                DB::raw('profiles.balance as balance'),
+            )
+            
+            ->groupBy('duration','id', 'name', 'email', 'gender', 'balance')
+            ->orderBy('duration', 'desc')
+            ->orderBy('balance', 'desc')
+
+            ->limit(7)
+            ->get()
+            ->sortBy('YEAR(booking__dates.checkin) ');
+    }
 }

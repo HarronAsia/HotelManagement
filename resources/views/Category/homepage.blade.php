@@ -23,6 +23,7 @@
                                     <div class="col-md-12">
 
                                         <form method="GET" action="{{route('category.search',$bed)}}">
+                                            @csrf
                                             <div class="form-group">
                                                 <input type="text" class="form-control" placeholder="Enter the name" id="name_query" name="name_query">
                                             </div>
@@ -46,8 +47,9 @@
                                             <div class="form-group ">
                                                 <div class="form-group search-slt" id="type_query" name="type_query">
                                                     <label for="room_type">Room Type:</label>
-                                                    <select class="form-control " name="type_query" id="type_query" required>
-                                                        <option value="Single" name="type_query" selected>Single</option>
+                                                    <select class="form-control " name="type_query" id="type_query">
+                                                        <option value="" name="type_query" selected>Type</option>
+                                                        <option value="Single" name="type_query">Single</option>
                                                         <option value="Couple" name="type_query">Couple</option>
                                                         <option value="Three or Four People" name="type_query">Three or Four People</option>
                                                         <option value="Family" name="type_query">Family</option>
@@ -57,7 +59,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="form-group">
+                                            <div class="form-group search-slt">
                                                 <label for="price">
                                                     <h4>Price</h4>
                                                     <div class="row">
@@ -70,6 +72,7 @@
                                                     </div>
                                                 </label>
                                             </div>
+
 
                                             <hr>
                                             <button type="submit" class="btn btn-primary">Find Now</button>
@@ -84,25 +87,6 @@
                 </div>
             </div>
             <div class="col-md-9">
-                <div class="row">
-                    <div class="col-md-12">
-                        <ul class="nav nav-justified nav-pills">
-                            <li class="nav-item">
-                                <a class="nav-link active" href="#">Default</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link bg-light" href="#">Most Rated Room</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link bg-light" href="#">Newest Room</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link bg-light" href="#">Cheapest Room</a>
-                            </li>
-
-                        </ul>
-                    </div>
-                </div>
                 @foreach($rooms as $room)
                 <div class="row mb-3">
                     <div class="col-md-12">

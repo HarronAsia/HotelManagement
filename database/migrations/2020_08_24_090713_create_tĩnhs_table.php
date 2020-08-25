@@ -15,8 +15,8 @@ class CreateTĩnhsTable extends Migration
     {
         Schema::create('tĩnhs', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
-            $table->longText('description')->nullable();
+            $table->string('tinh_name')->nullable();
+            $table->longText('tinh_description')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

@@ -27,11 +27,12 @@ class BedController extends Controller
 
     public function search($bed)
     {
-
+dd(request()->all());
         if (
             isset($_GET['name_query']) or isset($_GET['floor_query']) or isset($_GET['type_query'])
             or isset($_GET['min_price']) or isset($_GET['max_price'])
         ) {
+            dd("1");
             $query = $_GET['name_query'];
             $query2 = $_GET['floor_query'];
             $query3 = $_GET['type_query'];
@@ -46,7 +47,14 @@ class BedController extends Controller
 
             return view('Category.homepage', compact('rooms', 'bed'));
         } 
+        elseif(isset($_GET['cheapest']))
+        {
+            dd("2");
+            $rooms = $this->roomRepo->cheapest($bed);
+            return view('Category.homepage', compact('rooms', 'bed'));
+        }
     }
+
     /**
      * Show the form for creating a new resource.
      *

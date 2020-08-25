@@ -17,14 +17,16 @@ Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/test', 'HomeController@test');
+Route::get('/test2', 'HomeController@test2');
 
+Auth::routes(['verify' => true]);
 
 Route::group([
     'prefix' => 'admin',
     'middleware' => 'admin'
 ], function () {
 
-    Route::get('/dashboard', 'AdminController@dashboard')->name('admin.dashboard');
+    Route::get('/{date}/dashboard', 'AdminController@dashboard')->name('admin.dashboard');
 
     Route::get('/calendar', 'AdminController@calendar')->name('admin.calendar');
     Route::get('/notification', 'AdminController@notification')->name('admin.notification');
@@ -66,6 +68,8 @@ Route::group([
         Route::post('/beds/{bed}/update', 'AdminController@updatebed')->name('admin.beds.update');
         Route::get('/beds/{bed}/destroy', 'AdminController@destroybed')->name('admin.beds.destroy');
         Route::get('/beds/{bed}/restore', 'AdminController@restorebed')->name('admin.beds.restore');
+
+        
     });
 
     Route::group([
@@ -81,6 +85,12 @@ Route::group([
         'prefix' => 'searching',
     ], function (){
         Route::get('/','AdminController@searching')->name('admin.searching');
+
+        Route::get('/search','AdminController@searching')->name('admin.searching.search');
+
+        Route::get('/create','AdminController@location_create')->name('admin.searching.create');
+        Route::get('/store','AdminController@location_store')->name('admin.searching.store');
+
         Route::post('/tinh','AdminController@Tinhimport')->name('admin.tinh.import');
         Route::post('/huyen','AdminController@Huyenimport')->name('admin.huyen.import');
         Route::post('/xa','AdminController@Xaimport')->name('admin.xa.import');
@@ -89,6 +99,7 @@ Route::group([
 
 Route::group([
     'prefix' => 'Profile',
+    'middleware' => 'verified'
 ], function () {
 
     Route::get('/{user}', 'UserController@view_profile')->name('profile.view');
@@ -103,6 +114,7 @@ Route::group([
 ], function () {
     Route::get('/{category}/homepage', 'BedController@index')->name('category.index');
     Route::get('/{category}/search', 'BedController@search')->name('category.search');
+    
 });
 
 Route::group([
@@ -127,6 +139,8 @@ Route::group([
     Route::get('/{room}/{user}/follow','RoomController@follow')->name('room.follow');
     Route::get('/{room}/{user}/unfollow','RoomController@unfollow')->name('room.unfollow');
     Route::post('/{room}/{user}/comment','RoomController@comment')->name('room.comment');
+
+   
 });
 
 

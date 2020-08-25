@@ -17,5 +17,6 @@ $factory->define(Profile::class, function (Faker $faker) {
         'job' => $faker->jobTitle,
         'bio' => $faker->paragraph,
         'user_id' => $number++,
+        'balance' => $faker->numberBetween(500000,100000000)
     ];
 });

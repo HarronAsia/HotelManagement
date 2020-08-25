@@ -53,25 +53,11 @@ class HomeController extends Controller
 
     public function test()
     {
-        $events = [];
-        $data = Room::all();
-        if ($data->count()) {
-            foreach ($data as $key => $value) {
-                $events[] = Calendar::event(
-                    $value->room_name,
-                    true,
-                    new \DateTime($value->date_start),
-                    new \DateTime($value->date_end . ' +1 day'),
-                    null,
-                    // Add color and link on event
-                    [
-                        'color' => '#f05050',
-                        'url' => '#',
-                    ]
-                );
-            }
-        }
-        $calendar = Calendar::addEvents($events);
-        return view('test', compact('calendar'));
+       return view('homework.test');
+    }
+
+    public function test2()
+    {
+       return view('homework.test2');
     }
 }

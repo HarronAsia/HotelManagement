@@ -38,6 +38,7 @@
                 </div>
             </li>
         </ul>
+        
         <form class="form-inline my-2 my-lg-0" method="GET" action="#">
             <input class="form-control mr-sm-2" type="search" name="query" placeholder="{{__('Search')}}" aria-label="{{__('Search')}}">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">{{__('Search')}}</button>
@@ -69,7 +70,7 @@
                         <p class="dropdown-item"><i class="fas fa-user-tie"></i>&ensp;{{__('Profile')}}</p>
                     </a>
                     @if(Auth::user()->role == 'Admin')
-                    <a href="{{route('admin.dashboard')}}">
+                    <a href="{{route('admin.dashboard','Month')}}">
                         <p class="dropdown-item"><i class="fas fa-user-secret"></i>&ensp;{{__('Dashboard')}}</p>
                     </a>
 

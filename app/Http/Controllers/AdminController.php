@@ -3,24 +3,31 @@
 namespace App\Http\Controllers;
 
 use Excel;
-use App\Models\Bed;
 
+
+use Carbon\Carbon;
+use App\Models\Bed;
 use App\Models\Room;
 use App\Models\User;
-
 use App\Models\Hotel;
 use App\Models\Profile;
+use App\Imports\XaImport;
 use App\Exports\BedsExport;
+use App\Imports\TinhImport;
+
+use App\Models\Location\Xã;
+use App\Imports\HuyenImport;
 use App\Models\Booking_Date;
 use Illuminate\Http\Request;
 
+use App\Models\Location\Tĩnh;
+
+use App\Models\Location\Huyện;
 use App\Http\Requests\StoreBed;
 use App\Http\Requests\StoreRoom;
+
 use App\Http\Requests\StoreAdmin;
 use App\Http\Requests\StoreHotel;
-use App\Imports\HuyenImport;
-use App\Imports\TinhImport;
-use App\Imports\XaImport;
 use Illuminate\Support\Facades\Auth;
 use LaravelFullCalendar\Facades\Calendar;
 
@@ -29,7 +36,11 @@ use App\Repositories\Room\RoomRepositoryInterface;
 use App\Repositories\User\UserRepositoryInterface;
 use App\Repositories\Hotel\HotelRepositoryInterface;
 use LaravelDaily\LaravelCharts\Classes\LaravelChart;
+use App\Repositories\Location\Xã\XãRepositoryInterface;
 use App\Repositories\Profile\ProfileRepositoryInterface;
+use App\Repositories\Location\Tĩnh\TĩnhRepositoryInterface;
+use App\Repositories\Location\Huyện\HuyệnRepositoryInterface;
+
 
 
 class AdminController extends Controller
@@ -39,13 +50,19 @@ class AdminController extends Controller
     protected $hotelRepo;
     protected $roomRepo;
     protected $bedRepo;
+    protected $tĩnhRepo;
+    protected $huyệnRepo;
+    protected $xãRepo;
 
     public function __construct(
         UserRepositoryInterface $userRepo,
         ProfileRepositoryInterface $profileRepo,
         HotelRepositoryInterface $hotelRepo,
         RoomRepositoryInterface $roomRepo,
-        BedRepositoryInterface $bedRepo
+        BedRepositoryInterface $bedRepo,
+        TĩnhRepositoryInterface $tĩnhRepo,
+        HuyệnRepositoryInterface $huyệnRepo,
+        XãRepositoryInterface $xãRepo
     ) {
         $this->middleware(['auth', 'admin', 'verified']);
 
@@ -54,20 +71,12 @@ class AdminController extends Controller
         $this->hotelRepo = $hotelRepo;
         $this->roomRepo = $roomRepo;
         $this->bedRepo = $bedRepo;
+        $this->tĩnhRepo = $tĩnhRepo;
+        $this->huyệnRepo = $huyệnRepo;
+        $this->xãRepo = $xãRepo;
     }
 
     //********************************* SideBar *****************************************************************************************************************************/
-    public function dashboard()
-    {
-        $users = $this->userRepo->showAll();
-
-        $hotels = $this->hotelRepo->showAll();
-        $rooms = $this->roomRepo->showall();
-        $beds = $this->bedRepo->showall();
-
-
-        return view('Admin.dashboard', compact('users',  'hotels', 'rooms', 'beds'));
-    }
 
     public function monitoring()
     {
@@ -82,15 +91,15 @@ class AdminController extends Controller
     public function calendar()
     {
         $events = [];
-        $data = Room::all();
+        $data = $this->roomRepo->calendarperYear();
 
         if ($data->count()) {
             foreach ($data as $key => $value) {
                 $events[] = Calendar::event(
                     $value->room_name,
                     true,
-                    new \DateTime($value->date->checkin),
-                    new \DateTime($value->date->checkout . ' +1 day'),
+                    new \DateTime($value->date->checkin??''),
+                    new \DateTime($value->date->checkout??'' . ' +1 day'),
                     null,
                     // Add color and link on event
                     [
@@ -139,8 +148,29 @@ class AdminController extends Controller
     //********************************* SideBar *****************************************************************************************************************************/
 
     //********************************* Dashboard *****************************************************************************************************************************/
+    public function dashboard($date)
+    {
+        
 
-
+        if($date == 'Month')
+        {
+            $users = $this->userRepo->HighestPaidPerMonth();
+            $rooms = $this->roomRepo->perMonth();
+            return view('Admin.dashboard', compact('users', 'rooms','date'));
+        }
+        elseif($date == 'Year')
+        {
+            $users = $this->userRepo->HighestPaidPerYear();
+            $rooms = $this->roomRepo->perYear();
+            return view('Admin.dashboard', compact('users', 'rooms','date'));
+        }
+        
+        
+        //dd( $rooms);
+       
+    }
+    
+    
     //********************************* Dashboard *****************************************************************************************************************************/
 
 
@@ -649,24 +679,42 @@ class AdminController extends Controller
     //********************************* Searching *****************************************************************************************************************************/
     public function searching()
     {
-        return view('Admin.Location.search');
+        $tinhs = $this->tĩnhRepo->paginate();
+        $huyens = $this->huyệnRepo->paginate();
+        $xas = $this->xãRepo->paginate();
+        return view('Admin.Location.search', compact('tinhs', 'huyens', 'xas'));
     }
 
-    public function Tinhimport(Request $request) 
+    public function search()
+    {
+    }
+
+    public function location_create()
+    {
+        $locations = $this->tĩnhRepo->showAll();
+        return view('Admin.Location.create', compact('locations'));
+    }
+
+    public function location_store()
+    {
+        dd('worked');
+    }
+
+    public function Tinhimport(Request $request)
     {
         $file = $request->file('excel');
         Excel::import(new TinhImport, $file);
         return redirect()->back();
     }
 
-    public function Huyenimport(Request $request) 
+    public function Huyenimport(Request $request)
     {
         $file = $request->file('excel');
         Excel::import(new HuyenImport, $file);
         return redirect()->back();
     }
 
-    public function Xaimport(Request $request) 
+    public function Xaimport(Request $request)
     {
         $file = $request->file('excel');
         Excel::import(new XaImport, $file);

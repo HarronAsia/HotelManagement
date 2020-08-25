@@ -1,19 +1,13 @@
 <?php
 
-namespace App\Repositories\User;
+namespace App\Repositories\Location\Xã;
 
-interface UserRepositoryInterface
+interface XãRepositoryInterface
 {
-    public function search($user);
-    
-    public function showall();
-    public function paginate();
-    
-    public function showUser($user);
-    public function destroyUser($user);
-    public function restoreUser($user);
 
-    
+    public function showAll();
+    public function paginate();
+     
     // public function showallascbyName();
     // public function showalldesbyName();
     // public function showallascbyEmail();
@@ -26,7 +20,4 @@ interface UserRepositoryInterface
     // public function showalldesbyUpdated();
     // public function showallascbyDeleted();
     // public function showalldesbyDeleted();
-
-    public function HighestPaidPerMonth();
-    public function HighestPaidPerYear();
 }

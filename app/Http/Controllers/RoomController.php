@@ -292,6 +292,7 @@ class RoomController extends Controller
         $booking->save();
 
         $profile = $this->profileRepo->showProfile($data['user_id']);
+        
         $profile->balance = $data['balance'];
         $profile->update();
         

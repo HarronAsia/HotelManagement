@@ -28,7 +28,7 @@
 
                 <a href="{{route('profile.view',$room->user->name)}}">{{$room->user->name}}</a>
                 @guest
-                <a href="{{route('login')}}" class="btn btn-info">{{__('Follow')}}</a>
+                <a href="{{route('login')}}" class="btn btn-info pull-right">{{__('Follow')}}</a>
                 @else
                 @if ($follower->follower_id?? '' == Auth::user()->id)
                 <a href="{{route('room.unfollow',['room'=>$room->id,'user'=>Auth::user()->name])}}" class="btn btn-info pull-right"><i class="fa fa-bell-slash-o"></i>&ensp;{{__('Unfollow')}}</a>
@@ -38,7 +38,7 @@
                 @endif
 
                 @guest
-                <a href="{{route('login')}}" class="card-link"><i class="far fa-thumbs-up"></i> {{__('Like')}}&ensp;{{$room->likes->count()}}</a>
+                <a href="{{route('login')}}" class="btn btn-info pull-right"><i class="far fa-thumbs-up"></i> {{__('Like')}}&ensp;{{$room->likes->count()}}</a>
                 @else
                 @if($room->like->user_id??'' == Auth::user()->id)
                 <a href="{{route('room.unlike',['room' => $room->id, 'user'=>Auth::user()->name])}}" class="btn btn-info pull-right"><i class="fas fa-thumbs-up"></i></i> {{__('Like')}}&ensp;{{$room->likes->count()}}</a>
@@ -71,15 +71,6 @@
             <p class="lead">{{$room->room_description}}</p>
             <hr>
             <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-8">
-                        <h3 class="h3">Other Images of the room</h3>
-                    </div>
-                    <div class="col-md-4">
-                        <a href="{{route('room.images',$room->id)}}" class="btn btn-primary">Add more Images</a>
-                    </div>
-                </div>
-
 
                 <div class="row">
                     <div class="col-md-12">

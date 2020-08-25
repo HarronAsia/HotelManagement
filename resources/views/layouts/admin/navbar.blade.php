@@ -8,7 +8,7 @@
     <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav animate side-nav">
             <li class="nav-item">
-                <a class="nav-link" href="{{route('admin.dashboard')}}" title="Dashboard"><i class="fas fa-cube"></i> &ensp; Dashboard <i class="fas fa-cube shortmenu animate"></i></a>
+                <a class="nav-link" href="{{route('admin.dashboard','Month')}}" title="Dashboard"><i class="fas fa-cube"></i> &ensp; Dashboard <i class="fas fa-cube shortmenu animate"></i></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{route('admin.monitoring')}}" title="Monitoring"><i class="fas fa-desktop"></i>&ensp; Monitoring <i class="fas fa-desktop shortmenu animate"></i></a>
@@ -23,7 +23,7 @@
                 <a class="nav-link" href="{{route('admin.feedback')}}" title="Feedback"><i class="far fa-comment-alt "></i>&ensp; Feedback <i class="far fa-comment-alt shortmenu animate"></i></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{route('admin.searching')}}" title="Feedback"><i class="fas fa-search-location"></i>&ensp; Searching <i class="far fa-comment-alt shortmenu animate"></i></a>
+                <a class="nav-link" href="{{route('admin.searching')}}" title="Feedback"><i class="fas fa-search-location"></i>&ensp; Searching <i class="fas fa-search-location shortmenu animate"></i></a>
             </li>
         </ul>
 
@@ -51,7 +51,7 @@
                         <p class="dropdown-item"><i class="fas fa-user-tie"></i>&ensp;{{__('Profile')}}</p>
                     </a>
                     @if(Auth::user()->role == 'Admin')
-                    <a href="{{route('admin.dashboard')}}">
+                    <a href="{{route('admin.dashboard','Month')}}">
                         <p class="dropdown-item"><i class="fas fa-user-secret"></i>&ensp;{{__('Dashboard')}}</p>
                     </a>
 
