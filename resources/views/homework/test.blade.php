@@ -5,17 +5,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Assignment 1</title>
+    <title>Assignment 2</title>
 
 
     <!-- Fonts -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
     <style>
-        /***
-Bootstrap4 Card with Tabs by @mdeuerlein
-***/
-
+ 
         body {
             background-color: #f7f8f9;
         }
@@ -84,13 +81,36 @@ Bootstrap4 Card with Tabs by @mdeuerlein
                 <div class="card mt-3 tab-card">
                     <div class="card-header tab-card-header">
                         <div class="row">
-                           
+                            <div class="col-lg-9 coral">
+                                <h4>カナンデについて</h4>
+                                <p class="text-primary">About Kanande</p>
+                            </div>
+                            <div class="col-lg-3 ">
+                                <p class="bg-info">
+                                    <i class="fab fa-youtube"></i> &ensp;
+                                    その他の動画
+                                </p>
+                            </div>
 
                         </div>
                     </div>
                     <div class="card-body">
                         <div class="row">
-                          
+                            <div class="col-md-4" style="width: 350px; height:120px;">
+                                <img src="http://bestjquery.com/tutorial/news-slider/demo33/images/img-1.jpg" alt="" style="width: 250px; height:50px;">
+                                <h5><a href="#"><u>新しい1</u></a></h5>
+                                <p>新しい1の新しい詳細は次のとおりです</p>
+                            </div>
+                            <div class="col-md-4" style="width: 250px; height:120px;">
+                                <img src="http://bestjquery.com/tutorial/news-slider/demo33/images/img-1.jpg" alt="" style="width: 250px; height:50px;">
+                                <h5><a href="#"><u>新しい2</u></a></h5>
+                                <p>新しい2の新しい詳細は次のとおりです。</p>
+                            </div>
+                            <div class="col-md-4" style="width: 250px; height:120px;">
+                                <img src="http://bestjquery.com/tutorial/news-slider/demo33/images/img-1.jpg" alt="" style="width: 250px; height:50px;">
+                                <h5><a href="#"><u>新しい3</u></a></h5>
+                                <p>新しい3の新しい詳細は次のとおりです。</p>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -6,36 +6,37 @@ use Excel;
 
 
 use Carbon\Carbon;
-use App\Models\Bed;
-use App\Models\Room;
-use App\Models\User;
 use App\Models\Hotel;
-use App\Models\Profile;
-use App\Imports\XaImport;
+use App\Models\Room\Bed;
+use App\Models\Room\Room;
+use App\Models\Room\Booking_Date;
+use App\Models\User\User;
+use App\Models\User\Profile;
+use App\Models\Location\Tĩnh;
+use App\Models\Location\Huyện;
+use App\Models\Location\Xã;
+
+
 use App\Exports\BedsExport;
 use App\Imports\TinhImport;
-
-use App\Models\Location\Xã;
 use App\Imports\HuyenImport;
-use App\Models\Booking_Date;
-use Illuminate\Http\Request;
+use App\Imports\XaImport;
 
-use App\Models\Location\Tĩnh;
-
-use App\Models\Location\Huyện;
-use App\Http\Requests\StoreBed;
-use App\Http\Requests\StoreRoom;
-
-use App\Http\Requests\StoreAdmin;
-use App\Http\Requests\StoreHotel;
 use Illuminate\Support\Facades\Auth;
 use LaravelFullCalendar\Facades\Calendar;
+use Illuminate\Http\Request;
+use LaravelDaily\LaravelCharts\Classes\LaravelChart;
+use Illuminate\Support\Facades\DB;
 
+use App\Http\Requests\StoreBed;
+use App\Http\Requests\StoreRoom;
+use App\Http\Requests\StoreAdmin;
+use App\Http\Requests\StoreHotel;
+use App\Http\Requests\StoreLocation;
 use App\Repositories\Bed\BedRepositoryInterface;
 use App\Repositories\Room\RoomRepositoryInterface;
 use App\Repositories\User\UserRepositoryInterface;
 use App\Repositories\Hotel\HotelRepositoryInterface;
-use LaravelDaily\LaravelCharts\Classes\LaravelChart;
 use App\Repositories\Location\Xã\XãRepositoryInterface;
 use App\Repositories\Profile\ProfileRepositoryInterface;
 use App\Repositories\Location\Tĩnh\TĩnhRepositoryInterface;
@@ -98,8 +99,8 @@ class AdminController extends Controller
                 $events[] = Calendar::event(
                     $value->room_name,
                     true,
-                    new \DateTime($value->date->checkin??''),
-                    new \DateTime($value->date->checkout??'' . ' +1 day'),
+                    new \DateTime($value->date->checkin ?? ''),
+                    new \DateTime($value->date->checkout ?? '' . ' +1 day'),
                     null,
                     // Add color and link on event
                     [
@@ -140,37 +141,30 @@ class AdminController extends Controller
         return view('Admin.notification');
     }
 
-    public function feedback()
-    {
-        return view('Admin.feedback');
-    }
-
     //********************************* SideBar *****************************************************************************************************************************/
 
     //********************************* Dashboard *****************************************************************************************************************************/
     public function dashboard($date)
     {
-        
+        $busymonths = $this->roomRepo->busymonth();
 
-        if($date == 'Month')
-        {
+
+        if ($date == 'Month') {
             $users = $this->userRepo->HighestPaidPerMonth();
             $rooms = $this->roomRepo->perMonth();
-            return view('Admin.dashboard', compact('users', 'rooms','date'));
-        }
-        elseif($date == 'Year')
-        {
+            return view('Admin.dashboard', compact('users', 'rooms', 'date', 'busymonths'));
+        } elseif ($date == 'Year') {
             $users = $this->userRepo->HighestPaidPerYear();
             $rooms = $this->roomRepo->perYear();
-            return view('Admin.dashboard', compact('users', 'rooms','date'));
+            return view('Admin.dashboard', compact('users', 'rooms', 'date', 'busymonths'));
+        } elseif ($date == 'Week') {
+            $users = $this->userRepo->HighestPaidPerWeek();
+            $rooms = $this->roomRepo->perWeek();
+            return view('Admin.dashboard', compact('users', 'rooms', 'date', 'busymonths'));
         }
-        
-        
-        //dd( $rooms);
-       
     }
-    
-    
+
+
     //********************************* Dashboard *****************************************************************************************************************************/
 
 
@@ -679,14 +673,80 @@ class AdminController extends Controller
     //********************************* Searching *****************************************************************************************************************************/
     public function searching()
     {
-        $tinhs = $this->tĩnhRepo->paginate();
-        $huyens = $this->huyệnRepo->paginate();
-        $xas = $this->xãRepo->paginate();
-        return view('Admin.Location.search', compact('tinhs', 'huyens', 'xas'));
+        if (
+            isset($_GET['select_query']) or isset($_GET['select2_query']) or isset($_GET['select3_query']) or isset($_GET['tinh_query'])
+            or isset($_GET['huyen_query']) or isset($_GET['xa_query'])
+        ) {
+            $query = $_GET['select_query'];
+
+            $query2 = $_GET['select2_query'];
+
+            $query3 = $_GET['select3_query'];
+            $query4 = $_GET['tinh_query'];
+            $query5 = $_GET['huyen_query'];
+            $query6 = $_GET['xa_query'];
+
+            if ($query == 'Tĩnh') {
+                $tinhs = Tĩnh::OfName($query4);
+                $huyens = $this->huyệnRepo->huyens();
+                $xas = $this->xãRepo->xas();
+                return view('Admin.Location.search', compact('tinhs', 'huyens', 'xas'));
+            } elseif ($query == 'Huyện') {
+                $tinhs = $this->tĩnhRepo->tinhs();
+                $huyens = Huyện::OfAll($query2, $query5);
+                $xas = $this->xãRepo->xas();
+                return view('Admin.Location.search', compact('tinhs', 'huyens', 'xas'));
+            } elseif ($query == 'Xã') {
+                $tinhs = $this->tĩnhRepo->tinhs();
+                $huyens = $this->huyệnRepo->huyens();
+                $xas = Xã::OfAll($query2, $query3, $query4, $query5 . $query6);
+                return view('Admin.Location.search', compact('tinhs', 'huyens', 'xas'));
+            }
+        } else {
+            $tinhs = $this->tĩnhRepo->tinhs();
+
+            $huyens = $this->huyệnRepo->huyens();
+            $xas = $this->xãRepo->xas();
+            return view('Admin.Location.search', compact('tinhs', 'huyens', 'xas'));
+        }
     }
 
-    public function search()
+    public function load_more(Request $request)
     {
+        $output = '';
+        $id = $request->id;
+        dd( $id);
+        $tinhs = Tĩnh::where('id', '<', $id)
+            ->orderBy('id', 'desc')
+            ->limit(5)
+            ->get();
+
+        if (!$tinhs->isEmpty()) {
+            foreach ($tinhs as $tinh) {
+                $id = $tinh->id;
+                $created_at = $tinh->created_at;
+                $output .= '<table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">' . $tinh->id . '</th>
+                    <td>' . $tinh->tinh_name . '</td>
+                    <td>' . $tinh->tinh_description . '</td>
+                  </tr>
+                </tbody>
+              </table>';
+            }
+            $output .= '<div id="remove-row" class="text-center">
+    <button id="btn-more" data-id="' . $tinh->id . '" class="loadmore-btn text-center">Load More</button>
+    </div>';
+            echo $output;
+        }
     }
 
     public function location_create()
@@ -695,10 +755,34 @@ class AdminController extends Controller
         return view('Admin.Location.create', compact('locations'));
     }
 
-    public function location_store()
+    public function location_store(StoreLocation $request)
     {
-        dd('worked');
+        $data = $request->validated();
+
+        $tinh = new Tĩnh;
+        $tinh->tinh_name = $data['tinh_name'];
+        $tinh->tinh_description = $data['tinh_description'];
+        $tinh->save();
+        $tinhid = $tinh->id;
+
+        $huyen = new Huyện;
+        $huyen->huyen_name = $data['huyen_name'];
+        $huyen->huyen_description = $data['huyen_description'];
+        $huyen->tĩnh_id = $tinhid;
+        $huyen->save();
+        $huyenid = $huyen->id;
+
+        $xa = new Xã;
+        $xa->xa_name = $data['xa_name'];
+        $xa->xa_description = $data['xa_description'];
+        $xa->tĩnh_id = $tinhid;
+        $xa->huyện_id = $huyenid;
+        $xa->save();
+
+        return redirect()->route('admin.searching');
     }
+
+
 
     public function Tinhimport(Request $request)
     {

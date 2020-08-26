@@ -1,7 +1,7 @@
 <?php
 
-namespace App\Models;
-use App\Models\Room;
+namespace App\Models\User;
+use App\Models\Room\Room;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -13,7 +13,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function profile()
     {
-        return $this->hasOne('App\Models\Profile');
+        return $this->hasOne('App\Models\User\Profile');
     }
 
     public function following()
@@ -23,12 +23,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function date()
     {
-        return $this->hasOne('App\Models\Booking_Date');
+        return $this->hasOne('App\Models\Room\Booking_Date');
     }
 
     public function dates()
     {
-        return $this->hasMany('App\Models\Booking_Date');
+        return $this->hasMany('App\Models\Room\Booking_Date');
     }
 
     /**

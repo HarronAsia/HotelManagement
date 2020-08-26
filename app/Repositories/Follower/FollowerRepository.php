@@ -2,10 +2,10 @@
 
 namespace App\Repositories\Follower;
 
-use App\Models\Follower;
+use App\Models\Room\Follower;
 use App\Repositories\BaseRepository;
 
-use App\Models\Room;
+use App\Models\Room\Room;
 
 
 class FollowerRepository extends BaseRepository implements FollowerRepositoryInterface
@@ -13,7 +13,7 @@ class FollowerRepository extends BaseRepository implements FollowerRepositoryInt
     //lấy model tương ứng
     public function getModel()
     {
-        return \App\Models\Follower::class;
+        return \App\Models\Room\Follower::class;
     }
 
     public function showfollowers($room)

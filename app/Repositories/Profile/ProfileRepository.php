@@ -4,7 +4,7 @@ namespace App\Repositories\Profile;
 
 use App\Repositories\BaseRepository;
 
-use App\Models\Profile;
+use App\Models\User\Profile;
 use Illuminate\Support\Facades\DB;
 
 
@@ -13,7 +13,7 @@ class ProfileRepository extends BaseRepository implements ProfileRepositoryInter
     //lấy model tương ứng
     public function getModel()
     {
-        return \App\Models\Profile::class;
+        return \App\Models\User\Profile::class;
     }
 
     public function showProfile($id)

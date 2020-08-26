@@ -63,8 +63,20 @@ class Huyện extends Model
         return $query->whereId($huyen);
     }
 
-    public function scopeOfTinhId($query,$tinh)
+    public function scopeOfTinhId($query, $tinh)
     {
-        return $query->where('tĩnh_id',$tinh);
+        return $query->where('tĩnh_id', $tinh);
+    }
+
+    public function scopeOfAll($query, $huyen1, $huyen2)
+    {
+        $query = Huyện::query()
+            ->join('tĩnhs', 'huyệns.tĩnh_id', 'tĩnhs.id')
+            ->whereLike('tĩnh_id',$huyen1)
+            ->whereLike('tinh_name',$huyen2)
+            ->select(['huyệns.id','huyệns.huyen_name','huyệns.huyen_description','huyệns.tĩnh_id','tĩnhs.tinh_name','tĩnhs.tinh_description'])
+            ->get();
+        
+        return $query;
     }
 }

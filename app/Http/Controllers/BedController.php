@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Room;
+use App\Models\Room\Room;
 use Illuminate\Http\Request;
 use App\Repositories\Room\RoomRepositoryInterface;
 
@@ -27,7 +27,7 @@ class BedController extends Controller
 
     public function search($bed)
     {
-dd(request()->all());
+
         if (
             isset($_GET['name_query']) or isset($_GET['floor_query']) or isset($_GET['type_query'])
             or isset($_GET['min_price']) or isset($_GET['max_price'])
@@ -47,12 +47,7 @@ dd(request()->all());
 
             return view('Category.homepage', compact('rooms', 'bed'));
         } 
-        elseif(isset($_GET['cheapest']))
-        {
-            dd("2");
-            $rooms = $this->roomRepo->cheapest($bed);
-            return view('Category.homepage', compact('rooms', 'bed'));
-        }
+      
     }
 
     /**

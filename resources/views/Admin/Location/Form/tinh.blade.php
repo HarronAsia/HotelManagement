@@ -2,7 +2,7 @@
     @csrf
     <div class="form-group">
         <label for="excel">Your Sheet file</label>
-        <input type="file" class="form-control" name="excel">
+        <input type="file" class="form-control" name="excel" required>
     </div>
     <br />
     <button type="submit" class="btn btn-success">Lấy danh sách Tĩnh</button>

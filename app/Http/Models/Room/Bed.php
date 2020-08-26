@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Room;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,7 +16,7 @@ class Bed extends Model
 
     public function room()
     {
-        return $this->belongsTo('App\Models\Room');
+        return $this->belongsTo('App\Models\Room\Bed');
     }
     //*********************************mutator************************************************************************************************************
 

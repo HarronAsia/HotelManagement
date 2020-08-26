@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Room;
+use App\Models\Location\Tĩnh;
 
-use LaravelFullCalendar\Facades\Calendar;
 use Illuminate\Http\Request;
 use App\Repositories\Room\RoomRepositoryInterface;
 use App\Repositories\Bed\BedRepositoryInterface;
 
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -22,7 +19,7 @@ class HomeController extends Controller
     protected $roomRepo;
     protected $bedRepo;
 
-    public function __construct(RoomRepositoryInterface $roomRepo,BedRepositoryInterface $bedRepo)
+    public function __construct(RoomRepositoryInterface $roomRepo, BedRepositoryInterface $bedRepo)
     {
         $this->roomRepo = $roomRepo;
         $this->bedRepo = $bedRepo;
@@ -47,17 +44,55 @@ class HomeController extends Controller
 
         $rooms = $this->roomRepo->showall();
         $beds = $this->bedRepo->showall();
-        return view('home', compact('rooms','beds'));
+        return view('home', compact('rooms', 'beds'));
     }
 
 
     public function test()
     {
-       return view('homework.test');
+        return view('homework.test');
     }
 
     public function test2()
     {
-       return view('homework.test2');
+        return view('homework.test2');
+    }
+
+    public function loadmoredata(Request $request)
+    {
+        $output = '';
+        $id = $request->id;
+
+        $tinhs = Tĩnh::where('id', '<', $id)
+            ->orderBy('id', 'desc')
+            ->limit(5)
+            ->get();
+            
+        if (!$tinhs->isEmpty()) {
+            foreach ($tinhs as $tinh) {
+                $id = $tinh->id;
+                $created_at=$tinh->created_at; 
+                $output .= '<table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">' . $tinh->id . '</th>
+                    <td>' . $tinh->tinh_name . '</td>
+                    <td>' . $tinh->tinh_description . '</td>
+                  </tr>
+                </tbody>
+              </table>';
+            }
+            $output .= '<div id="remove-row" class="text-center">
+    <button id="btn-more" data-id="' . $tinh->id . '" class="loadmore-btn text-center">Load More</button>
+    </div>';
+            echo $output;
+        }
     }
 }

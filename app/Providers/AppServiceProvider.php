@@ -39,11 +39,6 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->app->singleton(
-            \App\Repositories\Images\ImagesRepositoryInterface::class,
-            \App\Repositories\Images\ImagesRepository::class,
-        );
-
-        $this->app->singleton(
             \App\Repositories\Bed\BedRepositoryInterface::class,
             \App\Repositories\Bed\BedRepository::class,
         );

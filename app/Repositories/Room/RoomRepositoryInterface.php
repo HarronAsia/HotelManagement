@@ -17,6 +17,8 @@ interface RoomRepositoryInterface
     public function restoreRoom($room);
 
     public function calendarperYear();
+    public function perWeek();
     public function perMonth();
     public function perYear();
+    public function busymonth();
 }

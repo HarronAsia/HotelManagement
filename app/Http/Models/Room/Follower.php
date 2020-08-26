@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Room;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,7 +12,7 @@ class Follower extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->belongsTo('App\Models\Room\Follower');
     }
 
     public function scopeOfFollowerId($query, $id)

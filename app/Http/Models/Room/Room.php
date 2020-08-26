@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Room;
 
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
@@ -18,7 +18,7 @@ class Room extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->belongsTo('App\Models\User\User');
     }
 
     public function hotel()
@@ -28,30 +28,24 @@ class Room extends Model
 
     public function bed()
     {
-        return $this->hasOne('App\Models\Bed');
+        return $this->hasOne('App\Models\Room\Bed');
     }
 
     public function beds()
     {
-        return $this->hasMany('App\Models\Bed');
-    }
-
-    public function images()
-    {
-        return $this->hasMany('App\Models\Images');
+        return $this->hasMany('App\Models\Room\Bed');
     }
 
     public function date()
     {
-        return $this->morphOne('App\Models\Booking_Date', 'bookable');
+        return $this->morphOne('App\Models\Room\Booking_Date', 'bookable');
     }
 
     public function dates()
     {
-        return $this->morphMany('App\Models\Booking_Date', 'bookable');
+        return $this->morphMany('App\Models\Room\Booking_Date', 'bookable');
     }
 
-    // users that follow this user
     public function followers()
     {
         return $this->belongsToMany(User::class, 'followers', 'following_id', 'follower_id');
@@ -59,22 +53,22 @@ class Room extends Model
 
     public function likes()
     {
-        return $this->morphMany('App\Models\Like', 'likeable');
+        return $this->morphMany('App\Models\Room\Like', 'likeable');
     }
 
     public function like()
     {
-        return $this->morphOne('App\Models\Like', 'likeable');
+        return $this->morphOne('App\Models\Room\Like', 'likeable');
     }
 
     public function comment()
     {
-        return $this->morphOne('App\Models\Comment', 'commentable');
+        return $this->morphOne('App\Models\Room\Comment', 'commentable');
     }
 
     public function comments()
     {
-        return $this->morphMany('App\Models\Comment', 'commentable');
+        return $this->morphMany('App\Models\Room\Comment', 'commentable');
     }
 
 

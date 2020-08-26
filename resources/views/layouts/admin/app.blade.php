@@ -28,6 +28,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/locale-all.min.js"></script>
         <script src="{{asset('js/admin/app.js')}}"></script>
         <script src="{{asset('js/admin/dashboard.js')}}"></script>
+      
         <!--Latest JS, Popper.js, and jQuery -->
         <script>
             $(document).ready(function() {

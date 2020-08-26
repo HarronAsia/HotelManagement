@@ -67,4 +67,18 @@ class Xã extends Model
     {
         return $query->where('huyện_id',$huyen);
     }
+
+    public function scopeOfAll($query, $xa1, $xa2,$xa3)
+    {
+        $query = Xã::query()
+            ->join('tĩnhs', 'xãs.tĩnh_id', 'tĩnhs.id')
+            ->join('huyệns', 'xãs.huyện_id', 'huyệns.id')
+            ->where('xãs.tĩnh_id',$xa1)
+            ->where('xãs.huyện_id',$xa2)
+            ->whereLike('xa_name',$xa3)
+            ->select(['xãs.id','xãs.xa_name','xãs.xa_description','huyệns.huyen_name','tĩnhs.tinh_name'])
+            ->get();
+        
+        return $query;
+    }
 }

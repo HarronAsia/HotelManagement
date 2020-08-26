@@ -4,14 +4,14 @@ namespace App\Repositories\Bed;
 
 use App\Repositories\BaseRepository;
 
-use App\Models\Bed;
+use App\Models\Room\Bed;
 
 class BedRepository extends BaseRepository implements BedRepositoryInterface
 {
     //lấy model tương ứng
     public function getModel()
     {
-        return \App\Models\Bed::class;
+        return \App\Models\Room\Bed::class;
     }
    
     public function search($bed)

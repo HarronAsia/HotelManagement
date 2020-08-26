@@ -26,7 +26,7 @@ interface UserRepositoryInterface
     // public function showalldesbyUpdated();
     // public function showallascbyDeleted();
     // public function showalldesbyDeleted();
-
+    public function HighestPaidPerWeek();
     public function HighestPaidPerMonth();
     public function HighestPaidPerYear();
 }

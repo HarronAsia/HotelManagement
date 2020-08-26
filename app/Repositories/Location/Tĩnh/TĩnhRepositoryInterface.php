@@ -6,7 +6,7 @@ interface TĩnhRepositoryInterface
 {
 
     public function showAll();
-    public function paginate();
+    public function tinhs();
     
 
     

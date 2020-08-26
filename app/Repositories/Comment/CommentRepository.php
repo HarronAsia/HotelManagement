@@ -3,14 +3,14 @@
 namespace App\Repositories\Comment;
 
 use App\Repositories\BaseRepository;
-use App\Models\Comment;
+use App\Models\Room\Comment;
 
 class CommentRepository extends BaseRepository implements CommentRepositoryInterface
 {
     //lấy model tương ứng
     public function getModel()
     {
-        return \App\Models\Comment::class;
+        return \App\Models\Room\Comment::class;
     }
 
     public function showall()

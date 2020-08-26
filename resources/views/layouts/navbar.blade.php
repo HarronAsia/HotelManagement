@@ -1,4 +1,4 @@
-<link href="{{ asset('css/HomePage/navbar.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ asset('css/HomePage/Navbar.css') }}" rel="stylesheet" type="text/css">
 <nav class="navbar navbar-icon-top navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="{{route('home')}}">
         <img src="{{asset('storage/cybridgeasia.png')}}" alt="England Flag" style="width: 50px;">
@@ -38,15 +38,9 @@
                 </div>
             </li>
         </ul>
-        
-        <form class="form-inline my-2 my-lg-0" method="GET" action="#">
-            <input class="form-control mr-sm-2" type="search" name="query" placeholder="{{__('Search')}}" aria-label="{{__('Search')}}">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">{{__('Search')}}</button>
-        </form>
-
-
+    
         @else
-        <ul class="navbar-nav  mr-auto">
+        <ul class="navbar-nav  ">
             <li class="nav-item active">
                 <a class="nav-link" href="{{ route('home') }}">
                     <i class="fa fa-home"></i>
@@ -57,7 +51,7 @@
 
         </ul>
 
-        <ul class="navbar-nav">
+        <ul class="navbar-nav mr-auto">
             <li class="nav-item dropdown ">
                 <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
                     <i class="fa fa-user">
@@ -101,11 +95,6 @@
                 </div>
             </li>
         </ul>
-
-        <form class="form-inline my-2 my-lg-0" method="GET" action="#">
-            <input class="form-control mr-sm-2" type="search" name="query" placeholder="{{__('Search')}}" aria-label="{{__('Search')}}">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">{{__('Search')}}</button>
-        </form>
 
 
         @endif

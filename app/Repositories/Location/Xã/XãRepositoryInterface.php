@@ -6,7 +6,7 @@ interface XãRepositoryInterface
 {
 
     public function showAll();
-    public function paginate();
+    public function xas();
      
     // public function showallascbyName();
     // public function showalldesbyName();

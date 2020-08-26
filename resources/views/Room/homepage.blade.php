@@ -187,7 +187,7 @@
                         <div class="col-lg-6">
                             <ul class="list-unstyled mb-0">
                                 <li>
-                                    <a href="#">{{$room->room_type}}</a>
+                                   <p>{{$room->room_type}}</p>
                                 </li>
                             </ul>
                         </div>

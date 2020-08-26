@@ -4,7 +4,7 @@ namespace App\Repositories\Room;
 
 use Carbon\Carbon;
 
-use App\Models\Room;
+use App\Models\Room\Room;
 use Illuminate\Support\Facades\DB;
 use App\Repositories\BaseRepository;
 
@@ -13,7 +13,7 @@ class RoomRepository extends BaseRepository implements RoomRepositoryInterface
     //lấy model tương ứng
     public function getModel()
     {
-        return \App\Models\Room::class;
+        return \App\Models\Room\Room::class;
     }
 
     public function search($room)
@@ -68,49 +68,80 @@ class RoomRepository extends BaseRepository implements RoomRepositoryInterface
 
     public function calendarperYear()
     {
-        return $this->model = Room::join('booking__dates', 'rooms.id', '=', 'booking__dates.bookable_id')     
-            ->where('booking__dates.checkin','>=',Carbon::now()->startOfYear())
+        return $this->model = Room::join('booking__dates', 'rooms.id', '=', 'booking__dates.bookable_id')
+            ->where('booking__dates.checkin', '>=', Carbon::now()->startOfYear())
             ->get();
+    }
+
+    public function perWeek()
+    {
+        return $this->model = Room::join('booking__dates', 'rooms.id', '=', 'booking__dates.bookable_id')
+            ->select(
+
+                DB::raw('rooms.id as id'),
+                DB::raw('rooms.room_name as name'),
+                DB::raw('room_condition as conditions'),
+                DB::raw('booking_time as booking'),
+
+            )
+            ->groupBy('id', 'name')
+
+            ->orderBy('booking', 'desc')
+            ->limit(10)
+            ->get()
+            ->sortBy('WEEK(booking__dates.checkin)');
     }
 
     public function perMonth()
     {
-        //return $this->model = DB::select('select year(created_at) as year, month(created_at) as month, sum(room_price) as total_amount from rooms group by year(created_at), month(created_at)');
         return $this->model = Room::join('booking__dates', 'rooms.id', '=', 'booking__dates.bookable_id')
             ->select(
-
-                DB::raw('MONTH(booking__dates.checkin) as date'),
                 DB::raw('rooms.id as id'),
                 DB::raw('rooms.room_name as name'),
                 DB::raw('room_condition as conditions'),
                 DB::raw('booking_time as booking'),
 
             )
-            ->groupBy('date', 'id', 'name')
+            ->groupBy('id', 'name')
 
             ->orderBy('booking', 'desc')
             ->limit(10)
             ->get()
-            ->sortBy('date');
+            ->sortBy('MONTH(booking__dates.checkin)');
     }
 
     public function perYear()
     {
-        //return $this->model = DB::select('select year(created_at) as year, month(created_at) as month, sum(room_price) as total_amount from rooms group by year(created_at), month(created_at)');
+
         return $this->model = Room::join('booking__dates', 'rooms.id', '=', 'booking__dates.bookable_id')
             ->select(
-                DB::raw('YEAR(booking__dates.checkin) as date'),
                 DB::raw('rooms.id as id'),
                 DB::raw('rooms.room_name as name'),
                 DB::raw('room_condition as conditions'),
                 DB::raw('booking_time as booking'),
 
             )
-            ->groupBy('date', 'id', 'name')
+            ->groupBy( 'id', 'name')
 
             ->orderBy('booking', 'desc')
             ->limit(10)
             ->get()
-            ->sortBy('date');
+            ->sortBy('YEAR(booking__dates.checkin)');
+    }
+
+    public function busymonth()
+    {
+        return $this->model = Room::join('booking__dates', 'rooms.id', '=', 'booking__dates.bookable_id')
+            ->select(
+                DB::raw('YEAR(booking__dates.checkin) as year'),
+                DB::raw('MONTH(booking__dates.checkin) as month'),
+                DB::raw('rooms.id as id'),
+                DB::raw('rooms.room_name as name'),
+                DB::raw('booking_time as booking'),
+            )
+            ->groupBy('year', 'month', 'id', 'name')
+            ->orderBy('booking', 'desc')
+            ->limit(6)
+            ->get();
     }
 }

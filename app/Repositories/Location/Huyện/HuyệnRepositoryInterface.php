@@ -7,7 +7,7 @@ interface HuyệnRepositoryInterface
 
     public function showAll();
     
-    public function paginate();
+    public function huyens();
     
     // public function showallascbyName();
     // public function showalldesbyName();

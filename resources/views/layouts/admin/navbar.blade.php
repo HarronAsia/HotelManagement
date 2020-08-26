@@ -20,14 +20,11 @@
                 <a class="nav-link" href="{{route('admin.notification')}}" title="Notification"><i class="far fa-envelope "></i>&ensp; Notification <i class="far fa-envelope shortmenu animate"></i></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{route('admin.feedback')}}" title="Feedback"><i class="far fa-comment-alt "></i>&ensp; Feedback <i class="far fa-comment-alt shortmenu animate"></i></a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" href="{{route('admin.searching')}}" title="Feedback"><i class="fas fa-search-location"></i>&ensp; Searching <i class="fas fa-search-location shortmenu animate"></i></a>
             </li>
         </ul>
 
-        <ul class="navbar-nav  mr-auto">
+        <ul class="navbar-nav  ">
             <li class="nav-item active">
                 <a class="nav-link" href="{{ route('home') }}">
                     <i class="fa fa-home"></i>
@@ -38,7 +35,7 @@
 
         </ul>
 
-        <ul class="navbar-nav ml-md-auto d-md-flex">
+        <ul class="navbar-nav mr-auto">
             <li class="nav-item dropdown ">
                 <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
                     <i class="fa fa-user">
@@ -83,9 +80,5 @@
             </li>
         </ul>
 
-        <form class="form-inline my-2 my-lg-0" method="GET" action="#">
-            <input class="form-control mr-sm-2" type="search" name="query" placeholder="{{__('Search')}}" aria-label="{{__('Search')}}">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">{{__('Search')}}</button>
-        </form>
     </div>
 </nav>

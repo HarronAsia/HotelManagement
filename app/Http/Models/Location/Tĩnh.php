@@ -68,5 +68,13 @@ class Tĩnh extends Model
         return $query->whereId($tinh);
     }
 
+    public function scopeOfName($query, $tinh1 )
+    {
 
+        $query = Tĩnh::query()
+            ->whereLike('tinh_name', $tinh1)
+            ->get();
+        
+        return $query;
+    }
 }

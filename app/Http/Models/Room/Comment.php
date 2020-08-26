@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Room;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -19,16 +19,16 @@ class Comment extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->belongsTo('App\Models\User\User');
     }
     public function like()
     {
-        return $this->morphOne('App\Models\Like', 'likeable');
+        return $this->morphOne('App\Models\Room\Like', 'likeable');
     }
 
     public function likes()
     {
-        return $this->morphMany('App\Models\Like', 'likeable');
+        return $this->morphMany('App\Models\Room\Like', 'likeable');
     }
 
      //*********************************mutator************************************************************************************************************

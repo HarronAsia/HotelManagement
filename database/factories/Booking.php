@@ -2,7 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\Booking_Date;
+use App\Models\Room\Booking_Date;
 use Carbon\Carbon;
 use Faker\Generator as Faker;
 
@@ -18,7 +18,7 @@ $factory->define(Booking_Date::class, function (Faker $faker) {
         'time_begin' => $faker->time,
         'time_end' => $faker->time,
         'bookable_id'=> rand(1,10000),
-        'bookable_type'=> 'App\Models\Room',
+        'bookable_type'=> 'App\Models\Room\Room',
         'user_id'=> rand(1,100)
         
     ];

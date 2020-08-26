@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Models\Bed;
+use App\Models\Room\Bed;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 

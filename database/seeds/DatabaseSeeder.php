@@ -6,14 +6,15 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 
 
-use App\Models\User;
-use App\Models\Profile;
-use App\Models\Region;
-use App\Models\Category;
+use App\Models\User\User;
+use App\Models\User\Profile;
 use App\Models\Hotel;
-use App\Models\Room;
-use App\Models\Bed;
-use App\Models\Booking_Date;
+use App\Models\Room\Room;
+use App\Models\Room\Bed;
+use App\Models\Room\Booking_Date;
+use App\Models\Location\Tĩnh;
+use App\Models\Location\Huyện;
+use App\Models\Location\Xã;
 
 class DatabaseSeeder extends Seeder
 {
@@ -44,10 +45,8 @@ class DatabaseSeeder extends Seeder
         factory(Room::class, 10000)->create();
         factory(Bed::class, 10000)->create();
         factory(Booking_Date::class, 20000)->create();
-        
-
-
-
-
+        factory(Tĩnh::class, 64)->create();
+        factory(Huyện::class, 1000)->create();
+        factory(Xã::class, 10000)->create();
     }
 }

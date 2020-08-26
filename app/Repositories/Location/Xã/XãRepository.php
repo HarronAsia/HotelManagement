@@ -18,7 +18,7 @@ class XãRepository extends BaseRepository implements XãRepositoryInterface
         return $this->model->all();
     }
 
-    public function paginate()
+    public function xas()
     {
         //return $this->model = Xã::withTrashed()->paginate(6);
         return $this->model = Xã::query()
@@ -26,71 +26,8 @@ class XãRepository extends BaseRepository implements XãRepositoryInterface
             ->join('huyệns', 'huyệns.id', '=', 'xãs.huyện_id')
             ->distinct()
             ->select(['xãs.id', 'xãs.xa_name','xãs.huyện_id','huyệns.huyen_name', 'xãs.tĩnh_id', 'tĩnhs.tinh_name', 'xãs.xa_description'])
-            ->paginate(20);
+            ->paginate(64);
     }
 
-    // //************************************************************************ Sort ***********************************************************************************************/
-
-    // public function showallascbyName()
-    // {
-    //     return $this->model = User::withTrashed()->orderBy('name','ASC')->get();
-    // }
-
-    // public function showalldesbyName()
-    // {
-    //     return $this->model = User::withTrashed()->orderBy('name','desc')->get();
-    // }
-
-
-    // public function showallascbyEmail()
-    // {
-    //     return $this->model = User::withTrashed()->orderBy('email','ASC')->get();
-    // }
-
-    // public function showalldesbyEmail()
-    // {
-    //     return $this->model = User::withTrashed()->orderBy('email','desc')->get();
-    // }
-
-    // public function showallascbyRole()
-    // {
-    //     return $this->model = User::withTrashed()->orderBy('role')->where('role','User')->get();
-    // }
-
-    // public function showalldesbyRole()
-    // {
-    //     return $this->model = User::withTrashed()->orderBy('role')->where('role','Admin')->get();
-    // }
-
-    // public function showallascbyCreated()
-    // {
-    //     return $this->model = User::withTrashed()->orderBy('created_at','asc')->get();
-    // }
-
-    // public function showalldesbyCreated()
-    // {
-    //     return $this->model = User::withTrashed()->orderBy('created_at','desc')->get();
-    // }
-
-    // public function showallascbyUpdated()
-    // {
-    //     return $this->model = User::withTrashed()->orderBy('updated_at','asc')->get();
-    // }
-
-    // public function showalldesbyUpdated()
-    // {
-    //     return $this->model = User::withTrashed()->orderBy('updated_at','desc')->get();
-    // }
-
-    // public function showallascbyDeleted()
-    // {
-    //     return $this->model = User::withTrashed()->orderBy('deleted_at','asc')->get();
-    // }
-
-    // public function showalldesbyDeleted()
-    // {
-    //     return $this->model = User::withTrashed()->orderBy('deleted_at','desc')->get();
-    // }
-
-    // //************************************************************************ Sort ***********************************************************************************************/
+   
 }

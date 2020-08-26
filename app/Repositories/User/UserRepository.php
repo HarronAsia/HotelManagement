@@ -3,7 +3,7 @@
 namespace App\Repositories\User;
 
 use App\Repositories\BaseRepository;
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Support\Facades\DB;
 
 class UserRepository extends BaseRepository implements UserRepositoryInterface
@@ -11,7 +11,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     //lấy model tương ứng
     public function getModel()
     {
-        return \App\Models\User::class;
+        return \App\Models\User\User::class;
     }
 
     public function search($user)
@@ -112,6 +112,30 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     // }
 
     // //************************************************************************ Sort ***********************************************************************************************/
+    public function HighestPaidPerWeek()
+    {
+
+        return $this->model = User::join('profiles', 'users.id', '=', 'profiles.user_id')
+            ->join('booking__dates', 'users.id', '=', 'booking__dates.user_id')
+            ->select(
+                DB::raw('HOUR(booking__dates.time_begin) as duration'),
+               
+                DB::raw('users.id as id'),
+                DB::raw('users.name as name'),
+                DB::raw('users.email as email'),
+                DB::raw('profiles.gender as gender'),
+                DB::raw('profiles.balance as balance'),
+            )
+            
+            ->groupBy('duration','id', 'name', 'email', 'gender', 'balance')
+            ->orderBy('duration', 'desc')
+            ->orderBy('balance', 'desc')
+
+            ->limit(9)
+            ->get()
+            ->sortBy('WEEK(booking__dates.checkin)');
+    }
+
     public function HighestPaidPerMonth()
     {
 
@@ -131,7 +155,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             ->orderBy('duration', 'desc')
             ->orderBy('balance', 'desc')
 
-            ->limit(7)
+            ->limit(9)
             ->get()
             ->sortBy('MONTH(booking__dates.checkin)');
     }
@@ -154,7 +178,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             ->orderBy('duration', 'desc')
             ->orderBy('balance', 'desc')
 
-            ->limit(7)
+            ->limit(9)
             ->get()
             ->sortBy('YEAR(booking__dates.checkin) ');
     }

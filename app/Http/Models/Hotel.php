@@ -16,27 +16,17 @@ class Hotel extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\Models\User');
-    }
-
-    public function category()
-    {
-        return $this->belongsTo('App\Models\Category');
-    }
-
-    public function region()
-    {
-        return $this->belongsTo('App\Models\Region');
+        return $this->belongsTo('App\Models\User\User');
     }
 
     public function room()
     {
-        return $this->hasOne('App\Models\Room');
+        return $this->hasOne('App\Models\Room\Room');
     }
 
     public function rooms()
     {
-        return $this->hasMany('App\Models\Room');
+        return $this->hasMany('App\Models\Room\Room');
     }
 
     //*********************************mutator************************************************************************************************************

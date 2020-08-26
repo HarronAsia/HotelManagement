@@ -2,20 +2,14 @@
 
 namespace App\Http\Controllers;
 
-
-use App\Http\Requests\StoreRoom;
-use App\Http\Requests\StoreBooking;
 use App\Http\Requests\StoreComment;
 
-use App\Models\Bed;
-use App\Models\Room;
-use App\Models\Follower;
+use App\Models\Room\Room;
 use Illuminate\Http\Request;
 
 use App\Repositories\User\UserRepositoryInterface;
 use App\Repositories\Profile\ProfileRepositoryInterface;
 use App\Repositories\Room\RoomRepositoryInterface;
-use App\Repositories\Images\ImagesRepositoryInterface;
 use App\Repositories\Hotel\HotelRepositoryInterface;
 use App\Repositories\Booking_Date\Booking_DateRepositoryInterface;
 use App\Repositories\Follower\FollowerRepositoryInterface;
@@ -25,12 +19,11 @@ use LaravelFullCalendar\Facades\Calendar;
 use Excel;
 
 use App\Exports\RoomsExport;
-use App\Http\Requests\StoreImage;
-use App\Http\Requests\StoreProfile;
-use App\Models\Booking_Date;
-use App\Models\Comment;
+
+use App\Models\Room\Booking_Date;
+
 use Illuminate\Support\Facades\Auth;
-use LaravelFullCalendar\Calendar as LaravelFullCalendarCalendar;
+
 
 class RoomController extends Controller
 {
@@ -38,14 +31,12 @@ class RoomController extends Controller
     protected $profileRepo;
     protected $roomRepo;
     protected $hotelRepo;
-    protected $imagesRepo;
     protected $bookingRepo;
     protected $followerRepo;
     protected $commentRepo;
 
     public function __construct(
         RoomRepositoryInterface $roomRepo,
-        ImagesRepositoryInterface $imagesRepo,
         HotelRepositoryInterface $hotelRepo,
         Booking_DateRepositoryInterface $bookingRepo,
         FollowerRepositoryInterface $followerRepo,
@@ -55,7 +46,6 @@ class RoomController extends Controller
     ) {
         $this->userRepo = $userRepo;
         $this->roomRepo = $roomRepo;
-        $this->imagesRepo = $imagesRepo;
         $this->hotelRepo = $hotelRepo;
         $this->bookingRepo = $bookingRepo;
         $this->followerRepo = $followerRepo;
@@ -105,13 +95,14 @@ class RoomController extends Controller
         $booking_dates = $this->bookingRepo->showallBooking_DateonRoom($room->id);
 
         $data = $booking_dates;
-
+        
         if ($data->count()) {
             foreach ($data as $key => $value) {
-
+                
                 $events = [];
                 $events[] = Calendar::event(
                     $value->user->name,
+                    
                     true,
                     new \DateTime($value->checkin),
                     new \DateTime($value->checkout . ' +1 day'),
@@ -288,7 +279,7 @@ class RoomController extends Controller
         $booking->time_end = $data['time_end'];
         $booking->bookable_id = $data['bookable_id'];
         $booking->user_id = $data['user_id'];
-        $booking->bookable_type = 'App\Models\Room';
+        $booking->bookable_type = 'App\Models\Room\Room';
         $booking->save();
 
         $profile = $this->profileRepo->showProfile($data['user_id']);

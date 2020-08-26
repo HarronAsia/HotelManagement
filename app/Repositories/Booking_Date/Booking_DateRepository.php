@@ -4,14 +4,14 @@ namespace App\Repositories\Booking_Date;
 
 use App\Repositories\BaseRepository;
 
-use App\Models\Booking_Date;
+use App\Models\Room\Booking_Date;
 
 class Booking_DateRepository extends BaseRepository implements Booking_DateRepositoryInterface
 {
     //lấy model tương ứng
     public function getModel()
     {
-        return \App\Models\Booking_Date::class;
+        return \App\Models\Room\Booking_Date::class;
     }
    
     public function showall()
@@ -26,6 +26,7 @@ class Booking_DateRepository extends BaseRepository implements Booking_DateRepos
 
     public function showallBooking_DateonRoom($id)
     {
+        
         return $this->model = Booking_Date::where('bookable_id',$id)->orderBy('created_at','desc')->get();
     }
 
