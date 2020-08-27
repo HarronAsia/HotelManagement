@@ -8,7 +8,7 @@
 <body>
     <div id="login">
         <h3 class="text-center text-white pt-5">
-            <a  href="{{route('home')}}">
+            <a  href="{{route('home',app()->getLocale())}}">
                 <img src="{{asset('storage/cybridgeasia.png')}}" alt="logo" style="width: 200px;height:200px;">
             </a>
         </h3>
@@ -16,7 +16,7 @@
             <div id="login-row" class="row justify-content-center align-items-center">
                 <div id="login-column" class="col-md-6">
                     <div id="login-box" class="col-md-12">
-                        <form id="login-form" class="form" method="POST" action="{{ route('login') }}">
+                        <form id="login-form" class="form" method="POST" action="{{ route('login',app()->getLocale()) }}">
                             @csrf
 
                             <h3 class="text-center text-info">Login</h3>
@@ -51,10 +51,10 @@
                                 <input type="submit" name="submit" class="btn btn-info btn-md" value="submit">
                             </div>
                             <div id="register-link" class="text-right">
-                                <a href="{{route('register')}}" class="text-info">Register here</a>
+                                <a href="{{route('register',app()->getLocale())}}" class="text-info">Register here</a>
                                 <span>|</span>
                                 @if (Route::has('password.request'))
-                                <a class="btn btn-link" href="{{ route('password.request') }}">
+                                <a class="btn btn-link" href="{{ route('password.request',app()->getLocale()) }}">
                                     {{ __('Forgot Your Password?') }}
                                 </a>
                                 @endif

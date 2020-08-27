@@ -75,8 +75,8 @@ class Huyện extends Model
             ->whereLike('tĩnh_id',$huyen1)
             ->whereLike('tinh_name',$huyen2)
             ->select(['huyệns.id','huyệns.huyen_name','huyệns.huyen_description','huyệns.tĩnh_id','tĩnhs.tinh_name','tĩnhs.tinh_description'])
-            ->get();
-        
+            ->paginate(6);
+           
         return $query;
     }
 }

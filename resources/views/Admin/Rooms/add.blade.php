@@ -9,7 +9,7 @@
             <p>Add New Room </p>
         </div>
         <div class="form-content bk">
-            <form action="{{route('admin.rooms.store')}}" method="POST" enctype="multipart/form-data">
+            <form action="{{route('admin.rooms.store',app()->getLocale())}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @if ($errors->any())
                 <div class="alert alert-danger">
@@ -56,7 +56,7 @@
                     </div>
                     <div class="section-to-print" id="section-to-print">
                         <div class="row top-buffer">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="form-group has-feedback{{ $errors->has('user_id') ? ' has-error' : '' }}">
                                     <label for="user_id">Customer Name</label>
                                     <select class="form-control " name="user_id" id="user_id" required>
@@ -66,6 +66,16 @@
                                         @else
                                         <option value="{{$user->id}}" selected>{{$user->name}}</option>
                                         @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group has-feedback{{ $errors->has('hotel_id') ? ' has-error' : '' }}">
+                                    <label for="hotel_id">In Hotel</label>
+                                    <select class="form-control " name="hotel_id" id="hotel_id" required>
+                                        @foreach($hotels as $hotel)
+                                        <option value="{{$hotel->id}}" selected>{{$hotel->hotel_name}}</option>
                                         @endforeach
                                     </select>
                                 </div>

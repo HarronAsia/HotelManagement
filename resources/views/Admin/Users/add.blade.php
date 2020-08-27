@@ -9,7 +9,7 @@
             <p>Add User Profile </p>
         </div>
         <div class="form-content bk">
-            <form action="{{route('admin.users.store')}}" method="POST" enctype="multipart/form-data">
+            <form action="{{route('admin.users.store',app()->getLocale())}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @if ($errors->any())
                 <div class="alert alert-danger">

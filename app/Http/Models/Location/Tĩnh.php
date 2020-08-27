@@ -73,7 +73,7 @@ class Tĩnh extends Model
 
         $query = Tĩnh::query()
             ->whereLike('tinh_name', $tinh1)
-            ->get();
+            ->paginate(6);
         
         return $query;
     }

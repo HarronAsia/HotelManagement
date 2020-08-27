@@ -2,6 +2,20 @@
 
 @section('title','Edit Profile')
 
+@section('language')
+<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+    <a class="dropdown-item" href="{{route(Route::currentRouteName(), ['locale' => 'en','user'=>$user->name,'profile'=>$profile->id])}}">
+        <img src="{{asset('storage/flag/england.png')}}" alt="England Flag" style="width: 35px;"> &ensp; {{__('English')}}
+    </a>
+    <a class="dropdown-item" href="{{route(Route::currentRouteName(), ['locale' => 'jp','user'=>$user->name,'profile'=>$profile->id])}}">
+        <img src="{{asset('storage/flag/japan.png')}}" alt="Japanese Flag" style="width: 35px;"> &ensp; {{__('Japan')}}
+    </a>
+    <a class="dropdown-item" href="{{route(Route::currentRouteName(), ['locale' => 'vi','user'=>$user->name,'profile'=>$profile->id])}}">
+        <img src="{{asset('storage/flag/vietnam.png')}}" alt="Vietnamese Flag" style="width: 35px;"> &ensp; {{__('VietNam')}}
+    </a>
+</div>
+@endsection
+
 @section('content')
 <link href="{{ asset('css/profile.css') }}" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/4.4.95/css/materialdesignicons.css">
@@ -9,7 +23,7 @@
 <div class="main-panel">
     <div class="container-fluid">
 
-        <form action="{{route('profile.update',['user'=>$user->name,'profile'=>$profile->id])}}" method="POST" enctype="multipart/form-data">
+        <form action="{{route('profile.update',['locale'=>app()->getLocale(),'user'=>$user->name,'profile'=>$profile->id])}}" method="POST" enctype="multipart/form-data">
             @csrf
             @if ($errors->any())
             <div class="alert alert-danger">

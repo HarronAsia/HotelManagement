@@ -9,7 +9,7 @@
             <p>Edit User Profile </p>
         </div>
         <div class="form-content bk">
-            <form action="{{route('admin.users.update',['user'=>$user->name,'profile'=>$user->profile->id??''])}}" method="POST" enctype="multipart/form-data">
+            <form action="{{route('admin.users.update',['locale'=>app()->getLocale(),'user'=>$user->name,'profile'=>$user->profile->id??''])}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @if ($errors->any())
                 <div class="alert alert-danger">
@@ -39,7 +39,7 @@
                                 @if($user->profile->avatar_image == NULL)
                                 <img id="image_preview_container" src="{{asset('storage/user.png')}}" class="img" alt="preview Avatar Image" style="width:450px;height:450xpx;">
                                 @else
-                                <img id="image_preview_container" src="{{asset('storage/user/'.ucfirst($user->name).'/image'.'/'.$user->profile->avatar_image.'/')}}" class="img" style="width: 470px; height:200px;">
+                                <img id="image_preview_container" src="{{asset('storage/user/'.$user->name.'/image'.'/'.$user->profile->avatar_image.'/')}}" class="img" style="width: 470px; height:200px;">
                                 @endif
                             </div>
                         </div>

@@ -21,11 +21,6 @@ class RoomRepository extends BaseRepository implements RoomRepositoryInterface
         return $this->model = Room::where('room_name', 'LIKE', '%' . $room . '%')->paginate(100);
     }
 
-    public function searchonHotel($hotel, $room)
-    {
-        return $this->model = Room::OfHotel($hotel)->where('room_name', 'LIKE', '%' . $room . '%')->paginate(100);
-    }
-
     public function showall()
     {
         return $this->model = Room::withTrashed()->orderBy('booking_time', 'desc')->get();
@@ -33,7 +28,7 @@ class RoomRepository extends BaseRepository implements RoomRepositoryInterface
 
     public function paginate()
     {
-        return $this->model = Room::withTrashed()->paginate(6);
+        return $this->model = Room::withTrashed()->paginate(64);
     }
 
     public function showallroomonHotel($id)
@@ -143,5 +138,42 @@ class RoomRepository extends BaseRepository implements RoomRepositoryInterface
             ->orderBy('booking', 'desc')
             ->limit(6)
             ->get();
+    }
+
+    public function searchAll($room1, $room2, $room3, $room4, $room5, $room6)
+    {
+
+        return $this->model = Room::query()
+            ->join('beds', 'rooms.id', '=', 'beds.room_id')
+            ->whereLike('room_type', $room5)
+            ->whereLike('bed_type', $room6)
+            ->whereLike('room_condition', 'Available')
+            ->distinct()
+            ->join('booking__dates', 'rooms.id', '=', 'booking__dates.bookable_id')
+            ->whereLike('checkin', $room1)
+            ->whereLike('checkout', $room2)
+            ->whereLike('time_begin', $room3)
+            ->whereLike('time_end', $room4)
+            ->select(['rooms.id', 'rooms.room_name', 'rooms.room_type', 'rooms.room_condition', 'beds.bed_type', 'rooms.room_description'])
+            ->paginate(6);
+
+    }
+
+    public function searchRoomonBed($bed, $room1, $room2, $room3, $room4, $room5)
+    {
+
+        return $this->model = Room::query()
+            ->join('beds', 'rooms.id', '=', 'beds.room_id')
+            ->whereLike('room_name', $room1)
+            ->whereLike('room_floor', $room2)
+            ->whereLike('room_type', $room3)
+            ->whereBetween('room_price', [$room4, $room5])
+            ->whereLike('room_condition', 'Available')
+            ->whereLike('bed_type', $bed)
+            ->distinct()
+            ->select(['rooms.id', 'rooms.room_name', 'rooms.room_type', 'rooms.room_condition', 'beds.bed_type', 'rooms.room_description'])
+            ->paginate(6);
+
+
     }
 }

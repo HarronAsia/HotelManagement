@@ -6,7 +6,9 @@ interface RoomRepositoryInterface
 {
 
     public function search($room);
-    public function searchonHotel($hotel, $room);
+    public function searchAll($room1, $room2, $room3, $room4, $room5, $room6);
+    public function searchRoomonBed($bed, $room1, $room2, $room3, $room4, $room5);
+
     public function showall();
     public function paginate();
 
@@ -21,4 +23,6 @@ interface RoomRepositoryInterface
     public function perMonth();
     public function perYear();
     public function busymonth();
+
+    
 }

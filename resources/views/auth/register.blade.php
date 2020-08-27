@@ -8,7 +8,7 @@
 <body>
     <div id="login">
         <h3 class="text-center text-white pt-5">
-            <a href="{{route('home')}}">
+            <a href="{{route('home',app()->getLocale())}}">
                 <img src="{{asset('storage/cybridgeasia.png')}}" alt="logo" style="width: 200px;height:200px;">
             </a>
         </h3>
@@ -16,7 +16,7 @@
             <div id="login-row" class="row justify-content-center align-items-center">
                 <div id="login-column" class="col-md-6">
                     <div id="login-box" class="col-md-12">
-                        <form method="POST" action="{{ route('register') }}">
+                        <form method="POST" action="{{ route('register',app()->getLocale()) }}">
                             @csrf
 
                             <h3 class="text-center text-info">Register</h3>
@@ -69,7 +69,7 @@
                             </div>
 
                             <div id="register-link" class="text-left">
-                                <a href="{{route('login')}}" class="text-info">Login here</a>
+                                <a href="{{route('login',app()->getLocale())}}" class="text-info">Login here</a>
                             </div>
                         </form>
                     </div>

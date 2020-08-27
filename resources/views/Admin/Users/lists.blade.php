@@ -12,16 +12,16 @@
                             <h4>List of Users</h4>
                         </div>
                         <div class="col-md-10">
-                            <a href="{{route('admin.users.add')}}">
+                            <a href="{{route('admin.users.add',app()->getLocale())}}">
                                 <button type="button" class="btn btn-sm btn-primary">Add User</button>
                             </a>
-                            <a href="{{route('admin.export.users')}}">
+                            <a href="{{route('admin.export.users',app()->getLocale())}}">
                                 <button type="button" class="btn btn-sm btn-primary">Export Users</button>
                             </a>
                         </div>
                     </div>
                     <br>
-                    <form class="form-inline my-2 my-lg-0" method="GET" action="{{route('admin.users')}}">
+                    <form class="form-inline my-2 my-lg-0" method="GET" action="{{route('admin.users',app()->getLocale())}}">
                         <input class="form-control mr-sm-2" type="search" name="query" id="search_text" placeholder="{{__('Search')}}" aria-label="{{__('Search')}}">
                         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">{{__('Search')}}</button>
                     </form>
@@ -43,7 +43,7 @@
                                 <tbody>
                                     @foreach($users as $user)
                                     <tr>
-                                        <td><a href="{{route('profile.view',$user->name)}}"><small>{{$user->name}}</small></td>
+                                        <td><a href="{{route('profile.view',['locale'=>app()->getLocale(),'user'=>$user->name])}}"><small>{{$user->name}}</small></td>
                                         <td><small>{{$user->email}}</small></td>
                                         <td><small>{{$user->role}}</small></td>
                                         <td><small>{{$user->created_at}}</small></td>
@@ -51,13 +51,13 @@
                                         <td><small>{{$user->deleted_at}}</small></td>
                                         <td style="font-size: 25px;">
                                             @if(Auth::user()->id == $user->id)
-                                            <a href="{{route('admin.users.edit',['user'=>$user->name,'profile'=>$user->profile->id??''])}}" title="Edit"><i class="fa fa-edit"></i></a>
+                                            <a href="{{route('admin.users.edit',['locale'=>app()->getLocale(),'user'=>$user->name,'profile'=>$user->profile->id??''])}}" title="Edit"><i class="fa fa-edit"></i></a>
                                             @else
                                             @if($user->deleted_at == NULL)
-                                            <a href="{{route('admin.users.edit',['user'=>$user->name,'profile'=>$user->profile->id??''])}}" title="Edit"><i class="fa fa-edit"></i></a> &ensp;
-                                            <a href="{{route('admin.users.destroy',['user'=>$user->id])}}" title="Remove"><i class="fa fa-trash"></i></a>
+                                            <a href="{{route('admin.users.edit',['locale'=>app()->getLocale(),'user'=>$user->name,'profile'=>$user->profile->id??''])}}" title="Edit"><i class="fa fa-edit"></i></a> &ensp;
+                                            <a href="{{route('admin.users.destroy',['locale'=>app()->getLocale(),'user'=>$user->id])}}" title="Remove"><i class="fa fa-trash"></i></a>
                                             @else
-                                            <a href="{{route('admin.users.restore',['user'=>$user->id])}}" title="Restore"><i class="fa fa-trash-alt"></i></a>
+                                            <a href="{{route('admin.users.restore',['locale'=>app()->getLocale(),'user'=>$user->id])}}" title="Restore"><i class="fa fa-trash-alt"></i></a>
                                             @endif
                                             @endif
                                         </td>

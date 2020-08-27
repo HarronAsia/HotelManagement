@@ -16,7 +16,7 @@ class Bed extends Model
 
     public function room()
     {
-        return $this->belongsTo('App\Models\Room\Bed');
+        return $this->belongsTo('App\Models\Room\Room');
     }
     //*********************************mutator************************************************************************************************************
 

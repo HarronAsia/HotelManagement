@@ -2,15 +2,29 @@
 
 @section('title','Dashboard')
 
+@section('language')
+<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+    <a class="dropdown-item" href="{{route(Route::currentRouteName(), ['locale' => 'en','date'=>'Month'])}}">
+        <img src="{{asset('storage/flag/england.png')}}" alt="England Flag" style="width: 35px;"> &ensp; {{__('English')}}
+    </a>
+    <a class="dropdown-item" href="{{route(Route::currentRouteName(), ['locale' => 'jp','date'=>'Month'])}}">
+        <img src="{{asset('storage/flag/japan.png')}}" alt="Japanese Flag" style="width: 35px;"> &ensp; {{__('Japan')}}
+    </a>
+    <a class="dropdown-item" href="{{route(Route::currentRouteName(), ['locale' => 'vi','date'=>'Month'])}}">
+        <img src="{{asset('storage/flag/vietnam.png')}}" alt="Vietnamese Flag" style="width: 35px;"> &ensp; {{__('VietNam')}}
+    </a>
+</div>
+@endsection
+
 @section('content')
 <link href="{{ asset('css/admin/dashboard.css')}}" rel="stylesheet" type="text/css">
 <div class="container-fluid">
 
     <div class="row ">
         <div class="col-lg-12">
-            <a href="{{route('admin.dashboard','Week')}}" class="btn btn-info">Week</a>
-            <a href="{{route('admin.dashboard','Month')}}" class="btn btn-info">Month</a>
-            <a href="{{route('admin.dashboard','Year')}}" class="btn btn-info">Year</a>
+            <a href="{{route('admin.dashboard',['locale'=>app()->getLocale(),'date'=>'Week'])}}" class="btn btn-info">{{__('Week')}}</a>
+            <a href="{{route('admin.dashboard',['locale'=>app()->getLocale(),'date'=>'Month'])}}" class="btn btn-info">{{__('Month')}}</a>
+            <a href="{{route('admin.dashboard',['locale'=>app()->getLocale(),'date'=>'Year'])}}" class="btn btn-info">{{__('Year')}}</a>
         </div>
     </div>
     <div class="row">
@@ -35,7 +49,11 @@
                             @foreach($rooms as $room)
                             <tr>
                                 <th scope="row">{{$room->id}}</th>
-                                <td>{{$room->name}}</td>
+                                <td>
+                                    <a href="{{route('room.show',['locale'=>app()->getLocale(),'id'=>$room->id])}}">
+                                        {{$room->name}}
+                                    </a>
+                                </td>
                                 <td>{{$room->conditions}}</td>
                                 <td>{{$room->booking}}</td>
 
@@ -67,7 +85,11 @@
                             @foreach($users as $user)
                             <tr>
                                 <th scope="row">{{$user->id}}</th>
-                                <td>{{$user->name}}</td>
+                                <td>
+                                    <a href="{{route('profile.view',['locale'=>app()->getLocale(),'user'=>$user->name])}}">
+                                        {{$user->name}}
+                                    </a>
+                                </td>
                                 <td>{{$user->email}}</td>
                                 <td>{{$user->profile->gender}}</td>
                                 <td>{{$user->profile->balance}}</td>
@@ -98,7 +120,11 @@
                         @foreach($busymonths as $busymonth)
                         <tr>
                             <th scope="row">{{$busymonth->id}}</th>
-                            <td>{{$busymonth->name}}</td>
+                            <td>
+                                <a href="{{route('room.show',['locale'=>app()->getLocale(),'id'=>$room->id])}}">
+                                    {{$busymonth->name}}
+                                </a>
+                            </td>
                             <td>{{$busymonth->booking}}</td>
                             <td>{{$busymonth->month}}</td>
                             <td>{{$busymonth->year}}</td>

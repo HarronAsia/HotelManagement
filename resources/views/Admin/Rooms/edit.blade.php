@@ -9,7 +9,7 @@
             <p>Change Information on room {{$room->room_name}} </p>
         </div>
         <div class="form-content bk">
-            <form action="{{route('admin.rooms.update',$room->id)}}" method="POST" enctype="multipart/form-data">
+            <form action="{{route('admin.rooms.update',['locale'=>app()->getLocale(),'room'=>$room->id])}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @if ($errors->any())
                 <div class="alert alert-danger">
@@ -60,7 +60,7 @@
                     </div>
                     <div class="section-to-print" id="section-to-print">
                         <div class="row top-buffer">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="form-group has-feedback{{ $errors->has('user_id') ? ' has-error' : '' }}">
                                     <label for="user_id">Customer Name</label>
                                     <select class="form-control " name="user_id" id="user_id" required>
@@ -72,6 +72,17 @@
                                         <option value="{{$room->user_id}}" selected>{{$room->user->name}}</option>
                                         <option value="{{$user->id}}">{{$user->name}}</option>
                                         @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group has-feedback{{ $errors->has('hotel_id') ? ' has-error' : '' }}">
+                                    <label for="hotel_id">In Hotel</label>
+                                    <select class="form-control " name="hotel_id" id="hotel_id" required>
+                                        <option value="{{$room->hotel->id}}" hidden selected>{{$room->hotel->hotel_name}}</option>
+                                        @foreach($hotels as $hotel)
+                                        <option value="{{$hotel->id}}">{{$hotel->hotel_name}}</option>
                                         @endforeach
                                     </select>
                                 </div>

@@ -6,10 +6,10 @@
 <div class="container register-form top-buffer-1">
     <div class="form">
         <div class="note">
-            <p>Add New Room </p>
+            <p>Add New Bed </p>
         </div>
         <div class="form-content bk">
-            <form action="{{route('admin.beds.store')}}" method="POST" enctype="multipart/form-data">
+            <form action="{{route('admin.beds.store',app()->getLocale())}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @if ($errors->any())
                 <div class="alert alert-danger">
@@ -45,7 +45,7 @@
 
                 <!-- Bed Information -->
                 <fieldset class="scheduler-border">
-                    <legend class="scheduler-border">Room Information</legend>
+                    <legend class="scheduler-border">Bed Information</legend>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group has-feedback{{ $errors->has('bed_name') ? ' has-error' : '' }}">

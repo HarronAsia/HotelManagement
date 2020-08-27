@@ -1,4 +1,4 @@
-<form method="post" action="{{ route('admin.xa.import')}}" enctype="multipart/form-data">
+<form method="post" action="{{ route('admin.xa.import',app()->getLocale())}}" enctype="multipart/form-data">
     @csrf
     <div class="form-group">
         <label for="excel">Your Sheet file</label>

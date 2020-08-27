@@ -26,7 +26,7 @@ class XãRepository extends BaseRepository implements XãRepositoryInterface
             ->join('huyệns', 'huyệns.id', '=', 'xãs.huyện_id')
             ->distinct()
             ->select(['xãs.id', 'xãs.xa_name','xãs.huyện_id','huyệns.huyen_name', 'xãs.tĩnh_id', 'tĩnhs.tinh_name', 'xãs.xa_description'])
-            ->paginate(64);
+            ->paginate(6);
     }
 
    

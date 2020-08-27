@@ -6,6 +6,7 @@ use App\Models\User\Profile;
 use Carbon\Carbon;
 use Faker\Generator as Faker;
 
+
 $factory->define(Profile::class, function (Faker $faker) {
     static $number = 1;
     return [
@@ -13,6 +14,8 @@ $factory->define(Profile::class, function (Faker $faker) {
         'number' => $faker->phoneNumber,
         'dob' => Carbon::now(),
         'gender' => $faker->randomElement(['Male','Female','Transgender']),
+        'blood' => $faker->randomElement(['A','B','AB','O']),
+        'relationship' => $faker->randomElement(['Single','In Relationship','Married','Just Divorced']),
         'place' => $faker->address,
         'job' => $faker->jobTitle,
         'bio' => $faker->paragraph,

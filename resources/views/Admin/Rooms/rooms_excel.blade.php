@@ -10,7 +10,6 @@
             <th>Room Type</th>
             <th>Room Condition</th>
             <th>Room Status</th>
-            <th>Room Description</th>
 
             <th>Checkin</th>
             <th>Checkout</th>
@@ -38,10 +37,10 @@
             <td>{{$room->room_condition}}</td>
             <td>{{$room->room_status}}</td>
 
-            <td>{{$room->date->checkin}}</td>
-            <td>{{$room->date->checkout}}</td>
-            <td>{{$room->date->time_begin}}</td>
-            <td>{{$room->date->time_end}}</td>
+            <td>{{$room->date->checkin??''}}</td>
+            <td>{{$room->date->checkout??''}}</td>
+            <td>{{$room->date->time_begin??''}}</td>
+            <td>{{$room->date->time_end??''}}</td>
            
             <td>{{$room->user->name??''}}</td>
            

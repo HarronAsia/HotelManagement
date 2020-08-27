@@ -6,10 +6,11 @@ use Illuminate\Support\Facades\Auth;
 
 
 use App\Http\Requests\StoreProfile;
-use App\Models\Profile;
-use App\Models\User;
+use App\Models\User\Profile;
+use App\Models\User\User;
 use App\Repositories\User\UserRepositoryInterface;
 use App\Repositories\Profile\ProfileRepositoryInterface;
+use App\Repositories\Notification\NotificationRepositoryInterface;
 
 use Excel;
 
@@ -19,31 +20,35 @@ class UserController extends Controller
 {
     protected $userRepo;
     protected $profileRepo;
+    protected $notiRepo;
 
-    public function __construct(UserRepositoryInterface $userRepo, ProfileRepositoryInterface $profileRepo)
+    public function __construct(UserRepositoryInterface $userRepo, ProfileRepositoryInterface $profileRepo,NotificationRepositoryInterface $notiRepo)
     {
         $this->middleware('auth');
         $this->userRepo = $userRepo;
         $this->profileRepo = $profileRepo;
+        $this->notiRepo = $notiRepo;
     }
 
-    public function view_profile($user)
+    public function view_profile($locale, $user)
     {
         $user = $this->userRepo->showUser($user);
-        return view('User.profile', compact('user'));
+        $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+        return view('User.profile', compact('user','notifications'))->with('locale', $locale);
     }
 
-    public function add_profile($user)
+    public function add_profile($locale, $user)
     {
         if (Auth::user()->name != $user) {
-            return redirect()->route('profile.show', Auth::user()->name);
+            return redirect()->route('profile.show', ['locale'=>$locale,'user'=>Auth::user()->name]);
         } else {
             $user = $this->userRepo->showUser($user);
-            return view('User.add', compact('user'));
+            $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+            return view('User.add', compact('user','notifications'))->with('locale', $locale);
         }
     }
 
-    public function store_profile(StoreProfile $request, $user)
+    public function store_profile(StoreProfile $request, $locale, $user)
     {
 
         $data = $request->validated();
@@ -79,26 +84,27 @@ class UserController extends Controller
 
             $profile->update();
 
-            return redirect()->route('profile.view', $user);
+            return redirect()->route('profile.view', ['locale' => $locale, 'user' => $user]);
         } else {
 
             $profile->update();
-            return redirect()->route('profile.view', $user);
+            return redirect()->route('profile.view', ['locale' => $locale, 'user' => $user]);
         }
     }
 
-    public function edit_profile($user, $profile)
+    public function edit_profile($locale, $user, $profile)
     {
         if (Auth::user()->name != $user) {
-            return redirect()->route('profile.show', Auth::user()->name);
+            return redirect()->route('profile.show', ['locale'=>$locale,'user'=>Auth::user()->name]);
         } else {
             $profile = $this->profileRepo->showProfile($profile);
             $user = $this->userRepo->showUser($user);
-            return view('User.edit', compact('user', 'profile'));
+            $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+            return view('User.edit', compact('user', 'profile','notifications'))->with('locale', $locale);
         }
     }
 
-    public function update_profile(StoreProfile $request, $user, $profile)
+    public function update_profile(StoreProfile $request, $locale, $user, $profile)
     {
         $data = $request->validated();
 
@@ -146,23 +152,25 @@ class UserController extends Controller
 
             $profile->update();
 
-            return redirect()->route('profile.view', $user);
+            return redirect()->route('profile.view', ['locale'=>$locale,'user'=>$user]);
         } else {
 
             $profile->update();
-            return redirect()->route('profile.view', $user);
+            return redirect()->route('profile.view',['locale'=>$locale,'user'=>$user]);
         }
     }
 
-    public function search()
+    public function search($locale)
     {
         $search_query = $_GET['query'];
         $users = User::where('name', 'LIKE', '%' . $search_query . '%')->get();
-        return view('Admin.Users.lists', compact($users));
+        $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+        return view('Admin.Users.lists', compact('users','notifications'))->with('locale', $locale);
     }
 
     public function export()
     {
         return Excel::download(new UsersExport, 'users_list.csv');
     }
+
 }

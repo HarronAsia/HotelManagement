@@ -9,7 +9,7 @@
             <p>Edit Information on Bed {{$bed->bed_name}} </p>
         </div>
         <div class="form-content bk">
-            <form action="{{route('admin.beds.update',$bed->id)}}" method="POST" enctype="multipart/form-data">
+            <form action="{{route('admin.beds.update',['locale'=>app()->getLocale(),'bed'=>$bed->id])}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @if ($errors->any())
                 <div class="alert alert-danger">
@@ -62,7 +62,7 @@
                         <div class="row top-buffer">
                             <div class="col-md-6">
                                 <div class="form-group has-feedback{{ $errors->has('room_id') ? ' has-error' : '' }}">
-                                    <label for="room_id">In Hotel</label>
+                                    <label for="room_id">In Room</label>
                                     <select class="form-control " name="room_id" id="room_id" required>
                                         @foreach($rooms as $room)
                                         <option value="{{$bed->room_id}}" selected>{{$bed->room->room_name}}</option>
@@ -73,7 +73,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group has-feedback{{ $errors->has('bed_type') ? ' has-error' : '' }}">
-                                    <label for="bed_type">Customer Name</label>
+                                    <label for="bed_type">Bed Type</label>
                                     <select class="form-control " name="bed_type" id="bed_type" required>
                                         <option value="{{$bed->bed_type}}" selected>{{$bed->bed_type}}</option>
                                         <option value="Single Bed">Single Bed</option>

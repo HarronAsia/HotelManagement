@@ -1,6 +1,21 @@
 @extends('layouts.admin.app')
 
 @section('title','Monitoring')
+
+@section('language')
+<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+    <a class="dropdown-item" href="{{route(Route::currentRouteName(), ['locale' => 'en'])}}">
+        <img src="{{asset('storage/flag/england.png')}}" alt="England Flag" style="width: 35px;"> &ensp; {{__('English')}}
+    </a>
+    <a class="dropdown-item" href="{{route(Route::currentRouteName(), ['locale' => 'jp'])}}">
+        <img src="{{asset('storage/flag/japan.png')}}" alt="Japanese Flag" style="width: 35px;"> &ensp; {{__('Japan')}}
+    </a>
+    <a class="dropdown-item" href="{{route(Route::currentRouteName(), ['locale' => 'vi'])}}">
+        <img src="{{asset('storage/flag/vietnam.png')}}" alt="Vietnamese Flag" style="width: 35px;"> &ensp; {{__('VietNam')}}
+    </a>
+</div>
+@endsection
+
 @section('content')
 
 <link href="{{ asset('css/admin/monitoring.css') }}" rel="stylesheet" type="text/css">
@@ -13,7 +28,7 @@
                     <span class="feature__number">01</span>
                     <span class="flaticon-003-target feature__icon">{{$users->count()}}</span>
                     <h3 class="feature__title">
-                        <a href="{{route('admin.users')}}">User</a>
+                        <a href="{{route('admin.users',app()->getLocale())}}">User</a>
                     </h3>
                     <p class="feature__desc">
                         <h4>Features</h4>
@@ -44,7 +59,7 @@
                     <span class="feature__number">02</span>
                     <span class="flaticon-001-time-is-money feature__icon">{{$hotels->count()}}</span>
                     <h3 class="feature__title">
-                        <a href="{{route('admin.hotels')}}">Hotels</a>
+                        <a href="{{route('admin.hotels',app()->getLocale())}}">Hotels</a>
                     </h3>
                     <p class="feature__desc">
                         <h4>Features</h4>
@@ -76,7 +91,7 @@
                     <span class="feature__number">03</span>
                     <span class="flaticon-009-search feature__icon">{{$rooms->count()}}</span>
                     <h3 class="feature__title">
-                        <a href="{{route('admin.rooms')}}">Rooms</a>
+                        <a href="{{route('admin.rooms',app()->getLocale())}}">Rooms</a>
                     </h3>
                     <p class="feature__desc">
                         <h4>Features</h4>
@@ -108,7 +123,7 @@
                     <span class="feature__number">04</span>
                     <span class="flaticon-009-search feature__icon">{{$beds->count()}}</span>
                     <h3 class="feature__title">
-                        <a href="{{route('admin.beds')}}">Beds</a>
+                        <a href="{{route('admin.beds',app()->getLocale())}}">Beds</a>
                     </h3>
                     <p class="feature__desc">
                         <h4>Features</h4>

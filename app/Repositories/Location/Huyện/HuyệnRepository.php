@@ -24,7 +24,7 @@ class HuyệnRepository extends BaseRepository implements HuyệnRepositoryInter
        return $this->model = Huyện::query()
         ->join('tĩnhs','tĩnhs.id','=','huyệns.tĩnh_id')
         ->select(['huyệns.id','huyệns.huyen_name','huyệns.tĩnh_id','tĩnhs.tinh_name','huyệns.huyen_description'])
-        ->paginate(64);
+        ->paginate(6);
         
     }
 

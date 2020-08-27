@@ -8,8 +8,8 @@
     <div class="container h-100">
         <div class="d-flex h-100 text-center align-items-center">
             <div class="w-100 text-white">
-                <h1>Hotel Name</h1>
-                <p class="lead mb-0">Hotel Motto</p>
+                <h1>{{__('Hotel Name')}}</h1>
+                <p class="lead mb-0">{{__('Hotel Motto')}}</p>
             </div>
         </div>
     </div>

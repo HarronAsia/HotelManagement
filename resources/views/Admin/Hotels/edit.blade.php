@@ -8,7 +8,7 @@
             <p>Edit Hotel </p>
         </div>
         <div class="form-content bk">
-            <form action="{{route('admin.hotels.update',$hotel->id)}}" method="POST" enctype="multipart/form-data">
+            <form action="{{route('admin.hotels.update',['locale'=>app()->getLocale(),'hotel'=>$hotel->id])}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @if ($errors->any())
                 <div class="alert alert-danger">
@@ -57,7 +57,7 @@
                                 <input type="text" class="form-control " id="hotel_name" placeholder="Enter Name of the Hotel" name="hotel_name" value="{{$hotel->hotel_name}}" required>
                             </div>
                         </div>
-                    </div>12
+                    </div>
                     <div class="section-to-print" id="section-to-print">
                         <div class="row top-buffer">
                             <div class="col-md-">

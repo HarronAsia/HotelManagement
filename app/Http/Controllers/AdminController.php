@@ -37,6 +37,7 @@ use App\Repositories\Bed\BedRepositoryInterface;
 use App\Repositories\Room\RoomRepositoryInterface;
 use App\Repositories\User\UserRepositoryInterface;
 use App\Repositories\Hotel\HotelRepositoryInterface;
+use App\Repositories\Notification\NotificationRepositoryInterface;
 use App\Repositories\Location\Xã\XãRepositoryInterface;
 use App\Repositories\Profile\ProfileRepositoryInterface;
 use App\Repositories\Location\Tĩnh\TĩnhRepositoryInterface;
@@ -51,9 +52,11 @@ class AdminController extends Controller
     protected $hotelRepo;
     protected $roomRepo;
     protected $bedRepo;
+    protected $notiRepo;
     protected $tĩnhRepo;
     protected $huyệnRepo;
     protected $xãRepo;
+    
 
     public function __construct(
         UserRepositoryInterface $userRepo,
@@ -61,6 +64,7 @@ class AdminController extends Controller
         HotelRepositoryInterface $hotelRepo,
         RoomRepositoryInterface $roomRepo,
         BedRepositoryInterface $bedRepo,
+        NotificationRepositoryInterface $notiRepo,
         TĩnhRepositoryInterface $tĩnhRepo,
         HuyệnRepositoryInterface $huyệnRepo,
         XãRepositoryInterface $xãRepo
@@ -72,24 +76,27 @@ class AdminController extends Controller
         $this->hotelRepo = $hotelRepo;
         $this->roomRepo = $roomRepo;
         $this->bedRepo = $bedRepo;
+        $this->notiRepo = $notiRepo;
         $this->tĩnhRepo = $tĩnhRepo;
         $this->huyệnRepo = $huyệnRepo;
         $this->xãRepo = $xãRepo;
+        
     }
 
     //********************************* SideBar *****************************************************************************************************************************/
 
-    public function monitoring()
+    public function monitoring($locale)
     {
         $users = $this->userRepo->showAll();
         $hotels = $this->hotelRepo->showAll();
         $rooms = $this->roomRepo->showall();
         $beds = $this->bedRepo->showall();
-        return view('Admin.monitoring', compact('users',  'hotels', 'rooms', 'beds'));
+        $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+        return view('Admin.monitoring', compact('users',  'hotels', 'rooms', 'beds','notifications'))->with('locale',$locale);
     }
 
 
-    public function calendar()
+    public function calendar($locale)
     {
         $events = [];
         $data = $this->roomRepo->calendarperYear();
@@ -97,6 +104,7 @@ class AdminController extends Controller
         if ($data->count()) {
             foreach ($data as $key => $value) {
                 $events[] = Calendar::event(
+                    //dd($value->id),
                     $value->room_name,
                     true,
                     new \DateTime($value->date->checkin ?? ''),
@@ -105,62 +113,69 @@ class AdminController extends Controller
                     // Add color and link on event
                     [
                         'color' => '#f05050',
-                        'route' => '#',
+                        //'url' => '/'.$locale.'/Room'.'/'.$value->id,
+                        
                     ]
                 );
             }
         }
-        $calendar = Calendar::addEvents($events)->setOptions([
-            'selectable' => true,
-            'editable' => true,
-            'handleWindowResize' => true,
-            'displayEventTime' => true,
-            // 'buttonText'=> [
-            //     'prevYear'=> '&laquo;', 
-            //     'nextYear'=> '&raquo;',  
-            //     'today'=>   '今日',
-            //     'month'=>    '月',
-            //     'week'=>     '週',
-            //     'day'=>      '日'
-            // ],
-            //   // 月名称
-            // 'monthNames'=> ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-            // // 月略称
-            // 'monthNamesShort'=> ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-            // // 曜日名称
-            // 'dayNames'=> ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'],
-            // // 曜日略称
-            // 'dayNamesShort'=> ['日', '月', '火', '水', '木', '金', '土'],
-        ]);
-        return view('Admin.Calendar', compact('calendar'));
+        if ($locale == 'jp') {
+            $calendar = Calendar::addEvents($events)->setOptions([
+                'handleWindowResize' => true,
+                'displayEventTime' => true,
+                'navLinks'=> true,
+                'locale'=>'ja',
+            ]);
+        } 
+        elseif($locale == 'vi')
+        {
+            $calendar = Calendar::addEvents($events)->setOptions([
+                'handleWindowResize' => true,
+                'displayEventTime' => true,
+                'navLinks'=> true,
+                'locale'=>'vi',
+                
+            ]);
+        }
+        else {
+            $calendar = Calendar::addEvents($events)->setOptions([
+                'handleWindowResize' => true,
+                'displayEventTime' => true,
+                'navLinks'=> true,
+                'locale'=>'en',
+            ]);
+        }
+        $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+        return view('Admin.Calendar', compact('calendar','notifications'))->with('locale',$locale);
     }
 
 
-    public function notification()
+    public function notification($locale)
     {
-        return view('Admin.notification');
+        $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+        return view('Admin.notification',compact('notifications'))->with('locale',$locale);
     }
 
     //********************************* SideBar *****************************************************************************************************************************/
 
     //********************************* Dashboard *****************************************************************************************************************************/
-    public function dashboard($date)
+    public function dashboard($locale,$date)
     {
         $busymonths = $this->roomRepo->busymonth();
-
+        $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
 
         if ($date == 'Month') {
             $users = $this->userRepo->HighestPaidPerMonth();
             $rooms = $this->roomRepo->perMonth();
-            return view('Admin.dashboard', compact('users', 'rooms', 'date', 'busymonths'));
+            return view('Admin.dashboard', compact('users', 'rooms', 'date', 'busymonths','notifications'))->with('locale',$locale);
         } elseif ($date == 'Year') {
             $users = $this->userRepo->HighestPaidPerYear();
             $rooms = $this->roomRepo->perYear();
-            return view('Admin.dashboard', compact('users', 'rooms', 'date', 'busymonths'));
+            return view('Admin.dashboard', compact('users', 'rooms', 'date', 'busymonths','notifications'))->with('locale',$locale);
         } elseif ($date == 'Week') {
             $users = $this->userRepo->HighestPaidPerWeek();
             $rooms = $this->roomRepo->perWeek();
-            return view('Admin.dashboard', compact('users', 'rooms', 'date', 'busymonths'));
+            return view('Admin.dashboard', compact('users', 'rooms', 'date', 'busymonths','notifications'))->with('locale',$locale);
         }
     }
 
@@ -170,24 +185,27 @@ class AdminController extends Controller
 
     //********************************* Monitoring *****************************************************************************************************************************/
     //-------------------------------------------------------------------------------USER-----------------------------------------------------------------------//
-    public function users()
+    public function users($locale)
     {
-        if (isset($_GET['query'])) {
+         $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+        if (isset($_GET['query'])) {    
             $search_query = $_GET['query'];
             $users = $this->userRepo->search($search_query);
-            return view('Admin.Users.lists', compact('users'));
-        } else {
+           
+            return view('Admin.Users.lists', compact('users','notifications'))->with('locale',$locale);
+        } else {  
             $users = $this->userRepo->paginate();
-            return view('Admin.Users.lists', compact('users'));
+            return view('Admin.Users.lists', compact('users','notifications'))->with('locale',$locale);
         }
     }
 
-    public function adduser()
+    public function adduser($locale)
     {
-        return view('Admin.Users.add');
+        $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+        return view('Admin.Users.add',compact('notifications'))->with('locale',$locale);
     }
 
-    public function storeuser(StoreAdmin $request)
+    public function storeuser(StoreAdmin $request,$locale)
     {
         $data = $request->validated();
 
@@ -197,6 +215,7 @@ class AdminController extends Controller
         $user->password = $data['password'];
         $user->role = $data['role'];
         $user->save();
+
         $profile = new Profile();
         $profile->username = $data['username'];
         $profile->number = $data['number'];
@@ -227,21 +246,22 @@ class AdminController extends Controller
 
             $profile->save();
 
-            return redirect()->route('admin.users');
+            return redirect()->route('admin.users',$locale);
         } else {
 
             $profile->save();
-            return redirect()->route('admin.users');
+            return redirect()->route('admin.users',$locale);
         }
     }
 
-    public function edituser($user)
+    public function edituser($locale,$user)
     {
         $user = $this->userRepo->showUser($user);
-        return view('Admin.Users.edit', compact('user'));
+        $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+        return view('Admin.Users.edit', compact('user','notifications'))->with('locale',$locale);
     }
 
-    public function updateuser(StoreAdmin $request, $userid, $profileid)
+    public function updateuser(StoreAdmin $request,$locale, $userid, $profileid)
     {
         $data = $request->validated();
 
@@ -250,6 +270,7 @@ class AdminController extends Controller
         $user->email = $data['email'];
         $user->password = $data['password'];
         $user->role = $data['role'];
+        $user->update();
 
         $profile = $this->profileRepo->showProfile($profileid);
         $profile->username = $data['username'];
@@ -293,20 +314,20 @@ class AdminController extends Controller
 
             $profile->update();
 
-            return redirect()->route('admin.users');
+            return redirect()->route('admin.users',$locale);
         } else {
 
             $profile->update();
-            return redirect()->route('admin.users');
+            return redirect()->route('admin.users',$locale);
         }
     }
 
-    public function destroyuser($user)
+    public function destroyuser($locale,$user)
     {
         $this->userRepo->destroyUser($user);
         return redirect()->back();
     }
-    public function restoreuser($user)
+    public function restoreuser($locale,$user)
     {
         $this->userRepo->restoreUser($user);
         return redirect()->back();
@@ -314,26 +335,27 @@ class AdminController extends Controller
     //-------------------------------------------------------------------------------USER-----------------------------------------------------------------------//
 
     //-------------------------------------------------------------------------------HOTEL-----------------------------------------------------------------------//
-    public function hotels()
-    {
+    public function hotels($locale)
+    { 
+        $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
         if (isset($_GET['query'])) {
             $search_query = $_GET['query'];
             $hotels = $this->hotelRepo->search($search_query);
-            return view('Admin.Hotels.lists', compact('hotels'));
+            return view('Admin.Hotels.lists', compact('hotels','notifications'))->with('locale',$locale);
         } else {
             $hotels = $this->hotelRepo->paginate();
-            return view('Admin.Hotels.lists', compact('hotels'));
+            return view('Admin.Hotels.lists', compact('hotels','notifications'))->with('locale',$locale);
         }
     }
 
-    public function addhotel()
+    public function addhotel($locale)
     {
         $users = $this->userRepo->showall();
-        $categories = $this->categoryRepo->showall();
-        return view('Admin.Hotels.add', compact('users', 'categories'));
+        $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+        return view('Admin.Hotels.add', compact('users','hotels','notifications'))->with('locale',$locale);
     }
 
-    public function storehotel(StoreHotel $request)
+    public function storehotel(StoreHotel $request,$locale)
     {
         $data = $request->validated();
 
@@ -357,18 +379,18 @@ class AdminController extends Controller
 
         $hotel->save();
 
-        return redirect()->route('admin.hotels');
+        return redirect()->route('admin.hotels',$locale);
     }
 
-    public function edithotel($hotel)
+    public function edithotel($locale,$hotel)
     {
         $hotel = $this->hotelRepo->showHotel($hotel);
         $users = $this->userRepo->showall();
-        $categories = $this->categoryRepo->showall();
-        return view('Admin.Hotels.edit', compact('hotel', 'users', 'categories'));
+        $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+        return view('Admin.Hotels.edit', compact('hotel', 'users','notifications'))->with('locale',$locale);
     }
 
-    public function updatehotel(StoreHotel $request, $hotel)
+    public function updatehotel(StoreHotel $request,$locale, $hotel)
     {
         $data = $request->validated();
 
@@ -400,21 +422,21 @@ class AdminController extends Controller
 
             $hotel->save();
 
-            return redirect()->route('admin.hotels');
+            return redirect()->route('admin.hotels',$locale);
         } else {
             $hotel->save();
 
-            return redirect()->route('admin.hotels');
+            return redirect()->route('admin.hotels',$locale);
         }
     }
 
-    public function destroyhotel($hotel)
+    public function destroyhotel($locale,$hotel)
     {
         $this->hotelRepo->destroyHotel($hotel);
         return redirect()->back();
     }
 
-    public function restorehotel($hotel)
+    public function restorehotel($locale,$hotel)
     {
         $this->hotelRepo->restoreHotel($hotel);
         return redirect()->back();
@@ -423,26 +445,28 @@ class AdminController extends Controller
     //-------------------------------------------------------------------------------HOTEL-----------------------------------------------------------------------//
 
     //-------------------------------------------------------------------------------ROOM-----------------------------------------------------------------------//
-    public function rooms()
+    public function rooms($locale)
     {
+        $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
         if (isset($_GET['query'])) {
             $search_query = $_GET['query'];
             $rooms = $this->roomRepo->search($search_query);
-            return view('Admin.Rooms.lists', compact('rooms'));
+            return view('Admin.Rooms.lists', compact('rooms','notifications'))->with('locale',$locale);
         } else {
             $rooms = $this->roomRepo->paginate();
-            return view('Admin.Rooms.lists', compact('rooms'));
+            return view('Admin.Rooms.lists', compact('rooms','notifications'))->with('locale',$locale);
         }
     }
 
-    public function addroom()
+    public function addroom($locale)
     {
         $users = $this->userRepo->showall();
         $hotels = $this->hotelRepo->showall();
-        return view('Admin.Rooms.add', compact('users', 'hotels'));
+        $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+        return view('Admin.Rooms.add', compact('users', 'hotels','notifications'))->with('locale',$locale);
     }
 
-    public function storeroom(StoreRoom $request)
+    public function storeroom(StoreRoom $request,$locale)
     {
         $data = $request->validated();
 
@@ -459,10 +483,7 @@ class AdminController extends Controller
         $room->user_id = $data['user_id'];
         $room->hotel_id = $data['hotel_id'];
 
-        $room->date_start = $data['date_start'];
-        $room->date_end = $data['date_end'];
-        $room->time_start = $data['time_start'];
-        $room->time_end = $data['time_end'];
+       
 
         $hotel = $this->hotelRepo->showHotel($room->hotel_id);
         if ($request->hasFile('room_image')) {
@@ -477,19 +498,28 @@ class AdminController extends Controller
         $room->room_image = $data['room_image'];
 
         $room->save();
+        
+        $room->date()->create([
+            'checkin' => $data['date_start'],
+            'checkout' => $data['date_end'],
+            'time_begin' => $data['time_start'],
+            'time_end' => $data['time_end'],
+            'user_id' =>  $room->user_id,
+        ]);
 
-        return redirect()->route('admin.rooms');
+        return redirect()->route('admin.rooms',$locale);
     }
 
-    public function editroom($room)
+    public function editroom($locale,$room)
     {
         $room = $this->roomRepo->showRoom($room);
         $users = $this->userRepo->showall();
         $hotels = $this->hotelRepo->showall();
-        return view('Admin.Rooms.edit', compact('room', 'users', 'hotels'));
+        $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+        return view('Admin.Rooms.edit', compact('room', 'users', 'hotels','notifications'))->with('locale',$locale);
     }
 
-    public function updateroom(StoreRoom $request, $room)
+    public function updateroom(StoreRoom $request,$locale, $room)
     {
         $data = $request->validated();
 
@@ -506,11 +536,6 @@ class AdminController extends Controller
         $room->user_id = $data['user_id'];
         $room->hotel_id = $data['hotel_id'];
 
-        $room->date_start = $data['date_start'];
-        $room->date_end = $data['date_end'];
-        $room->time_start = $data['time_start'];
-        $room->time_end = $data['time_end'];
-
         $hotel = $this->hotelRepo->showHotel($room->hotel_id);
 
         $old_room_image = $room->room_image;
@@ -526,7 +551,7 @@ class AdminController extends Controller
             } elseif (!file_exists($path . $old_room_image)) {
 
                 $data['room_image']->move($path, $filename);
-                unlink($path . $old_room_image);
+                //unlink($path . $old_room_image);
             }
 
             $data['room_image'] = $filename;
@@ -534,21 +559,28 @@ class AdminController extends Controller
 
             $room->save();
 
-            return redirect()->route('admin.rooms');
+            $room->date()->create([
+                'checkin' => $data['date_start'],
+                'checkout' => $data['date_end'],
+                'time_begin' => $data['time_start'],
+                'time_end' => $data['time_end'],
+                'user_id' =>  $room->user_id,
+            ]);
+            return redirect()->route('admin.rooms',$locale);
         } else {
             $room->save();
 
-            return redirect()->route('admin.rooms');
+            return redirect()->route('admin.rooms',$locale);
         }
     }
 
-    public function destroyroom($room)
+    public function destroyroom($locale,$room)
     {
         $this->roomRepo->destroyRoom($room);
         return redirect()->back();
     }
 
-    public function restoreroom($room)
+    public function restoreroom($locale,$room)
     {
         $this->roomRepo->restoreRoom($room);
         return redirect()->back();
@@ -557,25 +589,27 @@ class AdminController extends Controller
     //-------------------------------------------------------------------------------ROOM-----------------------------------------------------------------------//
 
     //-------------------------------------------------------------------------------Bed-----------------------------------------------------------------------//
-    public function beds()
+    public function beds($locale)
     {
+        $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
         if (isset($_GET['query'])) {
             $search_query = $_GET['query'];
             $beds = $this->bedRepo->search($search_query);
-            return view('Admin.Beds.lists', compact('beds'));
+            return view('Admin.Beds.lists', compact('beds','notifications'))->with('locale',$locale);
         } else {
             $beds = $this->bedRepo->paginate();
-            return view('Admin.Beds.lists', compact('beds'));
+            return view('Admin.Beds.lists', compact('beds','notifications'))->with('locale',$locale);
         }
     }
 
-    public function addbed()
+    public function addbed($locale)
     {
-        $rooms = $this->roomRepo->showall();
-        return view('Admin.Beds.add', compact('rooms'));
+        $rooms = $this->roomRepo->paginate();
+        $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+        return view('Admin.Beds.add', compact('rooms','notifications'))->with('locale',$locale);
     }
 
-    public function storebed(StoreBed $request)
+    public function storebed(StoreBed $request,$locale)
     {
         $data = $request->validated();
 
@@ -584,7 +618,7 @@ class AdminController extends Controller
         $bed->bed_name = $data['bed_name'];
         $bed->bed_type = $data['bed_type'];
         $bed->room_id = $data['room_id'];
-
+        dd($bed->room_id);
         $room = $this->roomRepo->showRoom($bed->room_id);
         $hotel = $this->hotelRepo->showHotel($room->hotel_id);
         if ($request->hasFile('bed_image')) {
@@ -600,17 +634,18 @@ class AdminController extends Controller
 
         $room->save();
 
-        return redirect()->route('admin.beds');
+        return redirect()->route('admin.beds',$locale);
     }
 
-    public function editbed($bed)
+    public function editbed($locale,$bed)
     {
         $bed = $this->bedRepo->showBed($bed);
-        $rooms = $this->roomRepo->showall();
-        return view('Admin.Beds.edit', compact('bed', 'rooms'));
+        $rooms = $this->roomRepo->paginate();
+        $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+        return view('Admin.Beds.edit', compact('bed', 'rooms','notifications'))->with('locale',$locale);
     }
 
-    public function updatebed(StoreBed $request, $bed)
+    public function updatebed(StoreBed $request,$locale, $bed)
     {
         $data = $request->validated();
 
@@ -619,7 +654,7 @@ class AdminController extends Controller
         $bed->bed_name = $data['bed_name'];
         $bed->bed_type = $data['bed_type'];
         $bed->room_id = $data['room_id'];
-
+        dd($bed->room_id);
         $room = $this->roomRepo->showRoom($bed->room_id);
         $hotel = $this->hotelRepo->showHotel($room->hotel_id);
 
@@ -644,21 +679,21 @@ class AdminController extends Controller
 
             $bed->save();
 
-            return redirect()->route('admin.beds');
+            return redirect()->route('admin.beds',$locale);
         } else {
             $bed->save();
 
-            return redirect()->route('admin.beds');
+            return redirect()->route('admin.beds',$locale);
         }
     }
 
-    public function destroybed($bed)
+    public function destroybed($locale,$bed)
     {
         $this->bedRepo->destroyBed($bed);
         return redirect()->back();
     }
 
-    public function restorebed($bed)
+    public function restorebed($locale,$bed)
     {
         $this->bedRepo->restorebed($bed);
         return redirect()->back();
@@ -671,8 +706,9 @@ class AdminController extends Controller
     //********************************* Monitoring *****************************************************************************************************************************/
 
     //********************************* Searching *****************************************************************************************************************************/
-    public function searching()
+    public function searching($locale)
     {
+        
         if (
             isset($_GET['select_query']) or isset($_GET['select2_query']) or isset($_GET['select3_query']) or isset($_GET['tinh_query'])
             or isset($_GET['huyen_query']) or isset($_GET['xa_query'])
@@ -690,72 +726,34 @@ class AdminController extends Controller
                 $tinhs = Tĩnh::OfName($query4);
                 $huyens = $this->huyệnRepo->huyens();
                 $xas = $this->xãRepo->xas();
-                return view('Admin.Location.search', compact('tinhs', 'huyens', 'xas'));
+                return view('Admin.Location.search', compact('tinhs', 'huyens', 'xas'))->with('locale',$locale);
             } elseif ($query == 'Huyện') {
                 $tinhs = $this->tĩnhRepo->tinhs();
                 $huyens = Huyện::OfAll($query2, $query5);
                 $xas = $this->xãRepo->xas();
-                return view('Admin.Location.search', compact('tinhs', 'huyens', 'xas'));
+                return view('Admin.Location.search', compact('tinhs', 'huyens', 'xas'))->with('locale',$locale);
             } elseif ($query == 'Xã') {
                 $tinhs = $this->tĩnhRepo->tinhs();
                 $huyens = $this->huyệnRepo->huyens();
                 $xas = Xã::OfAll($query2, $query3, $query4, $query5 . $query6);
-                return view('Admin.Location.search', compact('tinhs', 'huyens', 'xas'));
+                return view('Admin.Location.search', compact('tinhs', 'huyens', 'xas'))->with('locale',$locale);
             }
         } else {
             $tinhs = $this->tĩnhRepo->tinhs();
 
             $huyens = $this->huyệnRepo->huyens();
             $xas = $this->xãRepo->xas();
-            return view('Admin.Location.search', compact('tinhs', 'huyens', 'xas'));
+            return view('Admin.Location.search', compact('tinhs', 'huyens', 'xas'))->with('locale',$locale);
         }
     }
 
-    public function load_more(Request $request)
-    {
-        $output = '';
-        $id = $request->id;
-        dd( $id);
-        $tinhs = Tĩnh::where('id', '<', $id)
-            ->orderBy('id', 'desc')
-            ->limit(5)
-            ->get();
-
-        if (!$tinhs->isEmpty()) {
-            foreach ($tinhs as $tinh) {
-                $id = $tinh->id;
-                $created_at = $tinh->created_at;
-                $output .= '<table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">' . $tinh->id . '</th>
-                    <td>' . $tinh->tinh_name . '</td>
-                    <td>' . $tinh->tinh_description . '</td>
-                  </tr>
-                </tbody>
-              </table>';
-            }
-            $output .= '<div id="remove-row" class="text-center">
-    <button id="btn-more" data-id="' . $tinh->id . '" class="loadmore-btn text-center">Load More</button>
-    </div>';
-            echo $output;
-        }
-    }
-
-    public function location_create()
+    public function location_create($locale)
     {
         $locations = $this->tĩnhRepo->showAll();
-        return view('Admin.Location.create', compact('locations'));
+        return view('Admin.Location.create', compact('locations'))->with('locale',$locale);
     }
 
-    public function location_store(StoreLocation $request)
+    public function location_store(StoreLocation $request,$locale)
     {
         $data = $request->validated();
 
@@ -779,10 +777,8 @@ class AdminController extends Controller
         $xa->huyện_id = $huyenid;
         $xa->save();
 
-        return redirect()->route('admin.searching');
+        return redirect()->route('admin.searching')->with('locale',$locale);
     }
-
-
 
     public function Tinhimport(Request $request)
     {

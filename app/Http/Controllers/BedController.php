@@ -3,50 +3,59 @@
 namespace App\Http\Controllers;
 
 use App\Models\Room\Room;
+use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Http\Request;
 use App\Repositories\Room\RoomRepositoryInterface;
+use App\Repositories\Notification\NotificationRepositoryInterface;
 
 class BedController extends Controller
 {
     protected $roomRepo;
+    protected $notiRepo;
 
-    public function __construct(RoomRepositoryInterface $roomRepo)
+    public function __construct(RoomRepositoryInterface $roomRepo,NotificationRepositoryInterface $notiRepo)
     {
         $this->roomRepo = $roomRepo;
+        $this->notiRepo = $notiRepo;
     }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($bed)
+    public function index($locale,$bed)
     {
         $rooms = $this->roomRepo->showallroomonBed($bed);
-        return view('Category.homepage', compact('rooms', 'bed'));
+        $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+        return view('Category.homepage', compact('rooms', 'bed'))->with('locale',$locale);
     }
 
-    public function search($bed)
+    public function search($locale,$bed)
     {
-
+        
         if (
             isset($_GET['name_query']) or isset($_GET['floor_query']) or isset($_GET['type_query'])
             or isset($_GET['min_price']) or isset($_GET['max_price'])
         ) {
-            dd("1");
+            
             $query = $_GET['name_query'];
             $query2 = $_GET['floor_query'];
             $query3 = $_GET['type_query'];
             $query4 = $_GET['min_price'];
             $query5 = $_GET['max_price'];
-
-            $rooms = Room::OfAll2($bed, $query, $query2, $query3, $query4, $query5);
-            // ->paginate(6);
-            // $rooms->appends(array(['start_date_query'=>$query,'end_date_query'=>$query2,
-            //                         'start_time_query'=>$query3,'end_time_query'=>$query4,
-            //                         'type_query'=>$query5,'bed_query'=>$query6,'room_query'=>$query7]));
-
-            return view('Category.homepage', compact('rooms', 'bed'));
+            $rooms = $this->roomRepo->searchRoomonBed($bed, $query, $query2, $query3, $query4, $query5);
+            $rooms->appends(['name_query'=>$query,'floor_query'=>$query2,'type_query'=>$query3,'min_price'=>$query4,'max_price'=>$query5]);
+            $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+            return view('Category.homepage', compact('rooms', 'bed','notifications'))->with('locale',$locale);
         } 
+        else
+        {
+            
+            $rooms = $this->roomRepo->showallroomonBed($bed);
+            $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+            return view('Category.homepage', compact('rooms', 'bed','notifications'))->with('locale',$locale);
+        }
       
     }
 

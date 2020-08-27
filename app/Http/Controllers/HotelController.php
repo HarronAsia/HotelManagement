@@ -2,23 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use Excel;
 use App\Models\Hotel;
 use Illuminate\Http\Request;
-use App\Repositories\Hotel\HotelRepositoryInterface;
+use App\Exports\HotelsExport;
+use Illuminate\Support\Facades\Auth;
+
 use App\Repositories\Room\RoomRepositoryInterface;
 
-use Excel;
+use App\Repositories\Hotel\HotelRepositoryInterface;
+use App\Repositories\Notification\NotificationRepositoryInterface;
 
-use App\Exports\HotelsExport;
 class HotelController extends Controller
 {
     protected $hotelRepo;
     protected $roomRepo;
+    protected $notiRepo;
 
-    public function __construct(HotelRepositoryInterface $hotelRepo, RoomRepositoryInterface $roomRepo)
+    public function __construct(HotelRepositoryInterface $hotelRepo, RoomRepositoryInterface $roomRepo,NotificationRepositoryInterface $notiRepo)
     {
         $this->hotelRepo = $hotelRepo;
         $this->roomRepo = $roomRepo;
+        $this->notiRepo = $notiRepo;
     }
     /**
      * Display a listing of the resource.
@@ -27,17 +32,7 @@ class HotelController extends Controller
      */
     public function index($id)
     {
-        if (isset($_GET['query'])) {
-            $search_query = $_GET['query'];
-            $hotel = $this->hotelRepo->showHotel($id);
-            $rooms = $this->roomRepo->searchonHotel($hotel->id,$search_query);
-            return view('Hotels.homepage', compact('rooms', 'hotel'));
-        } else {
-            $hotel = $this->hotelRepo->showHotel($id);
-            $rooms = $this->roomRepo->showallroomonHotel($hotel->id);
-    
-            return view('Hotels.homepage', compact('rooms', 'hotel'));
-        }
+       
        
     }
 
@@ -112,7 +107,8 @@ class HotelController extends Controller
     {
         $search_query = $_GET['query'];
         $hotels = Hotel::where('hotel_name', 'LIKE', '%' . $search_query . '%')->get();
-        return view('Hotels.search',compact('hotels'));
+        $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+        return view('Hotels.search',compact('hotels','notifications'));
     }
 
     public function export()

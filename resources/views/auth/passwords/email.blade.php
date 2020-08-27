@@ -8,7 +8,7 @@
 <body>
     <div id="login">
         <h3 class="text-center text-white pt-5">
-            <a href="{{route('home')}}">
+            <a href="{{route('home',app()->getLocale())}}">
                 <img src="{{asset('storage/cybridgeasia.png')}}" alt="logo" style="width: 200px;height:200px;">
             </a>
         </h3>
@@ -21,7 +21,7 @@
                             {{ session('status') }}
                         </div>
                         @endif
-                        <form id="login-form" class="form" method="POST" action="{{ route('login') }}">
+                        <form id="login-form" class="form" method="POST" action="{{ route('login',app()->getLocale()) }}">
                             @csrf
 
                             <h3 class="text-center text-info">{{ __('Reset Password') }}</h3>
@@ -43,9 +43,9 @@
                             </div>
                             <div class="form-group">
                                 <div id="register-link" class="text-right">
-                                    <a href="{{route('login')}}" class=" text-info">Login here</a>
+                                    <a href="{{route('login',app()->getLocale())}}" class=" text-info">Login here</a>
                                     <span>|</span>
-                                    <a href="{{route('register')}}" class=" text-info">Register here</a>
+                                    <a href="{{route('register',app()->getLocale())}}" class=" text-info">Register here</a>
                                 </div>
                             </div>
                         </form>

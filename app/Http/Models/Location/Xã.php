@@ -77,7 +77,7 @@ class Xã extends Model
             ->where('xãs.huyện_id',$xa2)
             ->whereLike('xa_name',$xa3)
             ->select(['xãs.id','xãs.xa_name','xãs.xa_description','huyệns.huyen_name','tĩnhs.tinh_name'])
-            ->get();
+            ->paginate(6);
         
         return $query;
     }

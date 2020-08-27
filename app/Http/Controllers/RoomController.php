@@ -14,16 +14,20 @@ use App\Repositories\Hotel\HotelRepositoryInterface;
 use App\Repositories\Booking_Date\Booking_DateRepositoryInterface;
 use App\Repositories\Follower\FollowerRepositoryInterface;
 use App\Repositories\Comment\CommentRepositoryInterface;
+use App\Repositories\Notification\NotificationRepositoryInterface;
 
 use LaravelFullCalendar\Facades\Calendar;
 use Excel;
+use Illuminate\Support\Facades\Auth;
 
 use App\Exports\RoomsExport;
 
 use App\Models\Room\Booking_Date;
 
-use Illuminate\Support\Facades\Auth;
-
+use App\Notifications\Room\ForUser\RoomFollowed;
+use App\Notifications\Room\ForUser\RoomUnFollowed;
+use App\Notifications\Room\ForRoom\RoomLiked;
+use App\Notifications\Room\ForRoom\RoomUnLiked;
 
 class RoomController extends Controller
 {
@@ -34,6 +38,7 @@ class RoomController extends Controller
     protected $bookingRepo;
     protected $followerRepo;
     protected $commentRepo;
+    protected $notiRepo;
 
     public function __construct(
         RoomRepositoryInterface $roomRepo,
@@ -42,7 +47,8 @@ class RoomController extends Controller
         FollowerRepositoryInterface $followerRepo,
         UserRepositoryInterface $userRepo,
         CommentRepositoryInterface $commentRepo,
-        ProfileRepositoryInterface $profileRepo
+        ProfileRepositoryInterface $profileRepo,
+        NotificationRepositoryInterface $notiRepo
     ) {
         $this->userRepo = $userRepo;
         $this->roomRepo = $roomRepo;
@@ -51,6 +57,7 @@ class RoomController extends Controller
         $this->followerRepo = $followerRepo;
         $this->commentRepo = $commentRepo;
         $this->profileRepo = $profileRepo;
+        $this->notiRepo = $notiRepo;
     }
     /**
      * Display a listing of the resource.
@@ -88,21 +95,22 @@ class RoomController extends Controller
      * @param  \App\Room  $room
      * @return \Illuminate\Http\Response
      */
-    public function show($roomid)
+    public function show($locale, $roomid)
     {
+
         $room = $this->roomRepo->showRoom($roomid);
         $comments = $this->commentRepo->showallonRoom($room->id);
         $booking_dates = $this->bookingRepo->showallBooking_DateonRoom($room->id);
-
+        $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
         $data = $booking_dates;
-        
+
         if ($data->count()) {
             foreach ($data as $key => $value) {
-                
+
                 $events = [];
                 $events[] = Calendar::event(
                     $value->user->name,
-                    
+
                     true,
                     new \DateTime($value->checkin),
                     new \DateTime($value->checkout . ' +1 day'),
@@ -114,35 +122,37 @@ class RoomController extends Controller
                     ]
                 );
 
-                $calendar = Calendar::addEvents($events)->setOptions([
-                    'handleWindowResize' => true,
-                    'displayEventTime' => true,
+                if ($locale == 'jp') {
+                    $calendar = Calendar::addEvents($events)->setOptions([
+                        'handleWindowResize' => true,
+                        'displayEventTime' => true,
+                        'navLinks' => true,
+                        'locale' => 'ja',
+                    ]);
+                } elseif ($locale == 'vi') {
+                    $calendar = Calendar::addEvents($events)->setOptions([
+                        'handleWindowResize' => true,
+                        'displayEventTime' => true,
+                        'navLinks' => true,
+                        'locale' => 'vi',
 
-                    // 'buttonText'=> [
-                    //     'prevYear'=> '&laquo;', 
-                    //     'nextYear'=> '&raquo;',  
-                    //     'today'=>   '今日',
-                    //     'month'=>    '月',
-                    //     'week'=>     '週',
-                    //     'day'=>      '日'
-                    // ],
-                    //   // 月名称
-                    // 'monthNames'=> ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-                    // // 月略称
-                    // 'monthNamesShort'=> ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-                    // // 曜日名称
-                    // 'dayNames'=> ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'],
-                    // // 曜日略称
-                    // 'dayNamesShort'=> ['日', '月', '火', '水', '木', '金', '土'],
-                ]);
+                    ]);
+                } else {
+                    $calendar = Calendar::addEvents($events)->setOptions([
+                        'handleWindowResize' => true,
+                        'displayEventTime' => true,
+                        'navLinks' => true,
+                        'locale' => 'en',
+                    ]);
+                }
             }
 
             if (Auth::guest()) {
-                return view('Room.homepage', compact('room', 'comments',  'calendar'));
+                return view('Room.homepage', compact('room', 'comments',  'calendar', 'notifications'));
             } else {
 
                 $follower = $this->followerRepo->showfollowerRoom(Auth::user()->id, $room->id);
-                return view('Room.homepage', compact('room', 'comments',  'calendar', 'follower'));
+                return view('Room.homepage', compact('room', 'comments',  'calendar', 'follower', 'notifications'))->with('locale', $locale);
             }
         }
     }
@@ -153,11 +163,12 @@ class RoomController extends Controller
      * @param  \App\Room  $room
      * @return \Illuminate\Http\Response
      */
-    public function edit($room)
+    public function edit($locale, $room)
     {
         $room = $this->roomRepo->showRoom($room);
         $hotels = $this->hotelRepo->showall();
-        return view('Room.edit', compact('room', 'hotels'));
+        $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+        return view('Room.edit', compact('room', 'hotels', 'notifications'))->with('locale', $locale);
     }
 
     /**
@@ -183,7 +194,7 @@ class RoomController extends Controller
         //
     }
 
-    public function search()
+    public function search($locale)
     {
 
         if (
@@ -197,23 +208,19 @@ class RoomController extends Controller
             $query5 = $_GET['type_query'];
             $query6 = $_GET['bed_query'];
 
-            $rooms = Room::OfAll($query, $query2, $query3, $query4, $query5, $query6);
-            // ->paginate(6);
-            // $rooms->appends(array(['start_date_query'=>$query,'end_date_query'=>$query2,
-            //                         'start_time_query'=>$query3,'end_time_query'=>$query4,
-            //                         'type_query'=>$query5,'bed_query'=>$query6,'room_query'=>$query7]));
-
-            return view('Room.search', compact('rooms'));
+            $rooms = $this->roomRepo->searchAll($query, $query2, $query3, $query4, $query5, $query6);
+            $rooms->appends(['start_date_query' => $query, 'end_date_query' => $query2, 'start_time_query' => $query3, 'end_time_query' => $query4, 'type_query' => $query5, 'bed_query' => $query6]);
+            $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+            return view('Room.search', compact('rooms', 'notifications'))->with('locale', $locale);
         }
-        
     }
 
-    public function reserve($room)
+    public function reserve($locale, $room)
     {
         $room = $this->roomRepo->showRoom($room);
 
         $booking_dates = $this->bookingRepo->showallBooking_DateonRoom($room->id);
-
+        $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
         $data = $booking_dates;
 
         if ($data->count()) {
@@ -232,36 +239,41 @@ class RoomController extends Controller
                         'route' => '#',
                     ]
                 );
-                $calendar = Calendar::addEvents($events)->setOptions([
-                    'handleWindowResize' => true,
-                    'displayEventTime' => true,
 
-                    // 'buttonText'=> [
-                    //     'prevYear'=> '&laquo;', 
-                    //     'nextYear'=> '&raquo;',  
-                    //     'today'=>   '今日',
-                    //     'month'=>    '月',
-                    //     'week'=>     '週',
-                    //     'day'=>      '日'
-                    // ],
-                    //   // 月名称
-                    // 'monthNames'=> ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-                    // // 月略称
-                    // 'monthNamesShort'=> ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-                    // // 曜日名称
-                    // 'dayNames'=> ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'],
-                    // // 曜日略称
-                    // 'dayNamesShort'=> ['日', '月', '火', '水', '木', '金', '土'],
-                ]);
+                if ($locale == 'jp') {
+                    $calendar = Calendar::addEvents($events)->setOptions([
+                        'handleWindowResize' => true,
+                        'displayEventTime' => true,
+                        'navLinks' => true,
+                        'locale' => 'ja',
+                        'defaultView' => 'agendaWeek',
+                    ]);
+                } elseif ($locale == 'vi') {
+                    $calendar = Calendar::addEvents($events)->setOptions([
+                        'handleWindowResize' => true,
+                        'displayEventTime' => true,
+                        'navLinks' => true,
+                        'locale' => 'vi',
+                        'defaultView' => 'agendaWeek',
+                    ]);
+                } else {
+                    $calendar = Calendar::addEvents($events)->setOptions([
+                        'handleWindowResize' => true,
+                        'displayEventTime' => true,
+                        'navLinks' => true,
+                        'locale' => 'en',
+                        'defaultView' => 'agendaWeek',
+                    ]);
+                }
             }
 
-            return view('Reserve.homepage', compact('room',  'calendar'));
+            return view('Reserve.homepage', compact('room',  'calendar', 'notifications'))->with('locale', $locale);
         }
     }
 
-    public function booking(Request $request)
+    public function booking(Request $request, $locale)
     {
-        
+
         $data = $request->validate([
             'checkin' => 'required|date',
             'checkout' => 'required|date|after_or_equal:checkin',
@@ -271,7 +283,7 @@ class RoomController extends Controller
             'user_id' => 'required',
             'balance' => 'required',
         ]);
-           
+
         $booking = new Booking_Date;
         $booking->checkin = $data['checkin'];
         $booking->checkout = $data['checkout'];
@@ -283,19 +295,19 @@ class RoomController extends Controller
         $booking->save();
 
         $profile = $this->profileRepo->showProfile($data['user_id']);
-        
+
         $profile->balance = $data['balance'];
         $profile->update();
-        
+
         $room = $this->roomRepo->showRoom($booking->bookable_id);
         $room->booking_time = $room->booking_time + 1;
-       
+
         $room->update();
 
-        return redirect()->route('room.show', $room->id);
+        return redirect()->route('room.show', ['locale' => $locale, 'id' => $room->id]);
     }
 
-    public function follow($roomid, $username)
+    public function follow($locale, $roomid, $username)
     {
 
         $room = $this->roomRepo->showRoom($roomid);
@@ -304,58 +316,50 @@ class RoomController extends Controller
 
         $user->following()->attach($room);
 
+        $room->notify(new RoomFollowed($room));
+        $this->notiRepo->updateUserId($user->id, $room->id);
         return redirect()->back();
     }
 
-    public function unfollow($roomid, $username)
+    public function unfollow($locale, $roomid, $username)
     {
 
         $room = $this->roomRepo->showRoom($roomid);
         $user = $this->userRepo->showUser($username);
 
         $user->following()->detach($room);
-
+        $room->notify(new RoomUnFollowed($room));
+        $this->notiRepo->updateUserId($user->id, $room->id);
         return redirect()->back();
     }
 
-    public function like($roomid, $username)
+    public function like($locale, $roomid, $username)
     {
         $room = $this->roomRepo->showRoom($roomid);
         $user = $this->userRepo->showUser($username);
         $room->likes()->create([
             'user_id' => $user->id
         ]);
-
+        $room->notify(new RoomLiked($room));
+        $this->notiRepo->updateUserId($room->user_id, $room->id);
         return redirect()->back();
     }
 
-    public function unlike($roomid)
+    public function unlike($locale, $roomid)
     {
         $room = $this->roomRepo->showRoom($roomid);
 
         $room->likes()->delete();
-
+        $room->notify(new RoomUnLiked($room));
+        $this->notiRepo->updateUserId($room->user_id, $room->id);
         return redirect()->back();
     }
 
-    // public function images(StoreImage $request, $roomid)
-    // {
-    //     $data = $request->validated();
-    //     dd($data);
-    //     $room = $this->roomRepo->showRoom($roomid);
-    // }
 
-    public function images($roomid)
-    {
-        $room = $this->roomRepo->showRoom($roomid);
-        $images = $this->imagesRepo->showallimagesonroom($room->id);
-        return view('Room.Images',compact('room','images'));
-    }
-    
-    public function comment(StoreComment $request, $roomid, $username)
+    public function comment(StoreComment $request, $locale, $roomid, $username)
     {
         $data = $request->validated();
-        
+
         $room = $this->roomRepo->showRoom($roomid);
         $user = $this->userRepo->showUser($username);
 
@@ -371,9 +375,9 @@ class RoomController extends Controller
 
             $data['comment_image']->move($path, $filename);
             $data['comment_image'] = $filename;
-            
+
             $room->comment()->create([
-                
+
                 'comment_detail' => $data['comment_detail'],
                 'comment_image' =>  $data['comment_image'],
                 'user_id' => $data['user_id'],

@@ -8,12 +8,12 @@
                 @foreach($rooms->take(5) as $room)
                 <div class="post-slide2">
                     <div class="post-img">
-                        <a href="{{route('room.show',$room->id)}}">
+                        <a href="{{route('room.show',['locale'=>app()->getLocale(),'id'=>$room->id])}}">
                             <img src="{{asset('storage/default.png')}}" alt="" style="width: 250px;height:250px">
                         </a>
                     </div>
                     <div class="post-content">
-                        <h3 class="post-title"><a href="{{route('room.show',$room->id)}}">{{$room->room_name}} </a></h3>
+                        <h3 class="post-title"><a href="{{route('room.show',['locale'=>app()->getLocale(),'id'=>$room->id])}}">{{$room->room_name}} </a></h3>
                         <p class="post-description">
                             {{$room->room_description}}
                         </p>
@@ -23,15 +23,15 @@
                             <hr>
                             <li style="font-size: 25px;">
                                 <i class="fa fa-users"></i>
-                                {{$room->room_type}}
+                                {{__($room->room_type)}}
                             </li>
                             <li style="font-size: 25px;">
                                 <i class="fa fa-bed"></i>
-                                {{$room->bed->bed_type}}
+                                {{__($room->bed->bed_type)}}
                             </li>
                             <li style="font-size: 25px;">
                                 <i class="fa fa-info"></i>
-                                {{$room->room_condition}}
+                                {{__($room->room_condition)}}
                             </li>
 
                         </ul>

@@ -21,7 +21,7 @@ class TĩnhRepository extends BaseRepository implements TĩnhRepositoryInterface
     public function tinhs()
     {
 
-        return $this->model = Tĩnh::withTrashed()->get();
+        return $this->model = Tĩnh::withTrashed()->paginate(6);
     }
 
     

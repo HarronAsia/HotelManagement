@@ -2,12 +2,13 @@
 
 @section('title','Result')
 
+
 @section('content')
 <div class="container-fluid">
     <h1>Search Results</h1>
     <p>There are {{$rooms->count()}} results found: </p>
     <section class="search-sec">
-        <form method="GET" action="{{route('room.search')}}">
+        <form method="GET" action="{{route('room.search',app()->getLocale())}}">
 
             <div class="container-fluid">
 
@@ -92,7 +93,7 @@
                 <tbody>
                     @foreach($rooms as $room)
                     <tr>
-                        <td><a href="{{route('room.show',$room->id)}}">{{$room->room_name}}</a></td>
+                        <td><a href="{{route('room.show',['locale'=>app()->getLocale(),'id'=>$room->id])}}">{{$room->room_name}}</a></td>
                         <td>
                             @if($room->room_image == NULL)
                             <img src="{{asset('storage/default.png')}}" alt="img1" class="card-img-top" alt="Card image cap" style="width:200px;height:200px;">
@@ -111,6 +112,6 @@
             </table>
             
         </div>
-    
+    {{$rooms->links()}}
 </div>
 @endsection

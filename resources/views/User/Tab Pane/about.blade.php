@@ -5,21 +5,21 @@
                 <p class="card-title font-weight-bold">About</p>
             </div>
             @if(Auth::user()->id == $user->id)
-                @if($user->profile)
-                <div class="col-md-2">
-                    <a href="{{route('profile.edit',['user'=>$user->name,'profile'=>$user->profile->user_id])}}" class="btn btn-info">
-                        <i class="fas fa-edit" style="font-size:15px;"></i>&ensp;
-                        Edit Profile
-                    </a>
-                </div>
-                @else
-                <div class="col-md-2">
-                    <a href="{{route('profile.add',$user->name)}}" class="btn btn-primary">
-                        <i class="fas fa-plus" style="font-size:15px; "></i>&ensp;
-                        Add Profile
-                    </a>
-                </div>
-                @endif
+            @if($user->profile)
+            <div class="col-md-2">
+                <a href="{{route('profile.edit',['locale'=>app()->getLocale(),'user'=>$user->name,'profile'=>$user->profile->user_id])}}" class="btn btn-info">
+                    <i class="fas fa-edit" style="font-size:15px;"></i>&ensp;
+                    Edit Profile
+                </a>
+            </div>
+            @else
+            <div class="col-md-2">
+                <a href="{{route('profile.add',['locale'=>app()->getLocale(),'user'=>$user->name])}}" class="btn btn-primary">
+                    <i class="fas fa-plus" style="font-size:15px; "></i>&ensp;
+                    Add Profile
+                </a>
+            </div>
+            @endif
             @else
 
             @endif

@@ -30,7 +30,10 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    public function redirectTo()
+    {
+        return app()->getLocale() . RouteServiceProvider::HOME;
+    }
 
     /**
      * Create a new controller instance.

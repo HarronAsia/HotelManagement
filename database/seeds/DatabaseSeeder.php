@@ -42,8 +42,8 @@ class DatabaseSeeder extends Seeder
         factory(User::class, 100)->create();
         factory(Profile::class, 101)->create();
         factory(Hotel::class, 3)->create();
-        factory(Room::class, 10000)->create();
-        factory(Bed::class, 10000)->create();
+        factory(Room::class, 1000)->create();
+        factory(Bed::class, 1000)->create();
         factory(Booking_Date::class, 20000)->create();
         factory(Tĩnh::class, 64)->create();
         factory(Huyện::class, 1000)->create();
