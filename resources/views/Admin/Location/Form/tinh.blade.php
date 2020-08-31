@@ -6,6 +6,6 @@
     </div>
     <br />
     <button type="submit" class="btn btn-success">Lấy danh sách Tĩnh</button>
-
+    <a href="{{route('admin.tĩnh.export',app()->getLocale())}}" class="btn btn-success">Xuất danh sách Tĩnh</a>
 </form>
 

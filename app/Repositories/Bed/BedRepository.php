@@ -3,7 +3,7 @@
 namespace App\Repositories\Bed;
 
 use App\Repositories\BaseRepository;
-
+use Illuminate\Support\Facades\Cache;
 use App\Models\Room\Bed;
 
 class BedRepository extends BaseRepository implements BedRepositoryInterface
@@ -16,11 +16,15 @@ class BedRepository extends BaseRepository implements BedRepositoryInterface
    
     public function search($bed)
     {
-        return $this->model =  Bed::where('bed_name', 'LIKE', '%' . $bed . '%')->paginate(100);
+        return $this->model =  Bed::join('rooms', 'beds.room_id', '=', 'rooms.id')
+        ->whereLike(['bed_name','bed_type','room_name'], $bed)->paginate(100);
     }
     public function showall()
     {
-        return $this->model = Bed::withTrashed()->get();
+        return $this->model = Cache::remember('beds', now()->minute(10), function () {
+            return Bed::withTrashed()->get();
+        });
+        
     }
 
     public function paginate()

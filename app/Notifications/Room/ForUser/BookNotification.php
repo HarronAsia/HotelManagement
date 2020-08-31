@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class RoomFollowed extends Notification
+class BookNotification extends Notification
 {
     use Queueable;
 
@@ -38,11 +38,10 @@ class RoomFollowed extends Notification
      * @param  mixed  $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
-     public function toDatabase($notifiable)
+    public function toDatabase($notifiable)
     {
-        
         return [
-           'data' => 'You just followed Room '.$notifiable->room_name
+            'data' =>  'You will receive news of' . $notifiable->room_name.' from '.$notifiable->user->name
         ];
     }
 

@@ -24,11 +24,20 @@ use App\Exports\RoomsExport;
 
 use App\Models\Room\Booking_Date;
 
-use App\Notifications\Room\ForUser\RoomFollowed;
-use App\Notifications\Room\ForUser\RoomUnFollowed;
+//**********************************For Room************************/
+use App\Notifications\Room\ForRoom\RoomFollowed;
+use App\Notifications\Room\ForRoom\RoomUnFollowed;
 use App\Notifications\Room\ForRoom\RoomLiked;
 use App\Notifications\Room\ForRoom\RoomUnLiked;
+use App\Notifications\Room\ForRoom\BookingNotification;
+//**********************************For Room************************/
 
+//**********************************For User************************/
+use App\Notifications\Room\ForUser\BookNotification;
+use App\Notifications\Room\ForUser\CancelNotification;
+use App\Notifications\Room\ForUser\FollowNotification;
+use App\Notifications\Room\ForUser\UnFollowNotification;
+//**********************************For User************************/
 class RoomController extends Controller
 {
     protected $userRepo;
@@ -101,7 +110,7 @@ class RoomController extends Controller
         $room = $this->roomRepo->showRoom($roomid);
         $comments = $this->commentRepo->showallonRoom($room->id);
         $booking_dates = $this->bookingRepo->showallBooking_DateonRoom($room->id);
-        $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+
         $data = $booking_dates;
 
         if ($data->count()) {
@@ -148,9 +157,10 @@ class RoomController extends Controller
             }
 
             if (Auth::guest()) {
-                return view('Room.homepage', compact('room', 'comments',  'calendar', 'notifications'));
-            } else {
 
+                return view('Room.homepage', compact('room', 'comments',  'calendar'))->with('locale', $locale);
+            } else {
+                $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
                 $follower = $this->followerRepo->showfollowerRoom(Auth::user()->id, $room->id);
                 return view('Room.homepage', compact('room', 'comments',  'calendar', 'follower', 'notifications'))->with('locale', $locale);
             }
@@ -167,8 +177,11 @@ class RoomController extends Controller
     {
         $room = $this->roomRepo->showRoom($room);
         $hotels = $this->hotelRepo->showall();
-        $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
-        return view('Room.edit', compact('room', 'hotels', 'notifications'))->with('locale', $locale);
+        if (!Auth::guest()) {
+            $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+            return view('Room.edit', compact('room', 'hotels', 'notifications'))->with('locale', $locale);
+        }
+        return view('Room.edit', compact('room', 'hotels'))->with('locale', $locale);
     }
 
     /**
@@ -210,8 +223,11 @@ class RoomController extends Controller
 
             $rooms = $this->roomRepo->searchAll($query, $query2, $query3, $query4, $query5, $query6);
             $rooms->appends(['start_date_query' => $query, 'end_date_query' => $query2, 'start_time_query' => $query3, 'end_time_query' => $query4, 'type_query' => $query5, 'bed_query' => $query6]);
-            $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
-            return view('Room.search', compact('rooms', 'notifications'))->with('locale', $locale);
+            if (!Auth::guest()) {
+                $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+                return view('Room.search', compact('rooms', 'notifications'))->with('locale', $locale);
+            }
+            return view('Room.search', compact('rooms'))->with('locale', $locale);
         }
     }
 
@@ -220,7 +236,7 @@ class RoomController extends Controller
         $room = $this->roomRepo->showRoom($room);
 
         $booking_dates = $this->bookingRepo->showallBooking_DateonRoom($room->id);
-        $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+        
         $data = $booking_dates;
 
         if ($data->count()) {
@@ -266,8 +282,12 @@ class RoomController extends Controller
                     ]);
                 }
             }
-
-            return view('Reserve.homepage', compact('room',  'calendar', 'notifications'))->with('locale', $locale);
+            if(!Auth::guest())
+            {
+                $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+                return view('Reserve.homepage', compact('room',  'calendar', 'notifications'))->with('locale', $locale);
+            }
+            return view('Reserve.homepage', compact('room',  'calendar'))->with('locale', $locale);
         }
     }
 
@@ -277,8 +297,6 @@ class RoomController extends Controller
         $data = $request->validate([
             'checkin' => 'required|date',
             'checkout' => 'required|date|after_or_equal:checkin',
-            'time_begin' => 'required',
-            'time_end' => 'required|after:time_begin',
             'bookable_id' => 'required',
             'user_id' => 'required',
             'balance' => 'required',
@@ -287,8 +305,7 @@ class RoomController extends Controller
         $booking = new Booking_Date;
         $booking->checkin = $data['checkin'];
         $booking->checkout = $data['checkout'];
-        $booking->time_begin = $data['time_begin'];
-        $booking->time_end = $data['time_end'];
+
         $booking->bookable_id = $data['bookable_id'];
         $booking->user_id = $data['user_id'];
         $booking->bookable_type = 'App\Models\Room\Room';
@@ -303,8 +320,22 @@ class RoomController extends Controller
         $room->booking_time = $room->booking_time + 1;
 
         $room->update();
-
+        $room->notify(new BookingNotification($room));
+        $this->notiRepo->updateUserId($room->user_id, $room->id);
+        $room->notify(new BookNotification($room));
+        $this->notiRepo->updateUserId(Auth::user()->id, $room->id);
         return redirect()->route('room.show', ['locale' => $locale, 'id' => $room->id]);
+    }
+
+    public function cancel($locale, $room,$username)
+    {
+        $room = $this->roomRepo->showRoom($room);
+        
+        $user = $this->userRepo->showUser($username);
+        
+        $this->bookingRepo->cancel($room->id,$user->id);
+        
+        return redirect()->back();
     }
 
     public function follow($locale, $roomid, $username)
@@ -317,7 +348,9 @@ class RoomController extends Controller
         $user->following()->attach($room);
 
         $room->notify(new RoomFollowed($room));
-        $this->notiRepo->updateUserId($user->id, $room->id);
+        $this->notiRepo->updateUserId($room->user_id, $room->id);
+        $room->notify(new FollowNotification($room));
+        $this->notiRepo->updateUserId(Auth::user()->id, $room->id);
         return redirect()->back();
     }
 
@@ -329,7 +362,9 @@ class RoomController extends Controller
 
         $user->following()->detach($room);
         $room->notify(new RoomUnFollowed($room));
-        $this->notiRepo->updateUserId($user->id, $room->id);
+        $this->notiRepo->updateUserId($room->user_id, $room->id);
+        $room->notify(new UnFollowNotification($room));
+        $this->notiRepo->updateUserId(Auth::user()->id, $room->id);
         return redirect()->back();
     }
 
@@ -398,4 +433,6 @@ class RoomController extends Controller
     {
         return Excel::download(new RoomsExport, 'rooms_list.csv');
     }
+
+
 }

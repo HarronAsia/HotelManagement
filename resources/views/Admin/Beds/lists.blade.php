@@ -55,7 +55,12 @@
                                             <img src="{{asset('storage/hotel/'.$bed->room->hotel->hotel_name.'/'.$bed->room->room_name.'/'.$bed->bed_name.'/'.$bed->bed_image)}}" alt="Card image cap" class="form-control" style="width: 250px;height:250px;">
                                             @endif
                                         </td>
-                                        <td><small>{{$bed->room->room_name}}</small></td>
+                                        <td><small>
+                                                <a href="{{route('room.show',['locale'=>app()->getLocale(),'id'=>$bed->room->id])}}">
+                                                    {{$bed->room->room_name}}
+                                                </a>
+                                            </small>
+                                        </td>
                                         <td><small>{{$bed->created_at}}</small></td>
                                         <td><small>{{$bed->updated_at}}</small></td>
                                         <td><small>{{$bed->deleted_at}}</small></td>

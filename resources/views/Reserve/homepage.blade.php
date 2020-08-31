@@ -134,29 +134,18 @@
                     </div>
                     <br>
                     <div class="row">
-                        <div class="col-lg-3 ">
+                        <div class="col-lg-6 ">
                             <div class="form_group has-feedback{{ $errors->has('checkin') ? ' has-error' : '' }}">
-                                <input onfocus="(this.type='date')" class="form-control" name="checkin" placeholder="{{__('Checkin')}}">
+                                <input onfocus="(this.type='datetime-local')" class="form-control" name="checkin" placeholder="{{__('Checkin')}}">
                             </div>
                         </div>
 
-                        <div class="col-lg-3 ">
+                        <div class="col-lg-6 ">
                             <div class="form_group has-feedback{{ $errors->has('checkout') ? ' has-error' : '' }}">
-                                <input onfocus="(this.type='date')" class="form-control" name="checkout" placeholder="{{__('Checkout')}}">
+                                <input onfocus="(this.type='datetime-local')" class="form-control" name="checkout" placeholder="{{__('Checkout')}}">
                             </div>
                         </div>
 
-                        <div class="col-lg-3 ">
-                            <div class="form_group has-feedback{{ $errors->has('time_begin') ? ' has-error' : '' }}">
-                                <input onfocus="(this.type='time')" class="form-control" name="time_begin" placeholder="{{__('Time Start')}}">
-                            </div>
-                        </div>
-
-                        <div class="col-lg-3 ">
-                            <div class="form_group has-feedback{{ $errors->has('time_end') ? ' has-error' : '' }}">
-                                <input onfocus="(this.type='time')" class="form-control " name="time_end" placeholder="{{__('Time End')}}">
-                            </div>
-                        </div>
                     </div>
                 </fieldset>
                 <!-- Booking Information -->
@@ -184,10 +173,10 @@
                                 </div>
                                 <div class="card-body bg-white mt-0 shadow">
                                     <ul class="list-unstyled mb-5 position-relative">
-                                        <li>{{__('<b>Free</b> Wifi')}}</li>
-                                        <li>{{__('<b>Free</b> Meal')}}</li>
-                                        <li>{{__('<b>Free </b>Parking')}}</li>
-                                        <li>{{__('<b>Free Help Center</b>')}}</li>
+                                        <li><b>{{__('Free Wifi')}}</b></li>
+                                        <li><b>{{__('Free Meal')}}</b></li>
+                                        <li><b>{{__('Free Parking')}}</b></li>
+                                        <li><b>{{__('Free Help Center')}}</b></li>
                                     </ul>
                                     <input class="form-check-input" type="radio" name="balance" id="balance" value="100000">
                                 </div>
@@ -211,13 +200,13 @@
 
                                 <div class="card-body bg-white mt-0 shadow">
                                     <ul class="list-unstyled mb-5 position-relative">
-                                        <li>{{__('<b>Free</b> Wifi')}}</li>
-                                        <li>{{__('<b>Free</b> Meal')}}</li>
-                                        <li>{{__('<b>Free </b>Parking')}}</li>
-                                        <li>{{__('<b>Free Help Center')}}</b></li>
-                                        <li>{{__('<b>Free </b>Breakfast')}}</li>
-                                        <li>{{__('<b>Free </b>Lunch')}}</li>
-                                        <li>{{__('<b>Free </b>Dinner')}}</li>
+                                        <li><b>{{__('Free Wifi')}}</b></li>
+                                        <li><b>{{__('Free Meal')}}</b></li>
+                                        <li><b>{{__('Free Parking')}}</b></li>
+                                        <li><b>{{__('Free Help Center')}}</b></li>
+                                        <li><b>{{__('Free Breakfast')}}</b></li>
+                                        <li><b>{{__('Free Lunch')}}</b></li>
+                                        <li><b>{{__('Free Dinner')}}</b></li>
 
                                     </ul>
                                     <input class="form-check-input" type="radio" name="balance" id="balance" value="200000">
@@ -247,13 +236,13 @@
 
                                 <div class="card-body bg-white mt-0 shadow">
                                     <ul class="list-unstyled mb-5 position-relative">
-                                        <li>{{__('<b>Free</b> Wifi')}}</li>
-                                        <li>{{__('<b>Free</b> Meal')}}</li>
-                                        <li>{{__('<b>Free </b>Parking')}}</li>
-                                        <li>{{__('<b>Free Help Center')}}</b></li>
-                                        <li>{{__('<b>Free </b>Breakfast')}}</li>
-                                        <li>{{__('<b>Free </b>Lunch')}}</li>
-                                        <li>{{__('<b>Free </b>Dinner')}}</li>
+                                        <li><b>{{__('Free Wifi')}}</b></li>
+                                        <li><b>{{__('Free Meal')}}</b></li>
+                                        <li><b>{{__('Free Parking')}}</b></li>
+                                        <li><b>{{__('Free Help Center')}}</b></li>
+                                        <li><b>{{__('Free Breakfast')}}</b></li>
+                                        <li><b>{{__('Free Lunch')}}</b></li>
+                                        <li><b>{{__('Free Dinner')}}</b></li>
                                         <li><b>{{__('Only 3$ first month, after that 5$ every month')}}</b></li>
                                     </ul>
                                     <input class="form-check-input" type="radio" name="balance" id="balance" value="300000">

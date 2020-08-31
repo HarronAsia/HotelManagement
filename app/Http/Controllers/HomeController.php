@@ -46,31 +46,34 @@ class HomeController extends Controller
     {
         $rooms = $this->roomRepo->showall();
         $beds = $this->bedRepo->showall();
-        $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
-        
-        return view('home', compact('rooms', 'beds','notifications'))->with('locale',$locale);
+        if (!Auth::guest()) {
+            $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+            return view('home', compact('rooms', 'beds', 'notifications'))->with('locale', $locale);
+        }
+
+        return view('home', compact('rooms', 'beds'))->with('locale', $locale);
+       
     }
 
-    public function readAt($locale,$id)
+    public function readAt($locale, $id)
     {
         $this->notiRepo->readAt($id);
 
         return redirect()->back();
     }
 
-    public function readAll()
+    public function readAll($locale, $id)
     {
-
-        $this->notiRepo->readAll();
+        $this->notiRepo->readAllonUser($id);
         return redirect()->back();
     }
 
     public function showAllNotifications($locale)
     {
-        
+
         $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
 
-        return view('Notifications.lists', compact('locale','notifications'));
+        return view('Notifications.lists', compact('locale', 'notifications'));
     }
 
 
@@ -84,4 +87,8 @@ class HomeController extends Controller
         return view('homework.test2');
     }
 
+    public function test3()
+    {
+        return view('homework.test3');
+    }
 }

@@ -10,7 +10,7 @@
                 <figure class="effect-ravi">
                     <img src="https://picsum.photos/1000/800/?random" alt="img17" />
                     <figcaption>
-                        <h2>{{__('Single <span>Bed</span>')}}</h2>
+                        <h2>{{__('Single Bed')}}</h2>
                         <p>
                             <a href="{{route('category.index',['locale'=>app()->getLocale(),'category'=>'Single Bed'])}}"><i class="fa fa-search"></i></a>
                         </p>
@@ -21,7 +21,7 @@
                 <figure class="effect-ravi">
                     <img src="https://picsum.photos/1000/801/?random" alt="img25" />
                     <figcaption>
-                        <h2>{{__('Double <span>Bed</span>')}}</h2>
+                        <h2>{{__('Double Bed')}}</h2>
                         <p>
                             <a href="{{route('category.index',['locale'=>app()->getLocale(),'category'=>'Double Bed'])}}"><i class="fa fa-search"></i></a>
 
@@ -33,7 +33,7 @@
                 <figure class="effect-ravi">
                     <img src="https://picsum.photos/1000/802/?random" alt="img25" />
                     <figcaption>
-                        <h2>{{__('Queen Size <span>Bed</span>')}}</h2>
+                        <h2>{{__('Queen Size Bed')}}</h2>
                         <p>
                             <a href="{{route('category.index',['locale'=>app()->getLocale(),'category'=>'Queen Size Bed'])}}"><i class="fa fa-search"></i></a>
 
@@ -47,7 +47,7 @@
                 <figure class="effect-ravi">
                     <img src="https://picsum.photos/1000/804/?random" alt="img25" />
                     <figcaption>
-                        <h2>{{__('King Size <span>Bed</span>')}}</h2>
+                        <h2>{{__('King Size Bed')}}</h2>
                         <p>
                             <a href="{{route('category.index',['locale'=>app()->getLocale(),'category'=>'King size Bed'])}}"><i class="fa fa-search"></i></a>
 
@@ -59,7 +59,7 @@
                 <figure class="effect-ravi">
                     <img src="https://picsum.photos/1000/805/?random" alt="img25" />
                     <figcaption>
-                        <h2>{{__('Super King Size <span>Bed</span>')}}</h2>
+                        <h2>{{__('Super King Size Bed')}}</h2>
                         <p>
                             <a href="{{route('category.index',['locale'=>app()->getLocale(),'category'=>'Super Kind Size Bed'])}}"><i class="fa fa-search"></i></a>
 
@@ -73,7 +73,7 @@
                 <figure class="effect-ravi">
                     <img src="https://picsum.photos/2000/300/?random" alt="img25" />
                     <figcaption>
-                        <h2>{{__('Californa King <span>Bed</span>')}}</h2>
+                        <h2>{{__('Californa King Bed')}}</h2>
                         <p>
                             <a href="{{route('category.index',['locale'=>app()->getLocale(),'category'=>'California king bed'])}}"><i class="fa fa-search"></i></a>
 

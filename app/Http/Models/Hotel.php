@@ -74,11 +74,6 @@ class Hotel extends Model
         return $query->whereId($hotel);
     }
 
-    public function scopeOfName($query,$hotel)
-    {
-        return $query->where('hotel_name','LIKE', '%' . $hotel . '%');
-    }
-
     public function scopeOfCategoryId($query,$hotel)
     {
         return $query->where('category_id', $hotel );

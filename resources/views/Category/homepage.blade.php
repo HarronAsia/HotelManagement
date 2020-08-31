@@ -20,6 +20,7 @@
 <script src="https://www.cssscript.com/demo/animated-customizable-range-slider-pure-javascript-rslider-js/js/rSlider.min.js"></script>
 <link href="{{ asset('css/Category.css') }}" rel="stylesheet" type="text/css">
 <script src="{{ asset('js/Category.js') }}"></script>
+
 <section class="listings">
     <div class="container">
         <div class="row">

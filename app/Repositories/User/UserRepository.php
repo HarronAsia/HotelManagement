@@ -4,6 +4,8 @@ namespace App\Repositories\User;
 
 use App\Repositories\BaseRepository;
 use App\Models\User\User;
+
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class UserRepository extends BaseRepository implements UserRepositoryInterface
@@ -16,12 +18,16 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
     public function search($user)
     {
-        return $this->model = User::where('name', 'LIKE', '%' . $user . '%')->paginate(100);
+        return $this->model = User::whereLike(['name','email'], $user)->paginate(100);
     }
 
     public function showall()
     {
-        return $this->model = User::withTrashed()->get();
+        //return $this->model = User::withTrashed()->get();
+       return $this->model = Cache::remember('users', now()->minute(10), function () {
+            return User::withTrashed()->get();
+        });
+        
     }
 
     public function paginate()
@@ -118,16 +124,16 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         return $this->model = User::join('profiles', 'users.id', '=', 'profiles.user_id')
             ->join('booking__dates', 'users.id', '=', 'booking__dates.user_id')
             ->select(
-                DB::raw('HOUR(booking__dates.time_begin) as duration'),
-               
+                DB::raw('HOUR(booking__dates.checkin) as duration'),
+
                 DB::raw('users.id as id'),
                 DB::raw('users.name as name'),
                 DB::raw('users.email as email'),
                 DB::raw('profiles.gender as gender'),
                 DB::raw('profiles.balance as balance'),
             )
-            
-            ->groupBy('duration','id', 'name', 'email', 'gender', 'balance')
+
+            ->groupBy('duration', 'id', 'name', 'email', 'gender', 'balance')
             ->orderBy('duration', 'desc')
             ->orderBy('balance', 'desc')
 
@@ -143,15 +149,15 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         return $this->model = User::join('profiles', 'users.id', '=', 'profiles.user_id')
             ->join('booking__dates', 'users.id', '=', 'booking__dates.user_id')
             ->select(
-                DB::raw('HOUR(booking__dates.time_begin) as duration'),
+                DB::raw('HOUR(booking__dates.checkin) as duration'),
                 DB::raw('users.id as id'),
                 DB::raw('users.name as name'),
                 DB::raw('users.email as email'),
                 DB::raw('profiles.gender as gender'),
                 DB::raw('profiles.balance as balance'),
             )
-            
-            ->groupBy('duration','id', 'name', 'email', 'gender', 'balance')
+
+            ->groupBy('duration', 'id', 'name', 'email', 'gender', 'balance')
             ->orderBy('duration', 'desc')
             ->orderBy('balance', 'desc')
 
@@ -166,15 +172,15 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         return $this->model = User::join('booking__dates', 'users.id', '=', 'booking__dates.user_id')
             ->join('profiles', 'users.id', '=', 'profiles.user_id')
             ->select(
-                DB::raw('HOUR(booking__dates.time_begin) as duration'),
+                DB::raw('HOUR(booking__dates.checkin) as duration'),
                 DB::raw('users.id as id'),
                 DB::raw('users.name as name'),
                 DB::raw('users.email as email'),
                 DB::raw('profiles.gender as gender'),
                 DB::raw('profiles.balance as balance'),
             )
-            
-            ->groupBy('duration','id', 'name', 'email', 'gender', 'balance')
+
+            ->groupBy('duration', 'id', 'name', 'email', 'gender', 'balance')
             ->orderBy('duration', 'desc')
             ->orderBy('balance', 'desc')
 

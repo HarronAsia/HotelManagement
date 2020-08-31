@@ -7,7 +7,7 @@
 
     <title>@yield('title','HomePage')</title>
 
-    
+
     <!-- Fonts -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
@@ -15,13 +15,28 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" />
     <link href="{{ asset('css/homepage.css') }}" rel="stylesheet" type="text/css">
-    
-    
+
+
 </head>
 
 <body>
     @include('layouts.navbar')
+    <div class="header">
+        <div class="card-body text-black bg-danger justify-content-center" style="font-size: 20px;">
+            @if (session('resent'))
+            <div class="alert alert-success" role="alert">
+                {{ __('A fresh verification link has been sent to your email address.') }}
+            </div>
+            @endif
 
+            {{ __('Before proceeding, please check your email for a verification link.') }}
+            {{ __('If you did not receive the email') }},
+            <form class="d-inline " method="POST" action="{{ route('verification.resend',app()->getLocale()) }}">
+                @csrf
+                <button type="submit" class="btn btn-link p-0 m-0 align-baseline">{{ __('click here to request another') }}</button>
+            </form>
+        </div>
+    </div>
     <div class="box">
         <div class="container-fluid">
             <div class="row">

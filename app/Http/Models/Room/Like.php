@@ -19,6 +19,6 @@ class Like extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\Models\Room\Like');
+        return $this->belongsTo('App\Models\User\User');
     }
 }

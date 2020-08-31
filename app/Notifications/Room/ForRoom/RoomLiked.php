@@ -44,7 +44,7 @@ class RoomLiked extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'data' => Auth::user()->name.' just liked your Room ' . $notifiable->room_name
+            'data' => Auth::user()->name.' just liked your ' . $notifiable->room_name
         ];
     }
 

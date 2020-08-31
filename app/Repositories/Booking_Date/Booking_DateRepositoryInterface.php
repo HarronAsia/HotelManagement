@@ -12,4 +12,6 @@ interface Booking_DateRepositoryInterface
     public function showBooking_Date($booking);
     public function destroyBooking_Date($booking);
     public function restoreBooking_Date($booking);
+
+    public function cancel($booking,$user);
 }

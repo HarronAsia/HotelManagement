@@ -17,7 +17,7 @@
                 <a class="nav-link" href="{{route('admin.calendar',app()->getLocale())}}" title="{{__('Calendar')}}"><i class="fas fa-calendar "></i>&ensp; {{__('Calendar')}} <i class="fas fa-calendar shortmenu animate"></i></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{route('admin.notification',app()->getLocale())}}" title="{{__('Notification')}}"><i class="far fa-envelope "></i>&ensp; {{__('Notification')}} <i class="far fa-envelope shortmenu animate"></i></a>
+                <a class="nav-link" href="{{route('admin.notifications',app()->getLocale())}}" title="{{__('Notification')}}"><i class="far fa-envelope "></i>&ensp; {{__('Notification')}} <i class="far fa-envelope shortmenu animate"></i></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{route('admin.searching',app()->getLocale())}}" title="{{__('Feedback')}}"><i class="fas fa-search-location"></i>&ensp; {{__('Searching')}} <i class="fas fa-search-location shortmenu animate"></i></a>

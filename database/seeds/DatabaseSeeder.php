@@ -38,13 +38,57 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => Carbon::now(),
             ]
         );
+
+        DB::table('users')->insert(
+            [
+                'name' => 'test',
+                'email' => 'test@gmail.com',
+                'password' => bcrypt('123123123'),
+                'email_verified_at' => Carbon::now(),
+                'remember_token' => Str::random(10),
+                'role' => 'user',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ]
+        );
         
-        factory(User::class, 100)->create();
+        DB::table('users')->insert(
+            [
+                'name' => 'test2',
+                'email' => 'test2@gmail.com',
+                'password' => bcrypt('123123123'),
+                'email_verified_at' => NULL,
+                'remember_token' => Str::random(10),
+                'role' => 'user',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ]
+        );
+        
+        
+        factory(User::class, 98)->create();
         factory(Profile::class, 101)->create();
         factory(Hotel::class, 3)->create();
-        factory(Room::class, 1000)->create();
+        DB::table('rooms')->insert(
+            [
+                'room_name' => 'Admin Room',
+                'room_floor' =>'1',
+                'room_number' => '9999',
+                'room_price' => '999999',
+                'room_type' => 'Single',
+                'room_condition' => 'Available',
+                'room_status' => 'Verified',
+                'room_description' => 'aaaaaaa',
+                'booking_time' => rand(1,1000),
+                'user_id' => '1',
+                'hotel_id' => rand(1,3),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ]
+        );
+        factory(Room::class, 999)->create();
         factory(Bed::class, 1000)->create();
-        factory(Booking_Date::class, 20000)->create();
+        factory(Booking_Date::class, 10000)->create();
         factory(Tĩnh::class, 64)->create();
         factory(Huyện::class, 1000)->create();
         factory(Xã::class, 10000)->create();

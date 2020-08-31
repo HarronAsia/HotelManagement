@@ -2,6 +2,19 @@
 
 @section('title','Result')
 
+@section('language')
+<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+    <a class="dropdown-item" href="{{route(Route::currentRouteName(), ['locale' => 'en'])}}">
+        <img src="{{asset('storage/flag/england.png')}}" alt="England Flag" style="width: 35px;"> &ensp; {{__('English')}}
+    </a>
+    <a class="dropdown-item" href="{{route(Route::currentRouteName(), ['locale' => 'jp'])}}">
+        <img src="{{asset('storage/flag/japan.png')}}" alt="Japanese Flag" style="width: 35px;"> &ensp; {{__('Japan')}}
+    </a>
+    <a class="dropdown-item" href="{{route(Route::currentRouteName(), ['locale' => 'vi'])}}">
+        <img src="{{asset('storage/flag/vietnam.png')}}" alt="Vietnamese Flag" style="width: 35px;"> &ensp; {{__('VietNam')}}
+    </a>
+</div>
+@endsection
 
 @section('content')
 <div class="container-fluid">
@@ -77,41 +90,41 @@
         </form>
     </section>
     <hr>
-    
-        <div class="row">
-            <table class="table">
-                <thead class="thead-dark">
-                    <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">Image</th>
-                        <th scope="col">Type</th>
-                        <th scope="col">Bed Type</th>
-                        <th scope="col">Condition</th>
-                        <th scope="col">Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($rooms as $room)
-                    <tr>
-                        <td><a href="{{route('room.show',['locale'=>app()->getLocale(),'id'=>$room->id])}}">{{$room->room_name}}</a></td>
-                        <td>
-                            @if($room->room_image == NULL)
-                            <img src="{{asset('storage/default.png')}}" alt="img1" class="card-img-top" alt="Card image cap" style="width:200px;height:200px;">
-                            @else
 
-                            <img src="{{asset('storage/hotel/'.$room->hotel->hotel_name.'/'.$room->room_name.'/'.$room->room_image.'/')}}" alt="Card image cap" class="card-img-top" style="width:200px;height:200px;">
-                            @endif
-                        </td>
-                        <td>{{$room->room_type}}</td>
-                        <td>{{$room->bed->bed_type??''}}</td>
-                        <td>{{$room->room_condition}}</td>
-                        <td>{{\Illuminate\Support\Str::limit($room->room_description,260)}}</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            
-        </div>
+    <div class="row">
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Image</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Bed Type</th>
+                    <th scope="col">Condition</th>
+                    <th scope="col">Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($rooms as $room)
+                <tr>
+                    <td><a href="{{route('room.show',['locale'=>app()->getLocale(),'id'=>$room->id])}}">{{$room->room_name}}</a></td>
+                    <td>
+                        @if($room->room_image == NULL)
+                        <img src="{{asset('storage/default.png')}}" alt="img1" class="card-img-top" alt="Card image cap" style="width:200px;height:200px;">
+                        @else
+
+                        <img src="{{asset('storage/hotel/'.$room->hotel->hotel_name.'/'.$room->room_name.'/'.$room->room_image.'/')}}" alt="Card image cap" class="card-img-top" style="width:200px;height:200px;">
+                        @endif
+                    </td>
+                    <td>{{$room->room_type}}</td>
+                    <td>{{$room->bed->bed_type??''}}</td>
+                    <td>{{$room->room_condition}}</td>
+                    <td>{{\Illuminate\Support\Str::limit($room->room_description,260)}}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+
+    </div>
     {{$rooms->links()}}
 </div>
 @endsection

@@ -27,7 +27,11 @@ class BedController extends Controller
     public function index($locale,$bed)
     {
         $rooms = $this->roomRepo->showallroomonBed($bed);
-        $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+        if(!Auth::guest())
+        {
+            $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+            return view('Category.homepage', compact('rooms', 'bed','notifications'))->with('locale',$locale);
+        }
         return view('Category.homepage', compact('rooms', 'bed'))->with('locale',$locale);
     }
 
@@ -46,15 +50,23 @@ class BedController extends Controller
             $query5 = $_GET['max_price'];
             $rooms = $this->roomRepo->searchRoomonBed($bed, $query, $query2, $query3, $query4, $query5);
             $rooms->appends(['name_query'=>$query,'floor_query'=>$query2,'type_query'=>$query3,'min_price'=>$query4,'max_price'=>$query5]);
-            $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
-            return view('Category.homepage', compact('rooms', 'bed','notifications'))->with('locale',$locale);
+            if(!Auth::guest())
+            {
+                $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+                return view('Category.homepage', compact('rooms', 'bed','notifications'))->with('locale',$locale);
+            }
+            return view('Category.homepage', compact('rooms', 'bed'))->with('locale',$locale);
         } 
         else
         {
             
             $rooms = $this->roomRepo->showallroomonBed($bed);
-            $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
-            return view('Category.homepage', compact('rooms', 'bed','notifications'))->with('locale',$locale);
+            if(!Auth::guest())
+            {
+                $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+                return view('Category.homepage', compact('rooms', 'bed','notifications'))->with('locale',$locale);
+            }
+            return view('Category.homepage', compact('rooms', 'bed'))->with('locale',$locale);
         }
       
     }

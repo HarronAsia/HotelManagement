@@ -46,7 +46,7 @@
                             <ul class="profile-info-list nav nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item">
                                     <a href="#timeline" id="timeline-tab" data-toggle="tab" class="profile-info-list-item" role="tab" aria-controls="timeline" aria-selected="true">
-                                        <i class="mdi mdi-eye"></i>Timeline
+                                        <i class="mdi mdi-eye"></i>Your Timeline
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -56,7 +56,7 @@
                                 </li>
                                 <li class="nav-item">
                                     <a href="#friends" id="friends-tab" data-toggle="tab" class="profile-info-list-item" role="tab" aria-controls="friends" aria-selected="false">
-                                        <i class="mdi mdi-movie"></i>Friends
+                                        <i class="mdi mdi-movie"></i>Your Bookings
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -87,7 +87,7 @@
 
                     <!-------------------------------------------------------------------------------------    Friends Tab start--------------------------------------------------------------->
                     <div class="tab-pane fade " id="friends" role="tabpanel" aria-labelledby="friends-tab">
-                        @include('User.Tab Pane.Friends')
+                        @include('User.Tab Pane.Bookings')
                     </div>
                     <!-------------------------------------------------------------------------------------    About Tab end--------------------------------------------------------------->
 

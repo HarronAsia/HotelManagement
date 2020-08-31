@@ -47,4 +47,10 @@ class Booking_DateRepository extends BaseRepository implements Booking_DateRepos
         return $this->model = $Booking_Date->restore();
         
     }
+
+    public function cancel($booking,$user)
+    {
+         $Booking_Date = Booking_Date::OfBookable_Id($booking)->OfUser_Id($user)->first();
+         return $this->model = $Booking_Date->forceDelete();
+    }
 }

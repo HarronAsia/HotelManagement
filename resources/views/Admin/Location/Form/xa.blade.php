@@ -6,4 +6,5 @@
     </div>
     <br />
     <button type="submit" class="btn btn-success">Lấy danh sách Xã</button>
+    <a href="{{route('admin.xã.export',app()->getLocale())}}" class="btn btn-success">Xuất danh sách Xã</a>
 </form>

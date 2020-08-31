@@ -75,7 +75,7 @@ class Xã extends Model
             ->join('huyệns', 'xãs.huyện_id', 'huyệns.id')
             ->where('xãs.tĩnh_id',$xa1)
             ->where('xãs.huyện_id',$xa2)
-            ->whereLike('xa_name',$xa3)
+            ->whereLike(['tinh_name','huyen_name','xa_name'],$xa3)
             ->select(['xãs.id','xãs.xa_name','xãs.xa_description','huyệns.huyen_name','tĩnhs.tinh_name'])
             ->paginate(6);
         

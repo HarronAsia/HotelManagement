@@ -2,9 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\User\User;
-use Illuminate\Support\Facades\Auth;
-
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\DatabaseNotification;
 
@@ -14,7 +11,12 @@ class Notification extends DatabaseNotification
 
     protected $fillable = ['data', 'user_id'];
 
-    public function users()
+    public function notificationable()
+    {
+        return $this->morphTo();
+    }
+
+    public function user()
     {
         return $this->belongsTo('App\Models\User\User');
     }

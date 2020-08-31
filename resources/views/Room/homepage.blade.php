@@ -43,7 +43,7 @@
             @guest
 
             @else
-                @include('Room.Materials.Comment.add')
+            @include('Room.Materials.Comment.add')
             @endif
 
             @include('Room.Materials.Comment.result')
@@ -102,7 +102,16 @@
                     @if(Auth::guest())
                     <a class="btn btn-success btn-block" href="{{route('login',app()->getLocale())}}">{{__('Reserve')}}</a>
                     @else
-                    <a class="btn btn-success btn-block" href="{{route('room.reserve',['locale'=>app()->getLocale(),'room'=>$room->id])}}">{{__('Reserve')}}</a>
+                    @if(Auth::user()->id == $room->user_id)
+
+                    @else
+                        @if($date->user_id??'' != Auth::user()->id)
+                        <a class="btn btn-success btn-block" href="{{route('room.reserve',['locale'=>app()->getLocale(),'room'=>$room->id])}}">{{__('Reserve')}}</a>
+                        @else
+                        <a class="btn btn-danger btn-block" href="{{route('room.reserve.cancel',['locale'=>app()->getLocale(),'room'=>$room->id,'user'=>Auth::user()->name])}}">{{__('Cancel')}}</a>
+                        @endif
+                    @endif
+
                     @endif
                 </div>
             </div>

@@ -34,7 +34,12 @@ class NotificationRepository extends BaseRepository implements NotificationRepos
 
     public function readAll()
     {
-        return $this->model =DB::table('notifications')->update(['read_at' => Carbon::now()]);
+        return $this->model = DB::table('notifications')->update(['read_at' => Carbon::now()]);
+    }
+
+    public function readAllonUser($id)
+    {
+        return $this->model = Notification::ofUserId($id)->update(['read_at' => Carbon::now()]);
     }
 
     public function deleteNotification($id)
@@ -44,8 +49,16 @@ class NotificationRepository extends BaseRepository implements NotificationRepos
         return $this->model->delete();
     }
 
-    public function updateUserId($id,$notifiableid)
-    {      
-        return $this->model = Notification::OfNotifiableId($notifiableid)->CreatedAt()->first()->update(['user_id' =>$id]);
+    public function deleteAll()
+    {
+        $this->model = Notification::query();
+
+        return $this->model->delete();
     }
+
+    public function updateUserId($id, $notifiableid)
+    {
+        return $this->model = Notification::OfNotifiableId($notifiableid)->CreatedAt()->first()->update(['user_id' => $id]);
+    }
+
 }

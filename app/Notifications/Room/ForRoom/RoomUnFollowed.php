@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Notifications\Room\ForUser;
+namespace App\Notifications\Room\ForRoom;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Auth;
 
 class RoomUnFollowed extends Notification
 {
@@ -42,7 +43,7 @@ class RoomUnFollowed extends Notification
     {
 
         return [
-            'data' => 'You just Unfollowed Room ' . $notifiable->room_name
+            'data' => Auth::user()->name.' just Unfollowed your ' . $notifiable->room_name
         ];
     }
 

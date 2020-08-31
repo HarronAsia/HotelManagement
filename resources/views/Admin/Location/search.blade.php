@@ -75,14 +75,17 @@
 <!----------------------------------------------------------------- --->
 <div id="hidden_div3" style="display:block;">
     @include('Admin.Location.Form.tinh')
+   
 </div>
 
 <div id="hidden_div4" style="display:none;">
     @include('Admin.Location.Form.huyen')
+    
 </div>
 
 <div id="hidden_div5" style="display:none;">
     @include('Admin.Location.Form.xa')
+    
 </div>
 <!----------------------------------------------------------------- --->
 <div id="hidden_table1" style="display:block;">

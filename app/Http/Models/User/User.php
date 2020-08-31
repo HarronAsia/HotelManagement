@@ -31,6 +31,16 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany('App\Models\Room\Booking_Date');
     }
 
+    public function notification()
+    {
+        return $this->morphOne('App\Models\Notification', 'notificationable');
+    }
+
+    public function notifications()
+    {
+        return $this->morphMany('App\Models\Notification', 'notificationable');
+    }
+
     /**
      * The attributes that are mass assignable.
      *

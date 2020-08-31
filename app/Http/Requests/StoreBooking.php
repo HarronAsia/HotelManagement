@@ -23,11 +23,17 @@ class StoreBooking extends FormRequest
      */
     public function rules()
     {
+        // return [
+        //     'checkin' => 'required|date',
+        //     'checkout' => 'required|date|after_or_equal:checkin',
+        //     'time_begin' => 'required',
+        //     'time_end' => 'required|after:time_begin',
+        //     'bookable_id' => 'required',
+        //     'user_id' => 'required',
+        // ];
         return [
-            'checkin' => 'required|date',
-            'checkout' => 'required|date|after_or_equal:checkin',
-            'time_begin' => 'required',
-            'time_end' => 'required|after:time_begin',
+            'checkin' => 'required|datetime',
+            'checkout' => 'required|datetime|after_or_equal:checkin',
             'bookable_id' => 'required',
             'user_id' => 'required',
         ];

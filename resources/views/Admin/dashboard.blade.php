@@ -109,9 +109,7 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Times of Booking</th>
+                            <th scope="col">Customers</th>
                             <th scope="col">In Month</th>
                             <th scope="col">In Year</th>
                         </tr>
@@ -119,13 +117,7 @@
                     <tbody>
                         @foreach($busymonths as $busymonth)
                         <tr>
-                            <th scope="row">{{$busymonth->id}}</th>
-                            <td>
-                                <a href="{{route('room.show',['locale'=>app()->getLocale(),'id'=>$room->id])}}">
-                                    {{$busymonth->name}}
-                                </a>
-                            </td>
-                            <td>{{$busymonth->booking}}</td>
+                            <td>{{$busymonth->busymonth}}</td>
                             <td>{{$busymonth->month}}</td>
                             <td>{{$busymonth->year}}</td>
                         </tr>

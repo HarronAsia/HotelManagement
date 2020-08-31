@@ -30,28 +30,28 @@ class Huyện extends Model
     //*********************************mutator************************************************************************************************************
 
     //******************************** SET************************************************************************************************************
-    public function setNameAttribute($value)
+    public function setHuyenNameAttribute($value)
     {
-        $this->attributes['name'] = ucfirst($value);
+        $this->attributes['huyen_name'] = ucfirst($value);
     }
 
-    public function setDescriptionAttribute($value)
+    public function setHuyenDescriptionAttribute($value)
     {
-        $this->attributes['description'] = ucfirst($value);
+        $this->attributes['huyen_description'] = ucfirst($value);
     }
 
 
     //******************************** SET************************************************************************************************************
 
     //******************************** GET************************************************************************************************************
-    public function getNameAttribute($value)
+    public function getHuyenNameAttribute($value)
     {
-        return  $this->attributes['name'] = ucfirst($value);
+        return  $this->attributes['huyen_name'] = ucfirst($value);
     }
 
-    public function getDescriptionAttribute($value)
+    public function getHuyenDescriptionAttribute($value)
     {
-        return  $this->attributes['description'] = ucfirst($value);
+        return  $this->attributes['huyen_description'] = ucfirst($value);
     }
 
     //******************************** GET************************************************************************************************************
@@ -73,7 +73,7 @@ class Huyện extends Model
         $query = Huyện::query()
             ->join('tĩnhs', 'huyệns.tĩnh_id', 'tĩnhs.id')
             ->whereLike('tĩnh_id',$huyen1)
-            ->whereLike('tinh_name',$huyen2)
+            ->whereLike(['tinh_name','huyen_name'],$huyen2)
             ->select(['huyệns.id','huyệns.huyen_name','huyệns.huyen_description','huyệns.tĩnh_id','tĩnhs.tinh_name','tĩnhs.tinh_description'])
             ->paginate(6);
            

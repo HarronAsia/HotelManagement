@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
-class Room extends Model
+
+class Room extends Model 
 {
     use SoftDeletes, Notifiable;
 

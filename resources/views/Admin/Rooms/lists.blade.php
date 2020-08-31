@@ -46,8 +46,13 @@
                                 <tbody>
                                     @foreach($rooms as $room)
                                     <tr>
-                                        <td><a href="{{route('room.show',['locale'=>app()->getLocale(),'id'=>$room->id])}}"><small>{{$room->room_name}}</small></td>
-                                        <td><small>{{$room->user->name}}</small></td>
+                                        <td><a href="{{route('room.show',['locale'=>app()->getLocale(),'id'=>$room->id])}}"><small>{{$room->room_name}}</small></a></td>
+                                        <td><small>
+                                                <a href="{{route('profile.view',['locale'=>app()->getLocale(),'user'=>$room->user->name])}}">
+                                                    {{$room->user->name}}
+                                                </a>
+                                            </small>
+                                        </td>
                                         <td><small>{{$room->room_condition}}</small></td>
                                         <td><small>{{$room->room_status}}</small></td>
                                         <td><small>{{$room->created_at}}</small></td>
