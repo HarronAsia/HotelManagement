@@ -6,20 +6,30 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
-class Xã extends Model
+class Tinh extends Model
 {
-    use SoftDeletes,Notifiable;
+    use SoftDeletes, Notifiable;
 
-    protected $fillable = ['name','description','tĩnh_id','huyện_id'];
-
-    public function tinh()
-    {
-        return $this->belongsTo('App\Models\Location\Tĩnh');
-    }
+    protected $fillable = ['name', 'description'];
 
     public function huyen()
     {
-        return $this->belongsTo('App\Models\Location\Huyện');
+        return $this->hasOne('App\Models\Location\Huyen');
+    }
+
+    public function huyens()
+    {
+        return $this->hasMany('App\Models\Location\Huyen');
+    }
+
+    public function xa()
+    {
+        return $this->hasOne('App\Models\Location\Xa');
+    }
+
+    public function xas()
+    {
+        return $this->hasMany('App\Models\Location\Xa');
     }
 
     //*********************************mutator************************************************************************************************************
@@ -53,30 +63,16 @@ class Xã extends Model
 
     //*********************************mutator************************************************************************************************************
 
-    public function scopeOfId($query, $huyen)
+    public function scopeOfId($query, $tinh)
     {
-        return $query->whereId($huyen);
+        return $query->whereId($tinh);
     }
 
-    public function scopeOfTinhId($query,$tinh)
+    public function scopeOfName($query, $tinh1 )
     {
-        return $query->where('tĩnh_id',$tinh);
-    }
 
-    public function scopeOfHuyenId($query,$huyen)
-    {
-        return $query->where('huyện_id',$huyen);
-    }
-
-    public function scopeOfAll($query, $xa1, $xa2,$xa3)
-    {
-        $query = Xã::query()
-            ->join('tĩnhs', 'xãs.tĩnh_id', 'tĩnhs.id')
-            ->join('huyệns', 'xãs.huyện_id', 'huyệns.id')
-            ->where('xãs.tĩnh_id',$xa1)
-            ->where('xãs.huyện_id',$xa2)
-            ->whereLike(['tinh_name','huyen_name','xa_name'],$xa3)
-            ->select(['xãs.id','xãs.xa_name','xãs.xa_description','huyệns.huyen_name','tĩnhs.tinh_name'])
+        $query = Tinh::query()
+            ->whereLike('tinh_name', $tinh1)
             ->paginate(6);
         
         return $query;

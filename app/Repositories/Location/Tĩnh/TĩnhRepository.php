@@ -3,14 +3,14 @@
 namespace App\Repositories\Location\Tĩnh;
 
 use App\Repositories\BaseRepository;
-use App\Models\Location\Tĩnh;
+use App\Models\Location\Tinh;
 
 class TĩnhRepository extends BaseRepository implements TĩnhRepositoryInterface
 {
     //lấy model tương ứng
     public function getModel()
     {
-        return \App\Models\Location\Tĩnh::class;
+        return \App\Models\Location\Tinh::class;
     }
 
     public function showAll()
@@ -21,7 +21,7 @@ class TĩnhRepository extends BaseRepository implements TĩnhRepositoryInterface
     public function tinhs()
     {
 
-        return $this->model = Tĩnh::withTrashed()->paginate(6);
+        return $this->model = Tinh::withTrashed()->paginate(64);
     }
 
     

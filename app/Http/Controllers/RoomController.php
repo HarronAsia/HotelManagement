@@ -37,6 +37,8 @@ use App\Notifications\Room\ForUser\BookNotification;
 use App\Notifications\Room\ForUser\CancelNotification;
 use App\Notifications\Room\ForUser\FollowNotification;
 use App\Notifications\Room\ForUser\UnFollowNotification;
+use App\Rules\BookingOverlap;
+
 //**********************************For User************************/
 class RoomController extends Controller
 {
@@ -108,7 +110,9 @@ class RoomController extends Controller
     {
 
         $room = $this->roomRepo->showRoom($roomid);
+
         $comments = $this->commentRepo->showallonRoom($room->id);
+
         $booking_dates = $this->bookingRepo->showallBooking_DateonRoom($room->id);
 
         $data = $booking_dates;
@@ -160,6 +164,41 @@ class RoomController extends Controller
 
                 return view('Room.homepage', compact('room', 'comments',  'calendar'))->with('locale', $locale);
             } else {
+
+                $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+                $follower = $this->followerRepo->showfollowerRoom(Auth::user()->id, $room->id);
+                return view('Room.homepage', compact('room', 'comments',  'calendar', 'follower', 'notifications'))->with('locale', $locale);
+            }
+        } else {
+            $events = [];
+            if ($locale == 'jp') {
+                $calendar = Calendar::addEvents($events)->setOptions([
+                    'handleWindowResize' => true,
+                    'displayEventTime' => true,
+                    'navLinks' => true,
+                    'locale' => 'ja',
+                ]);
+            } elseif ($locale == 'vi') {
+                $calendar = Calendar::addEvents($events)->setOptions([
+                    'handleWindowResize' => true,
+                    'displayEventTime' => true,
+                    'navLinks' => true,
+                    'locale' => 'vi',
+
+                ]);
+            } else {
+                $calendar = Calendar::addEvents($events)->setOptions([
+                    'handleWindowResize' => true,
+                    'displayEventTime' => true,
+                    'navLinks' => true,
+                    'locale' => 'en',
+                ]);
+            }
+            if (Auth::guest()) {
+
+                return view('Room.homepage', compact('room', 'comments',  'calendar'))->with('locale', $locale);
+            } else {
+
                 $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
                 $follower = $this->followerRepo->showfollowerRoom(Auth::user()->id, $room->id);
                 return view('Room.homepage', compact('room', 'comments',  'calendar', 'follower', 'notifications'))->with('locale', $locale);
@@ -211,18 +250,15 @@ class RoomController extends Controller
     {
 
         if (
-            isset($_GET['start_date_query']) or isset($_GET['end_date_query']) or isset($_GET['start_time_query'])
-            or isset($_GET['end_time_query']) or isset($_GET['type_query']) or isset($_GET['bed_query'])
+            isset($_GET['checkin']) or isset($_GET['checkout']) or isset($_GET['type_query']) or isset($_GET['bed_query'])
         ) {
-            $query = $_GET['start_date_query'];
-            $query2 = $_GET['end_date_query'];
-            $query3 = $_GET['start_time_query'];
-            $query4 = $_GET['end_time_query'];
-            $query5 = $_GET['type_query'];
-            $query6 = $_GET['bed_query'];
+            $query = $_GET['checkin'];
+            $query2 = $_GET['checkout'];
+            $query3 = $_GET['type_query'];
+            $query4 = $_GET['bed_query'];
 
-            $rooms = $this->roomRepo->searchAll($query, $query2, $query3, $query4, $query5, $query6);
-            $rooms->appends(['start_date_query' => $query, 'end_date_query' => $query2, 'start_time_query' => $query3, 'end_time_query' => $query4, 'type_query' => $query5, 'bed_query' => $query6]);
+            $rooms = $this->roomRepo->searchAll($query, $query2, $query3, $query4);
+            $rooms->appends(['checkin' => $query, 'checkout' => $query2, 'type_query' => $query3, 'bed_query' => $query4]);
             if (!Auth::guest()) {
                 $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
                 return view('Room.search', compact('rooms', 'notifications'))->with('locale', $locale);
@@ -236,7 +272,7 @@ class RoomController extends Controller
         $room = $this->roomRepo->showRoom($room);
 
         $booking_dates = $this->bookingRepo->showallBooking_DateonRoom($room->id);
-        
+
         $data = $booking_dates;
 
         if ($data->count()) {
@@ -282,8 +318,39 @@ class RoomController extends Controller
                     ]);
                 }
             }
-            if(!Auth::guest())
-            {
+            if (!Auth::guest()) {
+                $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
+                return view('Reserve.homepage', compact('room',  'calendar', 'notifications'))->with('locale', $locale);
+            }
+            return view('Reserve.homepage', compact('room',  'calendar'))->with('locale', $locale);
+        } else {
+            $events = [];
+            if ($locale == 'jp') {
+                $calendar = Calendar::addEvents($events)->setOptions([
+                    'handleWindowResize' => true,
+                    'displayEventTime' => true,
+                    'navLinks' => true,
+                    'locale' => 'ja',
+                    'defaultView' => 'agendaWeek',
+                ]);
+            } elseif ($locale == 'vi') {
+                $calendar = Calendar::addEvents($events)->setOptions([
+                    'handleWindowResize' => true,
+                    'displayEventTime' => true,
+                    'navLinks' => true,
+                    'locale' => 'vi',
+                    'defaultView' => 'agendaWeek',
+                ]);
+            } else {
+                $calendar = Calendar::addEvents($events)->setOptions([
+                    'handleWindowResize' => true,
+                    'displayEventTime' => true,
+                    'navLinks' => true,
+                    'locale' => 'en',
+                    'defaultView' => 'agendaWeek',
+                ]);
+            }
+            if (!Auth::guest()) {
                 $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
                 return view('Reserve.homepage', compact('room',  'calendar', 'notifications'))->with('locale', $locale);
             }
@@ -295,8 +362,8 @@ class RoomController extends Controller
     {
 
         $data = $request->validate([
-            'checkin' => 'required|date',
-            'checkout' => 'required|date|after_or_equal:checkin',
+            'checkin' => ['required', new BookingOverlap()],
+            'checkout' => 'required|',
             'bookable_id' => 'required',
             'user_id' => 'required',
             'balance' => 'required',
@@ -327,14 +394,14 @@ class RoomController extends Controller
         return redirect()->route('room.show', ['locale' => $locale, 'id' => $room->id]);
     }
 
-    public function cancel($locale, $room,$username)
+    public function cancel($locale, $room, $username)
     {
         $room = $this->roomRepo->showRoom($room);
-        
+
         $user = $this->userRepo->showUser($username);
-        
-        $this->bookingRepo->cancel($room->id,$user->id);
-        
+
+        $this->bookingRepo->cancel($room->id, $user->id);
+
         return redirect()->back();
     }
 
@@ -433,6 +500,4 @@ class RoomController extends Controller
     {
         return Excel::download(new RoomsExport, 'rooms_list.csv');
     }
-
-
 }

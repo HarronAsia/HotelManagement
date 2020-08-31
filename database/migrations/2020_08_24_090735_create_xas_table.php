@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateHuyệnsTable extends Migration
+class CreateXasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,14 @@ class CreateHuyệnsTable extends Migration
      */
     public function up()
     {
-        Schema::create('huyệns', function (Blueprint $table) {
+        Schema::create('xas', function (Blueprint $table) {
             $table->id();
-            $table->string('huyen_name')->nullable();
-            $table->longText('huyen_description')->nullable();
+            $table->string('xa_name')->nullable();
+            $table->longText('xa_description')->nullable();
             $table->timestamps();
-
-            $table->unsignedBigInteger('tĩnh_id')->nullable();
-            $table->foreign('tĩnh_id')->references('id')->on('tĩnhs')->onDelete('cascade');
-
             $table->softDeletes();
+
+            $table->unsignedBigInteger('huyen_id')->nullable();
         });
     }
 
@@ -33,6 +31,8 @@ class CreateHuyệnsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('huyệns');
+        Schema::dropIfExists('xas', function (Blueprint $table) {
+            $table->foreign('huyen_id')->references('id')->on('huyens')->onDelete('cascade');
+        });
     }
 }

@@ -8,7 +8,7 @@ interface Booking_DateRepositoryInterface
     public function paginate();
     
     public function showallBooking_DateonRoom($id);
-    
+    public function showallBooking_DateonUser($id);
     public function showBooking_Date($booking);
     public function destroyBooking_Date($booking);
     public function restoreBooking_Date($booking);

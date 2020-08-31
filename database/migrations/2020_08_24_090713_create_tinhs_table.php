@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTĩnhsTable extends Migration
+class CreateTinhsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateTĩnhsTable extends Migration
      */
     public function up()
     {
-        Schema::create('tĩnhs', function (Blueprint $table) {
+        Schema::create('tinhs', function (Blueprint $table) {
             $table->id();
             $table->string('tinh_name')->nullable();
             $table->longText('tinh_description')->nullable();

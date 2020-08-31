@@ -11,7 +11,7 @@ use App\Models\User\User;
 use App\Repositories\User\UserRepositoryInterface;
 use App\Repositories\Profile\ProfileRepositoryInterface;
 use App\Repositories\Notification\NotificationRepositoryInterface;
-
+use App\Repositories\Booking_Date\Booking_DateRepositoryInterface;
 use Excel;
 
 use App\Exports\UsersExport;
@@ -21,21 +21,24 @@ class UserController extends Controller
     protected $userRepo;
     protected $profileRepo;
     protected $notiRepo;
+    protected $bookRepo;
 
-    public function __construct(UserRepositoryInterface $userRepo, ProfileRepositoryInterface $profileRepo, NotificationRepositoryInterface $notiRepo)
+    public function __construct(UserRepositoryInterface $userRepo, ProfileRepositoryInterface $profileRepo, NotificationRepositoryInterface $notiRepo, Booking_DateRepositoryInterface $bookRepo)
     {
         $this->middleware('auth');
         $this->userRepo = $userRepo;
         $this->profileRepo = $profileRepo;
         $this->notiRepo = $notiRepo;
+        $this->bookRepo = $bookRepo;
     }
 
     public function view_profile($locale, $user)
     {
         $user = $this->userRepo->showUser($user);
         if (!Auth::guest()) {
+            $dates = $this->bookRepo->showallBooking_DateonUser($user->id);
             $notifications = $this->notiRepo->showallUnreadbyUser(Auth::user()->id);
-            return view('User.profile', compact('user', 'notifications'))->with('locale', $locale);
+            return view('User.profile', compact('user', 'notifications','dates'))->with('locale', $locale);
         }
         return view('User.profile', compact('user'))->with('locale', $locale);
     }

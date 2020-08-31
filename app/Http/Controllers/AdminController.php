@@ -8,48 +8,49 @@ use Excel;
 use Carbon\Carbon;
 use App\Models\Hotel;
 use App\Models\Room\Bed;
+use App\Exports\Xaexport;
+use App\Imports\XaImport;
 use App\Models\Room\Room;
-use App\Models\Room\Booking_Date;
 use App\Models\User\User;
-use App\Models\User\Profile;
-use App\Models\Location\Tĩnh;
-use App\Models\Location\Huyện;
-use App\Models\Location\Xã;
-
-
+use App\Exports\XasExport;
 use App\Exports\BedsExport;
 use App\Exports\Tinhexport;
-use App\Exports\Huyenexport;
-use App\Exports\HuyensExport;
-use App\Exports\TinhsExport;
-use App\Exports\Xaexport;
-use App\Exports\XasExport;
+
+
 use App\Imports\TinhImport;
+use App\Models\Location\Xa;
+use App\Exports\Huyenexport;
+use App\Exports\TinhsExport;
 use App\Imports\HuyenImport;
-use App\Imports\XaImport;
-
-use Illuminate\Support\Facades\Auth;
-use LaravelFullCalendar\Facades\Calendar;
+use App\Models\Room\Comment;
+use App\Models\User\Profile;
 use Illuminate\Http\Request;
-use LaravelDaily\LaravelCharts\Classes\LaravelChart;
-use Illuminate\Support\Facades\DB;
+use App\Exports\HuyensExport;
+use App\Models\Location\Tinh;
 
+use App\Rules\BookingOverlap;
+use App\Models\Location\Huyen;
 use App\Http\Requests\StoreBed;
 use App\Http\Requests\StoreRoom;
 use App\Http\Requests\StoreAdmin;
-use App\Http\Requests\StoreComment;
+
 use App\Http\Requests\StoreHotel;
+use App\Models\Room\Booking_Date;
+use Illuminate\Support\Facades\DB;
+use App\Http\Requests\StoreComment;
 use App\Http\Requests\StoreLocation;
-use App\Models\Room\Comment;
+use Illuminate\Support\Facades\Auth;
+use LaravelFullCalendar\Facades\Calendar;
 use App\Repositories\Bed\BedRepositoryInterface;
 use App\Repositories\Room\RoomRepositoryInterface;
 use App\Repositories\User\UserRepositoryInterface;
 use App\Repositories\Hotel\HotelRepositoryInterface;
-use App\Repositories\Notification\NotificationRepositoryInterface;
+use LaravelDaily\LaravelCharts\Classes\LaravelChart;
 use App\Repositories\Location\Xã\XãRepositoryInterface;
 use App\Repositories\Profile\ProfileRepositoryInterface;
 use App\Repositories\Location\Tĩnh\TĩnhRepositoryInterface;
 use App\Repositories\Location\Huyện\HuyệnRepositoryInterface;
+use App\Repositories\Notification\NotificationRepositoryInterface;
 
 
 
@@ -472,7 +473,7 @@ class AdminController extends Controller
     public function storeroom(StoreRoom $request, $locale)
     {
         $data = $request->validated();
-
+        
         $room = new Room();
 
         $room->room_name = $data['room_name'];
@@ -503,10 +504,8 @@ class AdminController extends Controller
         $room->save();
 
         $room->date()->create([
-            'checkin' => $data['date_start'],
-            'checkout' => $data['date_end'],
-            'time_begin' => $data['time_start'],
-            'time_end' => $data['time_end'],
+            'checkin' => $data['checkin'],
+            'checkout' => $data['checkout'],
             'user_id' =>  $room->user_id,
         ]);
 
@@ -522,10 +521,24 @@ class AdminController extends Controller
         return view('Admin.Rooms.edit', compact('room', 'users', 'hotels', 'notifications'))->with('locale', $locale);
     }
 
-    public function updateroom(StoreRoom $request, $locale, $room)
+    public function updateroom(Request $request, $locale, $room)
     {
-        $data = $request->validated();
+        //dd($request);
+        $data = $request->validate([
+            'room_name'=>'required',
+            'room_image'=>'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'room_floor'=>'required',
+            'room_number'=>'required',
+            'room_price'=>'required',
+            'room_type'=>'required',
+            'room_condition'=>'required',
+            'room_status'=>'required',
+            'room_description'=>'required',
+            'user_id'=>'required',
+            'hotel_id'=>'required',
 
+        ]);
+       
         $room = $this->roomRepo->showRoom($room);
 
         $room->room_name = $data['room_name'];
@@ -561,14 +574,7 @@ class AdminController extends Controller
             $room->room_image = $data['room_image'];
 
             $room->save();
-
-            $room->date()->create([
-                'checkin' => $data['date_start'],
-                'checkout' => $data['date_end'],
-                'time_begin' => $data['time_start'],
-                'time_end' => $data['time_end'],
-                'user_id' =>  $room->user_id,
-            ]);
+           
             return redirect()->route('admin.rooms', $locale);
         } else {
             $room->save();
@@ -753,28 +759,33 @@ class AdminController extends Controller
             or isset($_GET['huyen_query']) or isset($_GET['xa_query'])
         ) {
             $query = $_GET['select_query'];
-
-            $query2 = $_GET['select2_query'];
-
-            $query3 = $_GET['select3_query'];
-            $query4 = $_GET['tinh_query'];
-            $query5 = $_GET['huyen_query'];
-            $query6 = $_GET['xa_query'];
+          
 
             if ($query == 'Tĩnh') {
-                $tinhs = Tĩnh::OfName($query4);
+                $query4 = $_GET['tinh_query'];
+                $tinhs = Tinh::OfName($query4);
                 $huyens = $this->huyệnRepo->huyens();
                 $xas = $this->xãRepo->xas();
                 return view('Admin.Location.search', compact('tinhs', 'huyens', 'xas'))->with('locale', $locale);
             } elseif ($query == 'Huyện') {
-                $tinhs = $this->tĩnhRepo->tinhs();
-                $huyens = Huyện::OfAll($query2, $query5);
+               
+                $tinhs = $this->tĩnhRepo->tinhs();  
                 $xas = $this->xãRepo->xas();
+                
+                $query2 = $_GET['select2_query'];      
+                $query5 = $_GET['huyen_query'];     
+                $huyens = Huyen::OfAll($query2, $query5);
+               
                 return view('Admin.Location.search', compact('tinhs', 'huyens', 'xas'))->with('locale', $locale);
             } elseif ($query == 'Xã') {
                 $tinhs = $this->tĩnhRepo->tinhs();
                 $huyens = $this->huyệnRepo->huyens();
-                $xas = Xã::OfAll($query2, $query3, $query4, $query5 . $query6);
+                
+                $query2 = $_GET['select2_query'];
+                $query3 = $_GET['select3_query'];
+                $query6 = $_GET['xa_query'];
+                
+                $xas = Xa::OfAll($query2, $query3, $query6);
                 return view('Admin.Location.search', compact('tinhs', 'huyens', 'xas'))->with('locale', $locale);
             }
         } else {
@@ -796,27 +807,26 @@ class AdminController extends Controller
     {
         $data = $request->validated();
 
-        $tinh = new Tĩnh;
+        $tinh = new Tinh;
         $tinh->tinh_name = $data['tinh_name'];
         $tinh->tinh_description = $data['tinh_description'];
         $tinh->save();
         $tinhid = $tinh->id;
 
-        $huyen = new Huyện;
+        $huyen = new Huyen;
         $huyen->huyen_name = $data['huyen_name'];
         $huyen->huyen_description = $data['huyen_description'];
         $huyen->tĩnh_id = $tinhid;
         $huyen->save();
         $huyenid = $huyen->id;
 
-        $xa = new Xã;
+        $xa = new Xa;
         $xa->xa_name = $data['xa_name'];
         $xa->xa_description = $data['xa_description'];
-        $xa->tĩnh_id = $tinhid;
         $xa->huyện_id = $huyenid;
         $xa->save();
 
-        return redirect()->route('admin.searching')->with('locale', $locale);
+        return redirect()->route('admin.searching',$locale);
     }
 
     public function Tinhimport(Request $request)

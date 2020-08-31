@@ -10,7 +10,7 @@
             <p>Thêm Địa chỉ mới </p>
         </div>
         <div class="form-content bk">
-            <form action="{{route('admin.searching.store')}}" method="POST" enctype="multipart/form-data">
+            <form action="{{route('admin.searching.store',app()->getLocale())}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @if ($errors->any())
                 <div class="alert alert-danger">

@@ -30,6 +30,12 @@ class Booking_DateRepository extends BaseRepository implements Booking_DateRepos
         return $this->model = Booking_Date::where('bookable_id',$id)->orderBy('created_at','desc')->get();
     }
 
+    public function showallBooking_DateonUser($id)
+    {
+        
+        return $this->model = Booking_Date::where('user_id',$id)->orderBy('created_at','desc')->paginate();
+    }
+
     public function showBooking_Date($booking)
     {
         return $this->model = Booking_Date::OfId($booking)->first();

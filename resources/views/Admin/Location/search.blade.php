@@ -38,7 +38,7 @@
                 <div class="col-md-4 " id="hidden_div" style="display:none;">
                     <select id="radius" name="select2_query" class="form-control">
                         @foreach($tinhs as $tinh)
-                        <option id="Tĩnh" name="select2_query" value="Tĩnh" hidden selected>Tĩnh</option>
+                        <option id="Tĩnh" name="select2_query" value="" hidden selected>Tĩnh</option>
                         <option name="select2_query" value="{{$tinh->id}}">{{$tinh->tinh_name}}</option>
                         @endforeach
                     </select>
@@ -47,7 +47,7 @@
                 <div class="col-md-4 " id="hidden_div2" style="display:none;">
                     <select id="radius" name="select3_query" class="form-control">
                         @foreach($huyens as $huyen)
-                        <option id="Tĩnh" name="select3_query" value="Quận" hidden selected>Quận/Huyện</option>
+                        <option id="Tĩnh" name="select3_query" value="" hidden selected>Quận/Huyện</option>
                         <option name="select3_query" value="{{$huyen->id}}">{{$huyen->huyen_name}}</option>
                         @endforeach
                     </select>

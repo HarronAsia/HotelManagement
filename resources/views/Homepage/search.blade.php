@@ -39,27 +39,15 @@
                             </div>
                         </div>
 
-                        <div class="col-lg-3 col-md-3 col-sm-12 p-0">
+                        <div class="col-lg-6 col-md-3 col-sm-12 p-0">
                             <div class="form_group ">
-                                <input onfocus="(this.type='date')" class="form-control search-slt" name="start_date_query" placeholder="{{__('Checkin')}}" value="">
+                                <input onfocus="(this.type='datetime-local')" class="form-control" name="checkin" placeholder="{{__('Checkin')}}">
                             </div>
                         </div>
 
-                        <div class="col-lg-3 col-md-3 col-sm-12 p-0">
+                        <div class="col-lg-6 col-md-3 col-sm-12 p-0">
                             <div class="form_group ">
-                                <input onfocus="(this.type='date')" class="form-control search-slt" name="end_date_query" placeholder="{{__('Checkout')}}" value="">
-                            </div>
-                        </div>
-
-                        <div class="col-lg-3 col-md-3 col-sm-12 p-0">
-                            <div class="form_group ">
-                                <input onfocus="(this.type='time')" class="form-control search-slt" name="start_time_query" placeholder="{{__('Time Start')}}" value="">
-                            </div>
-                        </div>
-
-                        <div class="col-lg-3 col-md-3 col-sm-12 p-0">
-                            <div class="form_group ">
-                                <input onfocus="(this.type='time')" class="form-control search-slt" name="end_time_query" placeholder="{{__('Time End')}}" value="">
+                                <input onfocus="(this.type='datetime-local')" class="form-control" name="checkout" placeholder="{{__('Checkout')}}">
                             </div>
                         </div>
 

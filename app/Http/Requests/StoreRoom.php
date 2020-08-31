@@ -37,10 +37,6 @@ class StoreRoom extends FormRequest
             'user_id'=>'required',
             'hotel_id'=>'required',
 
-            'date_start'=>'',
-            'date_end'=>'',
-            'time_start'=>'',
-            'time_end'=>'',
         ];
     }
 }

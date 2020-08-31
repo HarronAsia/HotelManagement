@@ -3,14 +3,14 @@
 namespace App\Repositories\Location\Huyện;
 
 use App\Repositories\BaseRepository;
-use App\Models\Location\Huyện;
+use App\Models\Location\Huyen;
 
 class HuyệnRepository extends BaseRepository implements HuyệnRepositoryInterface
 {
     //lấy model tương ứng
     public function getModel()
     {
-        return \App\Models\Location\Huyện::class;
+        return \App\Models\Location\Huyen::class;
     }
 
     public function showAll()
@@ -21,10 +21,10 @@ class HuyệnRepository extends BaseRepository implements HuyệnRepositoryInter
     public function huyens()
     {
 
-       return $this->model = Huyện::query()
-        ->join('tĩnhs','tĩnhs.id','=','huyệns.tĩnh_id')
-        ->select(['huyệns.id','huyệns.huyen_name','huyệns.tĩnh_id','tĩnhs.tinh_name','huyệns.huyen_description'])
-        ->paginate(6);
+       return $this->model = Huyen::query()
+        ->join('tinhs','tinhs.id','=','huyens.tinh_id')
+        ->select(['huyens.id','huyens.huyen_name','huyens.tinh_id','tinhs.tinh_name','huyens.huyen_description'])
+        ->paginate(100);
         
     }
 

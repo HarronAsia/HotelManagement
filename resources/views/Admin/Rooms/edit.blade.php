@@ -198,36 +198,6 @@
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="form-group has-feedback{{ $errors->has('date_start') ? ' has-error' : '' }}">
-                                <label for="date_start">Room Date Start:</label>
-                                <input type="date" class="form-control" name="date_start" value="{{$room->date_start}}">
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="form-group has-feedback{{ $errors->has('date_end') ? ' has-error' : '' }}">
-                                <label for="date_end">Room Date End:</label>
-                                <input type="date" class="form-control" name="date_end" value="{{$room->date_end}}">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="form-group has-feedback{{ $errors->has('time_start') ? ' has-error' : '' }}">
-                                <label for="time_start">Room Time Start:</label>
-                                <input type="time" class="form-control" name="time_start" value="{{$room->time_start}}">
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="form-group has-feedback{{ $errors->has('time_end') ? ' has-error' : '' }}">
-                                <label for="time_end">Room Time End:</label>
-                                <input type="time" class="form-control" name="time_end" value="{{$room->time_end}}">
-                            </div>
-                        </div>
-                    </div>
-
                 </fieldset>
                 <!-- Social Network -->
 

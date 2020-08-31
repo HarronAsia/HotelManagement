@@ -6,25 +6,25 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
-class Huyện extends Model
+class Huyen extends Model
 {
     use SoftDeletes, Notifiable;
 
-    protected $fillable = ['name', 'description', 'tĩnh_id'];
+    protected $fillable = ['name', 'description', 'tinh_id'];
 
     public function tinh()
     {
-        return $this->belongsTo('App\Models\Location\Tĩnh');
+        return $this->belongsTo('App\Models\Location\Tinh');
     }
 
     public function xa()
     {
-        return $this->hasOne('App\Models\Location\Xã');
+        return $this->hasOne('App\Models\Location\Xa');
     }
 
     public function xas()
     {
-        return $this->hasMany('App\Models\Location\Xã');
+        return $this->hasMany('App\Models\Location\Xa');
     }
 
     //*********************************mutator************************************************************************************************************
@@ -65,16 +65,16 @@ class Huyện extends Model
 
     public function scopeOfTinhId($query, $tinh)
     {
-        return $query->where('tĩnh_id', $tinh);
+        return $query->where('tinh_id', $tinh);
     }
 
     public function scopeOfAll($query, $huyen1, $huyen2)
     {
-        $query = Huyện::query()
-            ->join('tĩnhs', 'huyệns.tĩnh_id', 'tĩnhs.id')
-            ->whereLike('tĩnh_id',$huyen1)
+        $query = Huyen::query()
+            ->join('tinhs', 'huyens.tinh_id', 'tinhs.id')
+            ->whereLike('tinh_id',$huyen1)
             ->whereLike(['tinh_name','huyen_name'],$huyen2)
-            ->select(['huyệns.id','huyệns.huyen_name','huyệns.huyen_description','huyệns.tĩnh_id','tĩnhs.tinh_name','tĩnhs.tinh_description'])
+            ->select(['huyens.id','huyens.huyen_name','huyens.huyen_description','huyens.tinh_id','tinhs.tinh_name','tinhs.tinh_description'])
             ->paginate(6);
            
         return $query;

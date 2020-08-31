@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
+    
     //lấy model tương ứng
     public function getModel()
     {
@@ -168,7 +169,6 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
     public function HighestPaidPerYear()
     {
-        //return $this->model = DB::select('select year(created_at) as year, month(created_at) as month, sum(room_price) as total_amount from rooms group by year(created_at), month(created_at)');
         return $this->model = User::join('booking__dates', 'users.id', '=', 'booking__dates.user_id')
             ->join('profiles', 'users.id', '=', 'profiles.user_id')
             ->select(

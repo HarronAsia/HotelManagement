@@ -2,11 +2,13 @@
 
 namespace App\Repositories\Room;
 
+use App\Models\Room\Booking_Date;
 use Carbon\Carbon;
 
 use App\Models\Room\Room;
 use Illuminate\Support\Facades\DB;
 use App\Repositories\BaseRepository;
+use DateTime;
 use Illuminate\Support\Facades\Cache;
 
 class RoomRepository extends BaseRepository implements RoomRepositoryInterface
@@ -20,7 +22,7 @@ class RoomRepository extends BaseRepository implements RoomRepositoryInterface
     public function search($room)
     {
         return $this->model = Room::join('users', 'rooms.user_id', '=', 'users.id')
-        ->whereLike(['room_name','room_condition','room_status','name'], $room )->paginate(100);
+            ->whereLike(['room_name', 'room_condition', 'room_status', 'name'], $room)->paginate(100);
     }
 
     public function showall()
@@ -29,7 +31,6 @@ class RoomRepository extends BaseRepository implements RoomRepositoryInterface
         return $this->model = Cache::remember('rooms', now()->minute(10), function () {
             return Room::withTrashed()->orderBy('booking_time', 'desc')->get();
         });
-    
     }
 
     public function paginate()
@@ -52,6 +53,7 @@ class RoomRepository extends BaseRepository implements RoomRepositoryInterface
 
     public function showRoom($room)
     {
+
         return $this->model = Room::OfId($room)->first();
     }
 
@@ -71,11 +73,10 @@ class RoomRepository extends BaseRepository implements RoomRepositoryInterface
     {
         return $this->model = Cache::remember('rooms', now()->minute(10), function () {
             return Room::join('booking__dates', 'rooms.id', '=', 'booking__dates.bookable_id')
-            ->where('booking__dates.checkin', '>=', Carbon::now()->startOfYear())
-            ->where('booking__dates.checkout','<=', Carbon::now()->endOfYear())
-            ->get();
+                ->where('booking__dates.checkin', '>=', Carbon::now()->startOfYear())
+                ->where('booking__dates.checkout', '<=', Carbon::now()->endOfYear())
+                ->get();
         });
-        
     }
 
     public function perWeek()
@@ -143,28 +144,40 @@ class RoomRepository extends BaseRepository implements RoomRepositoryInterface
                 DB::raw('count(*) as busymonth'),
             )
             ->groupBy('year', 'month')
-            ->orderBy('busymonth','desc')
+            ->orderBy('busymonth', 'desc')
             ->limit(6)
             ->get();
     }
 
-    public function searchAll($room1, $room2, $room3, $room4, $room5, $room6)
+    public function searchAll($room1, $room2, $room3, $room4)
     {
+        $date = date_create($room1);
+        $from = date_format($date, 'Y-m-d H:i:s');
 
-        return $this->model = Room::query()
+        $date2 = date_create($room2);
+        $till = date_format($date2, 'Y-m-d H:i:s');
+
+
+        $lists = Booking_Date::where(function ($q) use ($from, $till) {
+            $q->where('checkin', '<=', $from);
+            $q->where('checkout', '>=', $till);
+            
+        })
+        ->select('booking__dates.bookable_id')
+        ->get();
+
+        $rooms = Room::query()
             ->join('beds', 'rooms.id', '=', 'beds.room_id')
-            ->whereLike('room_type', $room5)
-            ->whereLike('bed_type', $room6)
+            ->whereLike('room_type', $room3)
+            ->whereLike('bed_type', $room4)
             ->whereLike('room_condition', 'Available')
-            ->distinct()
-            ->join('booking__dates', 'rooms.id', '=', 'booking__dates.bookable_id')
-            ->whereLike('checkin', $room1)
-            ->whereLike('checkout', $room2)
-            ->whereLike('TIME(checkin)', $room3)
-            ->whereLike('TIME(time_end)', $room4)
+            ->whereNotIn('rooms.id', $lists)
             ->select(['rooms.id', 'rooms.room_name', 'rooms.room_type', 'rooms.room_condition', 'beds.bed_type', 'rooms.room_description'])
             ->paginate(6);
+
+        return $rooms;
     }
+
 
     public function searchRoomonBed($bed, $room1, $room2, $room3, $room4, $room5)
     {

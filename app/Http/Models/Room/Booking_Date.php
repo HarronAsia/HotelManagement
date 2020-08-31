@@ -10,7 +10,6 @@ class Booking_Date extends Model
 {
     use Notifiable, SoftDeletes;
 
-    //protected $fillable = ['checkin', 'checkout', 'time_begin', 'time_end', 'commentable_type', 'commentable_id', 'user_id'];
     protected $fillable = ['checkin', 'checkout', 'commentable_type', 'commentable_id', 'user_id'];
     public function bookable()
     {

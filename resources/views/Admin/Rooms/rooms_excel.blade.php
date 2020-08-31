@@ -13,8 +13,7 @@
 
             <th>Checkin</th>
             <th>Checkout</th>
-            <th>Time Start</th>
-            <th>Time End</th>
+
 
             <th>Customer</th>
            
@@ -39,8 +38,6 @@
 
             <td>{{$room->date->checkin??''}}</td>
             <td>{{$room->date->checkout??''}}</td>
-            <td>{{$room->date->time_begin??''}}</td>
-            <td>{{$room->date->time_end??''}}</td>
            
             <td>{{$room->user->name??''}}</td>
            
