@@ -158,14 +158,21 @@ class RoomRepository extends BaseRepository implements RoomRepositoryInterface
         $till = date_format($date2, 'Y-m-d H:i:s');
 
 
-        $lists = Booking_Date::where(function ($q) use ($from, $till) {
-            $q->where('checkin', '<=', $from);
-            $q->where('checkout', '>=', $till);
-            
+        $lists = Booking_Date::where(function ($query) use ($from, $till) {
+            $query->where(function ($query) use ($from) {
+                $query->where('checkin', '<=', $from)
+                    ->where('checkout', '>=', $from);
+            })->orWhere(function ($query) use ($till) {
+                $query->where('checkin', '<=', $till)
+                    ->where('checkout', '>=', $till);
+            })->orWhere(function ($query) use ($from, $till) {
+                $query->where('checkin', '>=', $from)
+                    ->where('checkout', '<=', $till);
+            });
         })
-        ->select('booking__dates.bookable_id')
+        ->select('bookable_id')
         ->get();
-
+        
         $rooms = Room::query()
             ->join('beds', 'rooms.id', '=', 'beds.room_id')
             ->whereLike('room_type', $room3)
@@ -174,7 +181,8 @@ class RoomRepository extends BaseRepository implements RoomRepositoryInterface
             ->whereNotIn('rooms.id', $lists)
             ->select(['rooms.id', 'rooms.room_name', 'rooms.room_type', 'rooms.room_condition', 'beds.bed_type', 'rooms.room_description'])
             ->paginate(6);
-
+            
+        
         return $rooms;
     }
 
